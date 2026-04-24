@@ -1,4 +1,4 @@
-# Pro-Job Research Wiki
+# ProJob Wiki
 
 This workspace contains an internal research pack for an offline-first PWA platform for trades, site-work, field-service, and cross-company project operations.
 

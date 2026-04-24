@@ -1,5 +1,6 @@
-site_name: Pro-Job Research Wiki
+site_name: ProJob Wiki
 site_description: Offline-first trades field operations platform research
+site_url: https://ajdench.github.io/ProJob-Wiki/
 theme:
   name: material
   features:
@@ -38,6 +39,13 @@ nav:
       - Shortlist: evaluation/shortlist.md
       - Scoring Matrix: evaluation/scoring-matrix.md
       - Research Questions: evaluation/research-questions.md
+  - Proofs of Concept:
+      - POC Plan: poc/index.md
+      - Common Test Scenario: poc/common-test-scenario.md
+      - Odoo + OCA Test Plan: poc/odoo-oca-test-plan.md
+      - ERPNext Test Plan: poc/erpnext-test-plan.md
+      - Offline PWA Test Plan: poc/offline-pwa-test-plan.md
+      - Findings Template: poc/findings-template.md
   - Architecture:
       - Target Architecture: architecture/target-architecture.md
       - Offline Sync Model: architecture/offline-sync-model.md
