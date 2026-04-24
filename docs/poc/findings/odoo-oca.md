@@ -10,19 +10,20 @@ Version / commit / image: Target Odoo 19.0 + OCA 19.0 branches
 
 Initial environment check:
 
-- `docker` is not installed locally.
-- `podman` is not installed locally.
-- `colima` is not installed locally.
+- `docker` is installed and verified.
+- `docker compose` is installed and verified.
+- `colima` is installed, started, and verified with `hello-world`.
+- `podman` is installed and its machine image is initialized, but `podman machine start` currently fails/hangs at `vfkit`.
 - Homebrew is available.
 - OCA `19.0` branches exist for `field-service`, `server-tools`, `web`, and `sale-workflow`.
 
-Prepared reproducible setup files under `experiments/odoo-oca/`. The POC is blocked on installing/running a container runtime.
+Prepared reproducible setup files under `experiments/odoo-oca/`. The POC should proceed with Docker via Colima.
 
 ## Scenario Result
 
 | Step | Result | Notes |
 | --- | --- | --- |
-| Customer/site setup | Blocked | Container runtime unavailable |
+| Customer/site setup | Not started | Docker/Colima runtime now available |
 | Quote | Not started | |
 | Job/work order | Not started | |
 | Schedule/assign | Not started | |

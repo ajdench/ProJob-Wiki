@@ -4,13 +4,14 @@ This experiment is for validating Odoo Community plus OCA Field Service against 
 
 ## Current Status
 
-Blocked locally because no container runtime is installed:
+Ready to run with Docker via Colima:
 
-- `docker`: unavailable
-- `podman`: unavailable
-- `colima`: unavailable
+- `docker`: installed and verified.
+- `docker compose`: installed and verified.
+- `colima`: installed, started, and verified with `hello-world`.
+- `podman`: installed and machine image initialized, but `podman machine start` currently fails/hangs at `vfkit`.
 
-Homebrew is available, so the next local step is to install a container runtime, for example Docker Desktop or Colima.
+Use Docker/Colima for this POC.
 
 ## Target Versions
 
@@ -40,6 +41,7 @@ git clone --depth 1 --branch 19.0 https://github.com/OCA/sale-workflow.git addon
 Start the stack:
 
 ```bash
+colima start
 docker compose up -d
 ```
 
@@ -97,4 +99,3 @@ To remove local database state:
 docker compose down -v
 rm -rf data/
 ```
-
