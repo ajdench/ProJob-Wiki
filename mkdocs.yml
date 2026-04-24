@@ -1,0 +1,52 @@
+site_name: Pro-Job Research Wiki
+site_description: Offline-first trades field operations platform research
+theme:
+  name: material
+  features:
+    - navigation.sections
+    - navigation.indexes
+    - navigation.top
+    - search.suggest
+    - content.code.copy
+markdown_extensions:
+  - admonition
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+nav:
+  - Overview: index.md
+  - Requirements:
+      - Product Requirements: requirements/product-requirements.md
+      - Workflow Map: workflows/workflow-map.md
+  - Options:
+      - Overview: options/index.md
+      - Odoo + OCA Field Service: options/odoo-oca-field-service.md
+      - ERPNext / Frappe: options/erpnext-frappe.md
+      - Dolibarr: options/dolibarr.md
+      - OpenProject: options/openproject.md
+      - Atlas CMMS: options/atlas-cmms.md
+      - openMAINT: options/openmaint.md
+      - Offline-First PWA Stack: options/offline-first-pwa-stack.md
+      - KoboToolbox / ODK: options/kobotoolbox-odk.md
+  - Evaluation:
+      - Shortlist: evaluation/shortlist.md
+      - Scoring Matrix: evaluation/scoring-matrix.md
+      - Research Questions: evaluation/research-questions.md
+  - Architecture:
+      - Target Architecture: architecture/target-architecture.md
+      - Offline Sync Model: architecture/offline-sync-model.md
+      - Permissions and Tenancy: architecture/permissions-and-tenancy.md
+  - Decisions:
+      - ADR 0001 Shortlist: decisions/adr-0001-shortlist.md
+      - ADR 0002 Documentation System: decisions/adr-0002-documentation-system.md
+      - ADR 0003 Jujutsu Version Control: decisions/adr-0003-jujutsu-version-control.md
+  - Operations:
+      - Jujutsu Workflow: operations/jujutsu-workflow.md
+  - References:
+      - Sources: references/sources.md
