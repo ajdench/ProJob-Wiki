@@ -1,18 +1,28 @@
 # Findings: Odoo + OCA Field Service
 
-Date:
-Evaluator:
-Version / commit / image:
+Date: 2026-04-24
+Evaluator: Codex
+Version / commit / image: Target Odoo 19.0 + OCA 19.0 branches
 
 ## Summary
 
 ## Setup Notes
 
+Initial environment check:
+
+- `docker` is not installed locally.
+- `podman` is not installed locally.
+- `colima` is not installed locally.
+- Homebrew is available.
+- OCA `19.0` branches exist for `field-service`, `server-tools`, `web`, and `sale-workflow`.
+
+Prepared reproducible setup files under `experiments/odoo-oca/`. The POC is blocked on installing/running a container runtime.
+
 ## Scenario Result
 
 | Step | Result | Notes |
 | --- | --- | --- |
-| Customer/site setup | Not started | |
+| Customer/site setup | Blocked | Container runtime unavailable |
 | Quote | Not started | |
 | Job/work order | Not started | |
 | Schedule/assign | Not started | |
@@ -58,4 +68,3 @@ Version / commit / image:
 ## Verdict
 
 ## Open Questions
-

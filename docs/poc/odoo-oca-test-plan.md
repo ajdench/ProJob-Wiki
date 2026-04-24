@@ -6,9 +6,18 @@ Validate whether Odoo Community plus OCA Field Service can act as the system of 
 
 ## Setup Target
 
-- Odoo Community 18.
-- OCA Field Service 18 modules.
+- Odoo Community 19.
+- OCA Field Service 19 modules.
 - Minimum modules: CRM, Sales, Inventory, Accounting/Invoicing, Project, Timesheets, Field Service, Field Service Sale, Field Service Stock, Field Service Timesheet, Field Service Route, Field Service Skill, Field Service Vehicle.
+
+The active OCA branches verified on 2026-04-24 include `19.0` for:
+
+- `OCA/field-service`
+- `OCA/server-tools`
+- `OCA/web`
+- `OCA/sale-workflow`
+
+Local setup files are in `experiments/odoo-oca/`.
 
 ## Tests
 
@@ -37,4 +46,3 @@ Validate whether Odoo Community plus OCA Field Service can act as the system of 
 Pass if Odoo/OCA can handle the back-office workflow with moderate configuration and a clear API path for a custom field PWA.
 
 Fail if the field-service modules are unstable, hard to install, or require broad customization before the common scenario can run.
-

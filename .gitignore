@@ -1,4 +1,7 @@
 .venv/
 site/
 .DS_Store
-
+experiments/odoo-oca/.env
+experiments/odoo-oca/addons/*
+!experiments/odoo-oca/addons/.gitignore
+experiments/odoo-oca/data/
