@@ -1,0 +1,34 @@
+# ProJob Wiki
+
+> Research wiki for an offline-first trades field operations platform: open-source options, product requirements, proof-of-concept plans, target architecture, and decision records.
+
+Site: https://ajdench.github.io/ProJob-Wiki/
+Repository: https://github.com/ajdench/ProJob-Wiki
+
+## Primary Docs
+
+- [Overview](https://ajdench.github.io/ProJob-Wiki/): research summary and recommended product shape.
+- [Product Requirements](https://ajdench.github.io/ProJob-Wiki/requirements/product-requirements/): users, core functions, and offline acceptance criteria.
+- [Workflow Map](https://ajdench.github.io/ProJob-Wiki/workflows/workflow-map/): quote-to-cash, site execution, cross-company dependencies, and resource flows.
+- [Shortlist](https://ajdench.github.io/ProJob-Wiki/evaluation/shortlist/): recommended evaluation order.
+- [Scoring Matrix](https://ajdench.github.io/ProJob-Wiki/evaluation/scoring-matrix/): initial comparative scoring and weighted criteria.
+- [POC Plan](https://ajdench.github.io/ProJob-Wiki/poc/): proof-of-concept schedule, decision gates, and evidence requirements.
+- [Common Test Scenario](https://ajdench.github.io/ProJob-Wiki/poc/common-test-scenario/): the workflow every candidate must run.
+- [Target Architecture](https://ajdench.github.io/ProJob-Wiki/architecture/target-architecture/): proposed ERP/FSM core plus offline PWA architecture.
+- [Offline Sync Model](https://ajdench.github.io/ProJob-Wiki/architecture/offline-sync-model/): local data, mutation queue, conflicts, and attachment handling.
+
+## Candidate Option Pages
+
+- [Odoo + OCA Field Service](https://ajdench.github.io/ProJob-Wiki/options/odoo-oca-field-service/)
+- [ERPNext / Frappe](https://ajdench.github.io/ProJob-Wiki/options/erpnext-frappe/)
+- [Dolibarr](https://ajdench.github.io/ProJob-Wiki/options/dolibarr/)
+- [OpenProject](https://ajdench.github.io/ProJob-Wiki/options/openproject/)
+- [Atlas CMMS](https://ajdench.github.io/ProJob-Wiki/options/atlas-cmms/)
+- [openMAINT](https://ajdench.github.io/ProJob-Wiki/options/openmaint/)
+- [Offline-First PWA Stack](https://ajdench.github.io/ProJob-Wiki/options/offline-first-pwa-stack/)
+- [KoboToolbox / ODK](https://ajdench.github.io/ProJob-Wiki/options/kobotoolbox-odk/)
+
+## Machine-Readable Full Context
+
+- [llms-full.txt](https://ajdench.github.io/ProJob-Wiki/llms-full.txt)
+

@@ -1,0 +1,103 @@
+# ProJob Wiki Full Context
+
+This file summarizes the current research wiki for LLM tools. The source of truth remains the Markdown documentation in this repository.
+
+## Purpose
+
+ProJob Wiki researches open-source options for a multi-functional, offline-first PWA solution for tradespeople and work-site projects. The platform scope includes checklists, job lists, resource management, scheduling, cross-project dependencies, quoting, field evidence, materials, stock, and cross-company collaboration.
+
+## Key Architectural Position
+
+No single open-source product appears to satisfy the full requirement set cleanly. The strongest direction is:
+
+- ERP/FSM core for customers, sites, quotes, jobs, stock, invoices, approvals, and audit records.
+- Dedicated offline-first PWA for field execution: assigned jobs, checklists, photos, signatures, time, materials, notes, and sync queue.
+- Planning layer only where cross-project dependencies, Gantt, or programme reporting matter.
+- Markdown/MkDocs wiki for human-readable requirements, research, architecture, ADRs, and proof-of-concept evidence.
+
+## Recommended Shortlist
+
+Evaluate these first:
+
+1. Odoo Community + OCA Field Service.
+2. ERPNext / Frappe.
+3. Custom offline-first PWA using RxDB or PouchDB/CouchDB.
+
+Use Dolibarr, Atlas CMMS, openMAINT, OpenProject, and KoboToolbox/ODK as secondary benchmarks or companion systems.
+
+## Core Requirements
+
+- Jobs/work orders: create, assign, schedule, status-track, complete, reopen, and audit work.
+- Checklists: templates per trade/job type, required evidence, pass/fail/N/A, signatures.
+- Offline: field users can open assigned work, edit forms, attach evidence, and queue changes offline.
+- Sync: conflict handling, retry queue, visible pending state, server-side audit log.
+- Quoting: estimates, proposals, line items, alternates, variation quotes, approval workflows.
+- Scheduling: calendar, job duration, technician/crew assignment, recurring work.
+- Dependencies: internal and external predecessor/successor relationships and blocker visibility.
+- Resources: people, skills, availability, vehicles, tools, equipment, materials, stock.
+- Documents: site docs, drawings, method statements, risk assessments, versioned attachments.
+- Collaboration: comments, mentions, external portal, subcontractor-scoped access.
+- Permissions: role-based access plus company/project/site/job/document scoping.
+
+## Offline Acceptance Criteria
+
+- Worker can start the PWA with no network and see previously assigned jobs.
+- Worker can complete checklist, notes, photos, material usage, time, and signature offline.
+- UI clearly shows unsynced changes and failed retries.
+- Sync is idempotent and does not duplicate records or attachments.
+- Conflicts produce reviewable states rather than silent overwrite.
+- Office users can see sync status and last-known device state.
+
+## Common POC Scenario
+
+Every candidate should run the same scenario:
+
+1. Create customer and site.
+2. Create project.
+3. Create quote with labour, materials, and optional variation line.
+4. Approve quote and create job/work order.
+5. Attach checklist and site documents.
+6. Schedule job to worker and vehicle.
+7. Assign planned materials.
+8. Worker opens job while online.
+9. Disable network.
+10. Complete pre-work risk checklist.
+11. Add job notes, time entry, used materials, photo evidence, and client signature.
+12. Mark job complete offline.
+13. Restore network.
+14. Sync changes.
+15. Supervisor reviews completion and flags a variation.
+16. Create and approve variation quote.
+17. Generate invoice or invoice-ready record.
+18. Record dependency impact against subcontractor task.
+
+## Candidate Roles
+
+Odoo Community + OCA Field Service: strongest broad ERP/FSM option with field service modules, sales, stock, timesheets, vehicles, routes, agreements, and integrations. Likely system-of-record candidate, but offline PWA likely required.
+
+ERPNext / Frappe: coherent open-source ERP and customization framework with selling, stock, projects, maintenance, workflows, APIs, and custom doctypes. Strong candidate if custom workflows are central.
+
+Dolibarr: simpler SME ERP/CRM baseline with proposals, orders, projects, tasks, interventions, stock, agenda, billing, and APIs. Good lower-complexity benchmark.
+
+OpenProject: best planning/programme layer for Gantt, dependencies, work packages, wiki, meetings, time, cost, and documents. Not a field execution tool.
+
+Atlas CMMS: useful CMMS benchmark for work orders, preventive maintenance, assets, parts, mobile use, and scheduling. Not a complete quote-to-cash platform.
+
+openMAINT: asset/facility maintenance benchmark with scheduled maintenance, work orders, asset movement, spare parts, purchase requests, contracts, and workflows.
+
+Offline-first PWA stack: required product surface for low-connectivity field execution. Candidate stacks include PouchDB/CouchDB, RxDB, Dexie.js, ElectricSQL, and PowerSync.
+
+KoboToolbox / ODK: strong offline forms/checklist/data-collection tools; useful as a subsystem or reference, not a complete business operating platform.
+
+## Decision Records
+
+- ADR 0001: Evaluate Odoo/OCA, ERPNext/Frappe, and custom offline-first PWA first.
+- ADR 0002: Use Markdown plus MkDocs Material for human-readable internal documentation.
+- ADR 0003: Use Jujutsu with colocated Git for local version control.
+
+## Important URLs
+
+- Site: https://ajdench.github.io/ProJob-Wiki/
+- Repository: https://github.com/ajdench/ProJob-Wiki
+- Sources: https://ajdench.github.io/ProJob-Wiki/references/sources/
+
