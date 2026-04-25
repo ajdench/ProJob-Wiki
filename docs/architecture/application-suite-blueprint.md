@@ -103,7 +103,7 @@ The next implementation slice should prove one complete offline-first loop:
 8. Supervisor reviews completion, evidence, and material exceptions.
 9. Supervisor raises a variation or approves invoice-ready completion.
 
-This slice should use the existing [UI framework spike](../poc/findings/ui-framework-spike.md) as the visual starting point and the [offline PWA test plan](../poc/offline-pwa-test-plan.md) as the reliability test.
+This slice has started in the existing [UI framework spike](../poc/findings/ui-framework-spike.md) with mocked `localStorage` persistence, offline mode, mutation queue states, sync, supervisor review, and approval. The [offline PWA test plan](../poc/offline-pwa-test-plan.md) remains the reliability test once a real local database and sync engine are selected.
 
 ## Decision Records Needed
 
@@ -122,9 +122,9 @@ Add ADRs when evidence supports them:
 
 | Step | Output |
 | --- | --- |
-| 1 | Extend [`experiments/projob-ui-spike`](https://github.com/ajdench/ProJob-Wiki/tree/main/experiments/projob-ui-spike) into the first vertical slice prototype |
-| 2 | Add fake local persistence and a visible mutation queue before connecting to a backend |
-| 3 | Add a supervisor review workspace that consumes the synced field result |
+| 1 | Extend [`experiments/projob-ui-spike`](https://github.com/ajdench/ProJob-Wiki/tree/main/experiments/projob-ui-spike) into the first vertical slice prototype: started with mocked state |
+| 2 | Add fake local persistence and a visible mutation queue before connecting to a backend: started with `localStorage` and pending/synced/failed/conflict queue states |
+| 3 | Add a supervisor review workspace that consumes the synced field result: started with review and approval states |
 | 4 | Create ADR drafts for frontend framework, local database, and sync model |
 | 5 | Run `make check`, browser-test phone/tablet/desktop flows, and record findings under [POC Findings](../poc/findings/index.md) |
 

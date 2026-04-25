@@ -7,18 +7,23 @@ import {
   ClipboardCheck,
   Clock3,
   FileSignature,
-  Filter,
   HardHat,
   ListChecks,
   PackageCheck,
+  Power,
   RefreshCw,
   Route,
+  Save,
   Truck,
   UploadCloud,
   Users,
   Wifi,
+  WifiOff,
+  Wrench,
 } from 'lucide-react'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import type { LucideIcon } from 'lucide-react'
+import type { ReactNode } from 'react'
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
@@ -45,8 +50,35 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { cn } from '@/lib/utils'
 
 type StatusTone = 'success' | 'warning' | 'danger' | 'info' | 'sync' | 'neutral'
+type QueueState = 'pending' | 'synced' | 'failed' | 'conflict'
+type JobStatus = 'Assigned' | 'In progress' | 'Completed offline' | 'Ready for review' | 'Approved'
 
-type Job = {
+type ChecklistRow = {
+  id: string
+  label: string
+  required: boolean
+  checked: boolean
+}
+
+type FieldJob = {
+  id: string
+  title: string
+  site: string
+  window: string
+  owner: string
+  status: JobStatus
+  nextAction: string
+  checklist: ChecklistRow[]
+  evidence: string[]
+  note: string
+  timeHours: number
+  materialUsed: string
+  materialException: boolean
+  signatureCaptured: boolean
+  approvedAt?: string
+}
+
+type DispatchJob = {
   id: string
   title: string
   site: string
@@ -62,29 +94,46 @@ type Job = {
   material: string
 }
 
-type ReviewItem = {
-  title: string
+type QueueEntry = {
+  id: string
+  label: string
   detail: string
-  action: string
-  tone: StatusTone
+  state: QueueState
+  createdAt: string
 }
 
-const jobs: Job[] = [
-  {
-    id: 'PJ-1048',
-    title: 'Replace extractor fan',
-    site: 'Flat 12, Brixton Hill',
-    window: '10:30-12:00',
-    owner: 'A. Patel + J. Lee',
-    status: 'Blocked',
-    tone: 'warning',
-    nextAction: 'Review missing fire-stop evidence',
-    checklistDone: 4,
-    checklistTotal: 7,
-    evidence: ['Before photos', 'Risk assessment', 'Client note'],
-    syncState: '3 local changes pending',
-    material: 'Extractor fan, isolator, fixings',
-  },
+type PersistedState = {
+  fieldJob: FieldJob
+  queue: QueueEntry[]
+  offlineMode: boolean
+}
+
+const storageKey = 'projob-ui-spike.vertical-slice.v1'
+
+const initialFieldJob: FieldJob = {
+  id: 'PJ-1048',
+  title: 'Replace extractor fan',
+  site: 'Flat 12, Brixton Hill',
+  window: '10:30-12:00',
+  owner: 'A. Patel + J. Lee',
+  status: 'Assigned',
+  nextAction: 'Complete risk checklist and capture client sign-off',
+  checklist: [
+    { id: 'risk', label: 'Risk assessment completed', required: true, checked: false },
+    { id: 'isolation', label: 'Electrical isolation confirmed', required: true, checked: false },
+    { id: 'photos', label: 'Before and after photos attached', required: true, checked: false },
+    { id: 'materials', label: 'Material use recorded', required: true, checked: false },
+    { id: 'signature', label: 'Client signature captured', required: true, checked: false },
+  ],
+  evidence: ['Site document cached'],
+  note: '',
+  timeHours: 1.5,
+  materialUsed: 'Extractor fan x1, isolator x1',
+  materialException: false,
+  signatureCaptured: false,
+}
+
+const seededDispatchJobs: DispatchJob[] = [
   {
     id: 'PJ-1051',
     title: 'Electrical condition photo set',
@@ -117,34 +166,6 @@ const jobs: Job[] = [
   },
 ]
 
-const reviewItems: ReviewItem[] = [
-  {
-    title: 'Variation requested',
-    detail: 'PJ-1039 added fire stopping around cable route',
-    action: 'Open',
-    tone: 'warning',
-  },
-  {
-    title: 'Sync failed',
-    detail: 'PJ-1042 signature image needs retry',
-    action: 'Retry',
-    tone: 'danger',
-  },
-  {
-    title: 'Completion evidence ready',
-    detail: 'PJ-1044 photos, time, materials, signature',
-    action: 'Approve',
-    tone: 'success',
-  },
-]
-
-const syncQueue = [
-  { label: 'PJ-1048 checklist answers', state: 'Pending upload', tone: 'warning' as const },
-  { label: 'PJ-1048 before photos', state: 'Uploading', tone: 'sync' as const },
-  { label: 'PJ-1042 signature image', state: 'Failed retryable', tone: 'danger' as const },
-  { label: 'PJ-1051 field pack', state: 'Server accepted', tone: 'success' as const },
-]
-
 const navigation = [
   { label: 'Jobs', icon: BriefcaseBusiness },
   { label: 'Schedule', icon: CalendarDays },
@@ -153,66 +174,268 @@ const navigation = [
   { label: 'Sync queue', icon: RefreshCw },
 ]
 
+function loadPersistedState(): PersistedState {
+  if (typeof window === 'undefined') {
+    return { fieldJob: initialFieldJob, queue: [], offlineMode: false }
+  }
+
+  try {
+    const raw = window.localStorage.getItem(storageKey)
+    if (!raw) {
+      return { fieldJob: initialFieldJob, queue: [], offlineMode: false }
+    }
+
+    return JSON.parse(raw) as PersistedState
+  } catch {
+    return { fieldJob: initialFieldJob, queue: [], offlineMode: false }
+  }
+}
+
 function App() {
-  const [selectedJobId, setSelectedJobId] = useState(jobs[0].id)
-  const [completedRows, setCompletedRows] = useState(new Set(['risk', 'photos']))
+  const [persisted, setPersisted] = useState<PersistedState>(() => loadPersistedState())
+  const [selectedJobId, setSelectedJobId] = useState(initialFieldJob.id)
 
-  const selectedJob = useMemo(
-    () => jobs.find((job) => job.id === selectedJobId) ?? jobs[0],
-    [selectedJobId],
-  )
+  const { fieldJob, offlineMode, queue } = persisted
+  const dispatchJobs = useMemo(() => [fieldJobToDispatch(fieldJob, queue), ...seededDispatchJobs], [fieldJob, queue])
+  const selectedJob = dispatchJobs.find((job) => job.id === selectedJobId) ?? dispatchJobs[0]
+  const queueCounts = useMemo(() => countQueueStates(queue), [queue])
+  const checklistDone = fieldJob.checklist.filter((row) => row.checked).length
+  const checklistProgress = Math.round((checklistDone / fieldJob.checklist.length) * 100)
+  const canComplete =
+    checklistDone === fieldJob.checklist.length &&
+    fieldJob.note.trim().length > 0 &&
+    fieldJob.evidence.length > 1 &&
+    fieldJob.signatureCaptured
 
-  const checklistProgress = Math.round((completedRows.size / 5) * 100)
+  useEffect(() => {
+    window.localStorage.setItem(storageKey, JSON.stringify(persisted))
+  }, [persisted])
+
+  function mutateJob(updater: (job: FieldJob) => FieldJob, label: string, detail: string, preferredState?: QueueState) {
+    setPersisted((current) => {
+      const updatedJob = updater(current.fieldJob)
+      const entry = makeQueueEntry(label, detail, preferredState ?? (current.offlineMode ? 'pending' : 'synced'))
+
+      return {
+        ...current,
+        fieldJob: updatedJob,
+        queue: [entry, ...current.queue].slice(0, 12),
+      }
+    })
+  }
+
+  function toggleOfflineMode() {
+    setPersisted((current) => ({ ...current, offlineMode: !current.offlineMode }))
+  }
 
   function toggleChecklistRow(id: string, checked: boolean) {
-    setCompletedRows((current) => {
-      const next = new Set(current)
-      if (checked) {
-        next.add(id)
-      } else {
-        next.delete(id)
+    mutateJob(
+      (job) => ({
+        ...job,
+        status: job.status === 'Assigned' ? 'In progress' : job.status,
+        checklist: job.checklist.map((row) => (row.id === id ? { ...row, checked } : row)),
+      }),
+      `${fieldJob.id} checklist`,
+      checked ? 'Checklist item saved locally' : 'Checklist item reopened',
+    )
+  }
+
+  function updateNote(value: string) {
+    setPersisted((current) => ({
+      ...current,
+      fieldJob: {
+        ...current.fieldJob,
+        status: current.fieldJob.status === 'Assigned' ? 'In progress' : current.fieldJob.status,
+        note: value,
+      },
+    }))
+  }
+
+  function saveNote() {
+    mutateJob((job) => job, `${fieldJob.id} completion note`, 'Completion note queued from field device')
+  }
+
+  function addPhotoEvidence() {
+    mutateJob(
+      (job) => ({
+        ...job,
+        status: job.status === 'Assigned' ? 'In progress' : job.status,
+        evidence: job.evidence.includes('After photo') ? job.evidence : [...job.evidence, 'After photo'],
+        checklist: job.checklist.map((row) => (row.id === 'photos' ? { ...row, checked: true } : row)),
+      }),
+      `${fieldJob.id} photo evidence`,
+      'After photo staged for upload',
+    )
+  }
+
+  function captureSignature() {
+    mutateJob(
+      (job) => ({
+        ...job,
+        signatureCaptured: true,
+        evidence: job.evidence.includes('Client signature') ? job.evidence : [...job.evidence, 'Client signature'],
+        checklist: job.checklist.map((row) => (row.id === 'signature' ? { ...row, checked: true } : row)),
+      }),
+      `${fieldJob.id} signature`,
+      'Client signature stored on device',
+    )
+  }
+
+  function addMaterialException() {
+    mutateJob(
+      (job) => ({
+        ...job,
+        materialException: true,
+        materialUsed: 'Extractor fan x1, isolator x1, fire collar x1',
+        checklist: job.checklist.map((row) => (row.id === 'materials' ? { ...row, checked: true } : row)),
+      }),
+      `${fieldJob.id} material exception`,
+      'Extra fire collar needs supervisor approval',
+      offlineMode ? 'pending' : 'conflict',
+    )
+  }
+
+  function completeJob() {
+    if (!canComplete) {
+      return
+    }
+
+    mutateJob(
+      (job) => ({
+        ...job,
+        status: offlineMode ? 'Completed offline' : 'Ready for review',
+        nextAction: 'Supervisor review required',
+      }),
+      `${fieldJob.id} completion`,
+      offlineMode ? 'Job completion waiting for network' : 'Job completion ready for supervisor review',
+      offlineMode ? 'pending' : 'synced',
+    )
+  }
+
+  function syncNow() {
+    if (offlineMode) {
+      return
+    }
+
+    setPersisted((current) => {
+      const hasMaterialConflict = current.fieldJob.materialException
+      const nextQueue = current.queue.map((entry) => {
+        if (entry.state !== 'pending' && entry.state !== 'failed') {
+          return entry
+        }
+        if (hasMaterialConflict && entry.label.includes('material')) {
+          return { ...entry, state: 'conflict' as const, detail: 'Extra material requires office approval' }
+        }
+        return { ...entry, state: 'synced' as const, detail: 'Server accepted mutation' }
+      })
+
+      return {
+        ...current,
+        fieldJob: {
+          ...current.fieldJob,
+          status:
+            current.fieldJob.status === 'Completed offline' ? 'Ready for review' : current.fieldJob.status,
+        },
+        queue: nextQueue,
       }
-      return next
     })
+  }
+
+  function failLatestPending() {
+    setPersisted((current) => {
+      const index = current.queue.findIndex((entry) => entry.state === 'pending')
+      if (index === -1) {
+        return current
+      }
+
+      return {
+        ...current,
+        queue: current.queue.map((entry, entryIndex) =>
+          entryIndex === index
+            ? { ...entry, state: 'failed', detail: 'Network timeout; retry required' }
+            : entry,
+        ),
+      }
+    })
+  }
+
+  function approveJob() {
+    setPersisted((current) => ({
+      ...current,
+      fieldJob: {
+        ...current.fieldJob,
+        status: 'Approved',
+        approvedAt: 'Approved in supervisor workspace',
+        nextAction: 'Invoice-ready completion approved',
+      },
+      queue: [
+        makeQueueEntry(`${current.fieldJob.id} approval`, 'Supervisor approved invoice-ready completion', 'synced'),
+        ...current.queue,
+      ].slice(0, 12),
+    }))
+  }
+
+  function resetPrototype() {
+    setPersisted({ fieldJob: initialFieldJob, queue: [], offlineMode: false })
+    setSelectedJobId(initialFieldJob.id)
+    window.localStorage.removeItem(storageKey)
   }
 
   return (
     <main className="min-h-svh bg-[var(--projob-neutral)] text-foreground">
       <div className="grid min-h-svh grid-cols-1 lg:grid-cols-[248px_minmax(0,1fr)]">
-        <Sidebar />
+        <Sidebar offlineMode={offlineMode} queueCounts={queueCounts} />
 
         <section className="min-w-0 p-4 sm:p-6 xl:p-8">
           <header className="mb-5 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div>
               <p className="text-sm font-semibold text-muted-foreground">Today, 25 Apr</p>
               <h1 className="mt-1 text-2xl font-bold tracking-normal text-foreground sm:text-3xl">
-                South London service run
+                Offline job execution loop
               </h1>
             </div>
             <div className="grid grid-cols-2 gap-2 sm:flex">
-              <Button variant="outline">
-                <Filter data-icon="inline-start" />
-                Filter
+              <Button onClick={toggleOfflineMode} variant={offlineMode ? 'destructive' : 'outline'}>
+                {offlineMode ? <WifiOff data-icon="inline-start" /> : <Wifi data-icon="inline-start" />}
+                {offlineMode ? 'Offline' : 'Online'}
               </Button>
-              <Button>
-                <CalendarDays data-icon="inline-start" />
-                New job
+              <Button onClick={resetPrototype} variant="outline">
+                <Power data-icon="inline-start" />
+                Reset
               </Button>
             </div>
           </header>
 
-          <SyncBanner />
+          <SyncBanner
+            offlineMode={offlineMode}
+            queue={queue}
+            queueCounts={queueCounts}
+            onFailLatest={failLatestPending}
+            onSyncNow={syncNow}
+          />
 
-          <section className="grid items-start gap-5 xl:grid-cols-[360px_minmax(0,1fr)]">
+          <section className="grid items-start gap-5 xl:grid-cols-[380px_minmax(0,1fr)]">
             <FieldPhone
-              completedRows={completedRows}
+              canComplete={canComplete}
+              checklistDone={checklistDone}
               checklistProgress={checklistProgress}
-              selectedJob={selectedJob}
+              fieldJob={fieldJob}
+              offlineMode={offlineMode}
+              onAddMaterialException={addMaterialException}
+              onAddPhotoEvidence={addPhotoEvidence}
+              onCaptureSignature={captureSignature}
               onChecklistChange={toggleChecklistRow}
+              onCompleteJob={completeJob}
+              onNoteChange={updateNote}
+              onSaveNote={saveNote}
             />
             <DesktopWorkspace
+              fieldJob={fieldJob}
+              dispatchJobs={dispatchJobs}
+              queue={queue}
               selectedJob={selectedJob}
               selectedJobId={selectedJobId}
+              onApproveJob={approveJob}
               onSelectJob={setSelectedJobId}
             />
           </section>
@@ -222,7 +445,13 @@ function App() {
   )
 }
 
-function Sidebar() {
+function Sidebar({
+  offlineMode,
+  queueCounts,
+}: {
+  offlineMode: boolean
+  queueCounts: Record<QueueState, number>
+}) {
   return (
     <aside className="flex flex-col gap-5 bg-primary p-4 text-primary-foreground lg:sticky lg:top-0 lg:h-svh lg:p-6">
       <div className="flex items-center gap-3">
@@ -255,71 +484,121 @@ function Sidebar() {
       </nav>
 
       <div className="mt-auto flex items-center gap-2 rounded-md border border-primary-foreground/20 p-3 text-sm font-bold">
-        <span className="size-2.5 rounded-full bg-emerald-300" aria-hidden="true" />
-        Online, 3 pending
+        <span
+          className={cn('size-2.5 rounded-full', offlineMode ? 'bg-amber-300' : 'bg-emerald-300')}
+          aria-hidden="true"
+        />
+        {offlineMode ? 'Offline' : 'Online'}, {queueCounts.pending} pending
       </div>
     </aside>
   )
 }
 
-function SyncBanner() {
+function SyncBanner({
+  offlineMode,
+  queue,
+  queueCounts,
+  onFailLatest,
+  onSyncNow,
+}: {
+  offlineMode: boolean
+  queue: QueueEntry[]
+  queueCounts: Record<QueueState, number>
+  onFailLatest: () => void
+  onSyncNow: () => void
+}) {
   return (
-    <Alert className="mb-5 border-0 bg-[var(--projob-sync)] text-[var(--projob-on-sync)]">
-      <Wifi />
-      <AlertTitle>Offline-ready field pack cached</AlertTitle>
-      <AlertDescription className="flex flex-col gap-3 text-[var(--projob-on-sync)]/85 md:flex-row md:items-center md:justify-between">
-        <span>12 jobs, 28 documents, 6 checklist templates. Last sync 09:42.</span>
-        <Sheet>
-          <SheetTrigger asChild>
-            <Button variant="secondary" size="sm">
-              <UploadCloud data-icon="inline-start" />
-              View queue
-            </Button>
-          </SheetTrigger>
-          <SheetContent className="w-full sm:max-w-md">
-            <SheetHeader>
-              <SheetTitle>Sync queue</SheetTitle>
-              <SheetDescription>
-                Local writes stay visible until the server accepts or flags them.
-              </SheetDescription>
-            </SheetHeader>
-            <div className="flex flex-col gap-3 px-4">
-              {syncQueue.map((item) => (
-                <div className="flex items-center justify-between gap-3 rounded-md border p-3" key={item.label}>
-                  <div>
-                    <strong className="block text-sm">{item.label}</strong>
-                    <span className="text-sm text-muted-foreground">{item.state}</span>
-                  </div>
-                  <StatusChip tone={item.tone}>{item.state.split(' ')[0]}</StatusChip>
-                </div>
-              ))}
-            </div>
-          </SheetContent>
-        </Sheet>
+    <Alert
+      className={cn(
+        'mb-5 border-0 text-white',
+        offlineMode ? 'bg-[var(--projob-warning)]' : 'bg-[var(--projob-sync)]',
+      )}
+    >
+      {offlineMode ? <WifiOff /> : <Wifi />}
+      <AlertTitle>{offlineMode ? 'Offline mode: writes are staying local' : 'Online: sync can run'}</AlertTitle>
+      <AlertDescription className="flex flex-col gap-3 text-white/88 md:flex-row md:items-center md:justify-between">
+        <span>
+          {queueCounts.pending} pending, {queueCounts.synced} synced, {queueCounts.failed} failed,{' '}
+          {queueCounts.conflict} conflict.
+        </span>
+        <div className="flex flex-wrap gap-2">
+          <Button disabled={offlineMode || queueCounts.pending + queueCounts.failed === 0} onClick={onSyncNow} size="sm" variant="secondary">
+            <UploadCloud data-icon="inline-start" />
+            Sync now
+          </Button>
+          <Button disabled={queueCounts.pending === 0} onClick={onFailLatest} size="sm" variant="secondary">
+            <AlertTriangle data-icon="inline-start" />
+            Fail one
+          </Button>
+          <SyncQueueSheet queue={queue} />
+        </div>
       </AlertDescription>
     </Alert>
   )
 }
 
-function FieldPhone({
-  completedRows,
-  checklistProgress,
-  selectedJob,
-  onChecklistChange,
-}: {
-  completedRows: Set<string>
-  checklistProgress: number
-  selectedJob: Job
-  onChecklistChange: (id: string, checked: boolean) => void
-}) {
-  const checklistRows = [
-    { id: 'risk', label: 'Risk assessment saved locally' },
-    { id: 'photos', label: 'Before photos attached' },
-    { id: 'materials', label: 'Material use recorded' },
-    { id: 'signature', label: 'Client signature required' },
-    { id: 'notes', label: 'Completion note ready' },
-  ]
+function SyncQueueSheet({ queue }: { queue: QueueEntry[] }) {
+  return (
+    <Sheet>
+      <SheetTrigger asChild>
+        <Button size="sm" variant="secondary">
+          <RefreshCw data-icon="inline-start" />
+          Queue
+        </Button>
+      </SheetTrigger>
+      <SheetContent className="w-full sm:max-w-md">
+        <SheetHeader>
+          <SheetTitle>Sync queue</SheetTitle>
+          <SheetDescription>Local writes remain visible until accepted or flagged.</SheetDescription>
+        </SheetHeader>
+        <div className="flex flex-col gap-3 px-4">
+          {queue.length === 0 ? (
+            <div className="rounded-md border p-4 text-sm text-muted-foreground">No local mutations yet.</div>
+          ) : (
+            queue.map((item) => (
+              <div className="flex items-center justify-between gap-3 rounded-md border p-3" key={item.id}>
+                <div>
+                  <strong className="block text-sm">{item.label}</strong>
+                  <span className="text-sm text-muted-foreground">{item.detail}</span>
+                  <span className="mt-1 block text-xs text-muted-foreground">{item.createdAt}</span>
+                </div>
+                <StatusChip tone={queueTone(item.state)}>{item.state}</StatusChip>
+              </div>
+            ))
+          )}
+        </div>
+      </SheetContent>
+    </Sheet>
+  )
+}
 
+function FieldPhone({
+  canComplete,
+  checklistDone,
+  checklistProgress,
+  fieldJob,
+  offlineMode,
+  onAddMaterialException,
+  onAddPhotoEvidence,
+  onCaptureSignature,
+  onChecklistChange,
+  onCompleteJob,
+  onNoteChange,
+  onSaveNote,
+}: {
+  canComplete: boolean
+  checklistDone: number
+  checklistProgress: number
+  fieldJob: FieldJob
+  offlineMode: boolean
+  onAddMaterialException: () => void
+  onAddPhotoEvidence: () => void
+  onCaptureSignature: () => void
+  onChecklistChange: (id: string, checked: boolean) => void
+  onCompleteJob: () => void
+  onNoteChange: (value: string) => void
+  onSaveNote: () => void
+}) {
   return (
     <article
       aria-label="Field mobile prototype"
@@ -328,36 +607,36 @@ function FieldPhone({
     >
       <div className="mb-4 flex items-center justify-between text-sm font-bold">
         <span>09:48</span>
-        <StatusChip tone="sync">Online</StatusChip>
+        <StatusChip tone={offlineMode ? 'warning' : 'sync'}>{offlineMode ? 'Offline' : 'Online'}</StatusChip>
       </div>
 
       <div className="mb-3 flex items-start justify-between gap-3">
         <div>
-          <p className="text-sm font-semibold text-muted-foreground">Next job</p>
-          <h2 className="text-2xl font-bold">{selectedJob.id}</h2>
+          <p className="text-sm font-semibold text-muted-foreground">Field job</p>
+          <h2 className="text-2xl font-bold">{fieldJob.id}</h2>
         </div>
-        <StatusChip tone={selectedJob.tone}>{selectedJob.status}</StatusChip>
+        <StatusChip tone={jobTone(fieldJob.status)}>{fieldJob.status}</StatusChip>
       </div>
 
-      <JobSummary job={selectedJob} selected />
+      <JobSummary job={fieldJobToDispatch(fieldJob, [])} selected />
 
       <Card className="mt-4 rounded-md" size="sm">
         <CardHeader>
           <CardTitle>Checklist</CardTitle>
           <CardAction>
             <StatusChip tone="info">
-              {completedRows.size} of {checklistRows.length}
+              {checklistDone} of {fieldJob.checklist.length}
             </StatusChip>
           </CardAction>
-          <CardDescription>Saved locally, synced when available</CardDescription>
+          <CardDescription>Saved locally, queued for sync when needed</CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-3">
           <Progress value={checklistProgress} />
           <div className="flex flex-col gap-2">
-            {checklistRows.map((row) => (
+            {fieldJob.checklist.map((row) => (
               <label className="flex min-h-10 items-center gap-3 border-t pt-2 text-sm" key={row.id}>
                 <Checkbox
-                  checked={completedRows.has(row.id)}
+                  checked={row.checked}
                   onCheckedChange={(checked) => onChecklistChange(row.id, checked === true)}
                 />
                 <span>{row.label}</span>
@@ -367,27 +646,61 @@ function FieldPhone({
         </CardContent>
       </Card>
 
-      <div className="mt-4 grid grid-cols-2 gap-2">
-        <Button variant="outline">
-          <Camera data-icon="inline-start" />
-          Photo
-        </Button>
-        <Button>
-          <ListChecks data-icon="inline-start" />
-          Continue
-        </Button>
-      </div>
+      <Card className="mt-4 rounded-md" size="sm">
+        <CardHeader>
+          <CardTitle>Completion</CardTitle>
+          <CardDescription>Note, time, materials, evidence, and signature</CardDescription>
+        </CardHeader>
+        <CardContent className="flex flex-col gap-3">
+          <textarea
+            className="min-h-24 rounded-md border bg-background p-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            onChange={(event) => onNoteChange(event.target.value)}
+            placeholder="Completion note"
+            value={fieldJob.note}
+          />
+          <div className="grid grid-cols-2 gap-2">
+            <Button onClick={onSaveNote} variant="outline">
+              <Save data-icon="inline-start" />
+              Save note
+            </Button>
+            <Button onClick={onAddPhotoEvidence} variant="outline">
+              <Camera data-icon="inline-start" />
+              Add photo
+            </Button>
+            <Button onClick={onCaptureSignature} variant="outline">
+              <FileSignature data-icon="inline-start" />
+              Signature
+            </Button>
+            <Button onClick={onAddMaterialException} variant="outline">
+              <Wrench data-icon="inline-start" />
+              Material
+            </Button>
+          </div>
+          <Button disabled={!canComplete} onClick={onCompleteJob}>
+            <ListChecks data-icon="inline-start" />
+            Mark complete
+          </Button>
+        </CardContent>
+      </Card>
     </article>
   )
 }
 
 function DesktopWorkspace({
+  dispatchJobs,
+  fieldJob,
+  queue,
   selectedJob,
   selectedJobId,
+  onApproveJob,
   onSelectJob,
 }: {
-  selectedJob: Job
+  dispatchJobs: DispatchJob[]
+  fieldJob: FieldJob
+  queue: QueueEntry[]
+  selectedJob: DispatchJob
   selectedJobId: string
+  onApproveJob: () => void
   onSelectJob: (id: string) => void
 }) {
   return (
@@ -396,7 +709,7 @@ function DesktopWorkspace({
         <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
           <div>
             <p className="text-sm font-semibold text-muted-foreground">Office workspace</p>
-            <h2 className="mt-1 text-2xl font-bold">Schedule and review</h2>
+            <h2 className="mt-1 text-2xl font-bold">Schedule, sync, review</h2>
           </div>
           <TabsList>
             <TabsTrigger value="board">Board</TabsTrigger>
@@ -407,8 +720,8 @@ function DesktopWorkspace({
 
         <div className="mt-4 grid gap-3 sm:grid-cols-3">
           <Metric label="Ready today" value="18" icon={CheckCircle2} />
-          <Metric label="Needs review" value="7" icon={AlertTriangle} />
-          <Metric label="Sync pending" value="3" icon={RefreshCw} />
+          <Metric label="Needs review" value={fieldJob.status === 'Ready for review' ? '1' : '0'} icon={AlertTriangle} />
+          <Metric label="Sync pending" value={String(countQueueStates(queue).pending)} icon={RefreshCw} />
         </div>
 
         <TabsContent className="mt-5" value="board">
@@ -417,11 +730,11 @@ function DesktopWorkspace({
               <CardHeader>
                 <CardTitle>Dispatch</CardTitle>
                 <CardAction>
-                  <StatusChip tone="info">6</StatusChip>
+                  <StatusChip tone="info">{dispatchJobs.length}</StatusChip>
                 </CardAction>
               </CardHeader>
               <CardContent className="flex flex-col gap-3">
-                {jobs.map((job) => (
+                {dispatchJobs.map((job) => (
                   <button
                     className={cn(
                       'w-full rounded-md border p-3 text-left transition-colors hover:bg-muted',
@@ -437,23 +750,11 @@ function DesktopWorkspace({
               </CardContent>
             </Card>
 
-            <Card id="review">
-              <CardHeader>
-                <CardTitle>Supervisor review</CardTitle>
-                <CardAction>
-                  <StatusChip tone="warning">7</StatusChip>
-                </CardAction>
-              </CardHeader>
-              <CardContent className="flex flex-col gap-3">
-                {reviewItems.map((item) => (
-                  <ReviewQueueRow item={item} key={item.title} />
-                ))}
-              </CardContent>
-            </Card>
+            <SupervisorReviewCard fieldJob={fieldJob} queue={queue} onApproveJob={onApproveJob} />
           </div>
         </TabsContent>
         <TabsContent className="mt-5" value="table">
-          <ScheduleTable />
+          <ScheduleTable jobs={dispatchJobs} />
         </TabsContent>
         <TabsContent className="mt-5" value="map">
           <RoutePanel selectedJob={selectedJob} />
@@ -461,10 +762,62 @@ function DesktopWorkspace({
 
         <div className="mt-4 grid gap-4 xl:grid-cols-[minmax(0,1.3fr)_minmax(280px,0.7fr)]">
           <JobDetailPanel job={selectedJob} />
-          <EvidencePanel job={selectedJob} />
+          <EvidencePanel job={fieldJob} />
         </div>
       </Tabs>
     </section>
+  )
+}
+
+function SupervisorReviewCard({
+  fieldJob,
+  queue,
+  onApproveJob,
+}: {
+  fieldJob: FieldJob
+  queue: QueueEntry[]
+  onApproveJob: () => void
+}) {
+  const pendingConflict = queue.some((entry) => entry.state === 'conflict')
+  const readyForReview = fieldJob.status === 'Ready for review' || fieldJob.status === 'Approved'
+
+  return (
+    <Card id="review">
+      <CardHeader>
+        <CardTitle>Supervisor review</CardTitle>
+        <CardAction>
+          <StatusChip tone={readyForReview ? 'success' : 'neutral'}>{readyForReview ? 'Ready' : 'Waiting'}</StatusChip>
+        </CardAction>
+      </CardHeader>
+      <CardContent className="flex flex-col gap-3">
+        <ReviewQueueRow
+          action={readyForReview ? 'Inspect' : 'Queued'}
+          detail={
+            readyForReview
+              ? `${fieldJob.id} has checklist, evidence, time, and signature`
+              : `${fieldJob.id} is not synced for supervisor review yet`
+          }
+          title={readyForReview ? 'Completion ready' : 'Awaiting field completion'}
+          tone={readyForReview ? 'success' : 'neutral'}
+        />
+        <ReviewQueueRow
+          action={pendingConflict ? 'Resolve' : 'Clear'}
+          detail={fieldJob.materialException ? fieldJob.materialUsed : 'No material exception recorded'}
+          title="Material review"
+          tone={pendingConflict ? 'warning' : 'success'}
+        />
+        <ReviewQueueRow
+          action={fieldJob.signatureCaptured ? 'Open' : 'Missing'}
+          detail={fieldJob.signatureCaptured ? 'Client signature captured' : 'Signature still required'}
+          title="Evidence review"
+          tone={fieldJob.signatureCaptured ? 'success' : 'danger'}
+        />
+        <Button disabled={!readyForReview || fieldJob.status === 'Approved'} onClick={onApproveJob}>
+          <CheckCircle2 data-icon="inline-start" />
+          Approve completion
+        </Button>
+      </CardContent>
+    </Card>
   )
 }
 
@@ -475,7 +828,7 @@ function Metric({
 }: {
   label: string
   value: string
-  icon: typeof CheckCircle2
+  icon: LucideIcon
 }) {
   return (
     <Card size="sm">
@@ -492,7 +845,7 @@ function Metric({
   )
 }
 
-function JobSummary({ job, selected = false }: { job: Job; selected?: boolean }) {
+function JobSummary({ job, selected = false }: { job: DispatchJob; selected?: boolean }) {
   return (
     <div
       className={cn(
@@ -510,22 +863,32 @@ function JobSummary({ job, selected = false }: { job: Job; selected?: boolean })
   )
 }
 
-function ReviewQueueRow({ item }: { item: ReviewItem }) {
+function ReviewQueueRow({
+  action,
+  detail,
+  title,
+  tone,
+}: {
+  action: string
+  detail: string
+  title: string
+  tone: StatusTone
+}) {
   return (
     <div className="grid grid-cols-[4px_minmax(0,1fr)_auto] items-center gap-3 border-t pt-3">
-      <span className={cn('h-10 rounded-full', statusRailClass(item.tone))} aria-hidden="true" />
+      <span className={cn('h-10 rounded-full', statusRailClass(tone))} aria-hidden="true" />
       <div className="min-w-0">
-        <strong className="block truncate">{item.title}</strong>
-        <span className="block truncate text-sm text-muted-foreground">{item.detail}</span>
+        <strong className="block truncate">{title}</strong>
+        <span className="block truncate text-sm text-muted-foreground">{detail}</span>
       </div>
       <Button variant="outline" size="sm">
-        {item.action}
+        {action}
       </Button>
     </div>
   )
 }
 
-function JobDetailPanel({ job }: { job: Job }) {
+function JobDetailPanel({ job }: { job: DispatchJob }) {
   return (
     <Card>
       <CardHeader>
@@ -545,7 +908,7 @@ function JobDetailPanel({ job }: { job: Job }) {
   )
 }
 
-function EvidencePanel({ job }: { job: Job }) {
+function EvidencePanel({ job }: { job: FieldJob }) {
   return (
     <Card>
       <CardHeader>
@@ -559,7 +922,7 @@ function EvidencePanel({ job }: { job: Job }) {
               <FileSignature aria-hidden="true" />
               <span className="text-sm font-semibold">{item}</span>
             </div>
-            <StatusChip tone="sync">Cached</StatusChip>
+            <StatusChip tone="sync">Local</StatusChip>
           </div>
         ))}
       </CardContent>
@@ -567,7 +930,7 @@ function EvidencePanel({ job }: { job: Job }) {
   )
 }
 
-function ScheduleTable() {
+function ScheduleTable({ jobs }: { jobs: DispatchJob[] }) {
   return (
     <Card>
       <CardContent className="p-0">
@@ -595,12 +958,12 @@ function ScheduleTable() {
   )
 }
 
-function RoutePanel({ selectedJob }: { selectedJob: Job }) {
+function RoutePanel({ selectedJob }: { selectedJob: DispatchJob }) {
   return (
     <Card>
       <CardHeader>
         <CardTitle>Route and dependency view</CardTitle>
-        <CardDescription>Map placeholder for the UI framework spike</CardDescription>
+        <CardDescription>Map placeholder for the vertical slice</CardDescription>
       </CardHeader>
       <CardContent className="grid gap-3 md:grid-cols-3">
         <InfoRow icon={Route} label="Selected stop" value={selectedJob.site} />
@@ -616,7 +979,7 @@ function InfoRow({
   label,
   value,
 }: {
-  icon: typeof CheckCircle2
+  icon: LucideIcon
   label: string
   value: string
 }) {
@@ -631,12 +994,87 @@ function InfoRow({
   )
 }
 
-function StatusChip({ children, tone }: { children: React.ReactNode; tone: StatusTone }) {
+function StatusChip({ children, tone }: { children: ReactNode; tone: StatusTone }) {
   return (
-    <Badge className={cn('shrink-0 border-0 font-bold', statusBadgeClass(tone))} variant="secondary">
+    <Badge className={cn('shrink-0 border-0 font-bold capitalize', statusBadgeClass(tone))} variant="secondary">
       {children}
     </Badge>
   )
+}
+
+function makeQueueEntry(label: string, detail: string, state: QueueState): QueueEntry {
+  return {
+    id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+    label,
+    detail,
+    state,
+    createdAt: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+  }
+}
+
+function countQueueStates(queue: QueueEntry[]) {
+  return queue.reduce<Record<QueueState, number>>(
+    (counts, entry) => {
+      counts[entry.state] += 1
+      return counts
+    },
+    { pending: 0, synced: 0, failed: 0, conflict: 0 },
+  )
+}
+
+function fieldJobToDispatch(job: FieldJob, queue: QueueEntry[]): DispatchJob {
+  const checklistDone = job.checklist.filter((row) => row.checked).length
+  const pendingCount = queue.filter((entry) => entry.state === 'pending').length
+  const conflictCount = queue.filter((entry) => entry.state === 'conflict').length
+
+  return {
+    id: job.id,
+    title: job.title,
+    site: job.site,
+    window: job.window,
+    owner: job.owner,
+    status: job.status,
+    tone: jobTone(job.status),
+    nextAction: job.nextAction,
+    checklistDone,
+    checklistTotal: job.checklist.length,
+    evidence: job.evidence,
+    syncState:
+      conflictCount > 0
+        ? `${conflictCount} conflict needs review`
+        : pendingCount > 0
+          ? `${pendingCount} local changes pending`
+          : 'Synced locally',
+    material: job.materialUsed,
+  }
+}
+
+function jobTone(status: JobStatus): StatusTone {
+  switch (status) {
+    case 'Approved':
+      return 'success'
+    case 'Ready for review':
+      return 'info'
+    case 'Completed offline':
+      return 'warning'
+    case 'In progress':
+      return 'sync'
+    case 'Assigned':
+      return 'neutral'
+  }
+}
+
+function queueTone(state: QueueState): StatusTone {
+  switch (state) {
+    case 'synced':
+      return 'success'
+    case 'pending':
+      return 'warning'
+    case 'failed':
+      return 'danger'
+    case 'conflict':
+      return 'info'
+  }
 }
 
 function statusBadgeClass(tone: StatusTone) {

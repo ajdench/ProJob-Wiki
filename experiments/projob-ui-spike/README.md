@@ -2,12 +2,12 @@
 
 This is the first React/Vite/Tailwind/shadcn implementation spike for the ProJob application suite.
 
-It ports the earlier static prototype into reusable React components backed by local mock data. The goal is to test whether the recommended UI stack from the wiki can express:
+It ports the earlier static prototype into reusable React components backed by local mock data and local browser persistence. The goal is to test whether the recommended UI stack from the wiki can express:
 
 - Phone-first field job execution.
-- Offline checklist progress and evidence capture.
-- Sync queue visibility.
-- Tablet/desktop supervisor review.
+- Offline checklist progress, notes, evidence, signatures, and material exceptions.
+- A visible mutation queue with pending, synced, failed, and conflict states.
+- Tablet/desktop supervisor review and approval after sync.
 - Desktop scheduling, table, and board surfaces.
 
 ## Stack
@@ -16,7 +16,19 @@ It ports the earlier static prototype into reusable React components backed by l
 - Tailwind CSS v4
 - shadcn/ui source components over Radix primitives
 - Lucide icons
-- Local mock state only
+- Local mock state in `localStorage`
+
+## Visible Flow
+
+When running locally, use the buttons in the prototype to:
+
+1. Toggle offline mode.
+2. Complete checklist rows, add a note, capture photo/signature placeholders, and add a material exception.
+3. Mark the job complete while offline.
+4. Return online and sync the queued mutations.
+5. Review the job in the supervisor panel and approve completion.
+
+This is still a mocked prototype. It proves UI behaviour and state language before selecting the real local database and sync engine.
 
 ## Commands
 

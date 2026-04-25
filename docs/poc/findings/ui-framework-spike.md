@@ -16,12 +16,16 @@ The app-level follow-on from this spike is the [Application Suite Blueprint](../
 
 ## Current Scope
 
-The first spike includes:
+The first spike now includes:
 
 - Phone-style field job execution panel.
 - Checklist rows with local completion state.
-- Evidence and sync-state treatment.
+- Completion note, photo, signature, and material-exception actions.
+- Local browser persistence through `localStorage`.
+- Offline mode toggle.
+- Mutation queue with pending, synced, failed, and conflict states.
 - Sync queue sheet.
+- Supervisor review and approval after queued field work is synced.
 - Desktop/tablet office workspace with dispatch, review, table, and route/dependency tabs.
 - ProJob semantic status chips mapped to design-token colours.
 
@@ -31,7 +35,8 @@ The first spike includes:
 | --- | --- |
 | Component ownership | shadcn source components work well as low-level primitives while ProJob owns job cards, review rows, status chips, and evidence panels |
 | Responsive fit | One React surface can express phone, tablet, and desktop layouts without forking the visual language |
-| Offline/sync UX | Sync queue, pending states, and local checklist progress can be made first-class UI components |
+| Offline/sync UX | Sync queue, pending/synced/failed/conflict states, local persistence, and field completion progress can be made first-class UI components |
+| Vertical slice fit | The mocked flow can move a job from assigned, to completed offline, to ready for review, to approved without changing component families |
 | Desktop density | Cards, tabs, tables, and queues are adequate for a first scheduling/review surface; TanStack Table should be tested once real data density increases |
 | Implementation risk | Tailwind/shadcn setup needs repo checks so generated component and token drift is caught early |
 
@@ -42,6 +47,12 @@ Playwright CLI was used because no in-app browser control was exposed in this se
 Verified interactions:
 
 - Checklist checkbox updates local completion count.
+- Offline mode queues field mutations instead of treating them as accepted.
+- Completion note, photo, signature, and material-exception controls update the field job and queue.
+- Marking the job complete offline changes the job status to `Completed offline`.
+- Returning online and selecting sync changes accepted mutations to `synced`, marks material exception as a `conflict`, and moves the job to `Ready for review`.
+- Supervisor review shows completion evidence, material exception state, and enables approval.
+- Approval moves the job to `Approved`.
 - Sync queue opens as a shadcn/Radix sheet and can be dismissed.
 - Board/Table/Map tabs switch the office workspace content.
 - Selecting a dispatch job updates the phone job summary, detail panel, and evidence panel.
@@ -68,7 +79,8 @@ This validates:
 
 ## Next Checks
 
-- Browser-test the spike at mobile, tablet, and desktop viewports.
 - Add TanStack Table once schedule/resource rows become materially denser.
 - Compare Quasar or Ionic only if the React spike shows mobile ergonomics or packaging weaknesses.
-- Extend the spike into the [first vertical slice](../../architecture/application-suite-blueprint.md#first-vertical-slice): job assignment, offline checklist/evidence, sync queue, supervisor review, and variation/approval.
+- Replace mocked `localStorage` persistence with a candidate local database: Dexie, RxDB, PouchDB/CouchDB, or PowerSync.
+- Split the large spike component into app shell, field job, sync queue, supervisor review, and office workspace modules if the prototype continues growing.
+- Record ADR drafts for frontend framework, local database, and sync model once the local database spike exists.
