@@ -57,6 +57,7 @@ nav:
       - Target Architecture: architecture/target-architecture.md
       - Web and Stack Architecture: architecture/web-stack-architecture.md
       - Suite Composition and Design: architecture/suite-composition-and-design.md
+      - DESIGN.md Standard: architecture/design-md-standard.md
       - UI Framework Options: architecture/ui-framework-options.md
       - Component Map: architecture/component-map.md
       - Integration Contracts: architecture/integration-contracts.md

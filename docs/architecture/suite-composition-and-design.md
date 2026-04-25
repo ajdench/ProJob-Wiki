@@ -52,7 +52,7 @@ flowchart TD
 
 ## Visual System Direction
 
-The visual system should be quiet, operational, and work-focused. This is a repeated-use field and office tool, not a marketing site. The current UI technology shortlist is tracked in [UI Framework Options](ui-framework-options.md).
+The visual system should be quiet, operational, and work-focused. This is a repeated-use field and office tool, not a marketing site. The current UI technology shortlist is tracked in [UI Framework Options](ui-framework-options.md), and the practical design brief now lives in the root [`design.md`](https://github.com/ajdench/ProJob-Wiki/blob/main/design.md) file. See [DESIGN.md Standard](design-md-standard.md) for how the wiki uses that file.
 
 | Area | Direction |
 | --- | --- |
@@ -125,14 +125,14 @@ They do not define:
 - Whether a feature works offline.
 - Whether a feature can be safely exposed to subcontractors or clients.
 
-## Design-System Deliverables To Add Later
+## Design-System Deliverables
 
-Create these once the first POC findings exist:
+Use the root [`design.md`](https://github.com/ajdench/ProJob-Wiki/blob/main/design.md) as the first design-system deliverable. Add the remaining artifacts as POC findings mature:
 
 | Deliverable | Purpose |
 | --- | --- |
+| [`design.md`](https://github.com/ajdench/ProJob-Wiki/blob/main/design.md) | Practical product design brief, seed tokens, responsive layout rules, and framework recommendation |
 | UI inventory | Catalogue job cards, status chips, checklists, tables, calendars, forms, review queues |
-| Design tokens | Colours, spacing, typography, elevation, radii, status palette |
 | Workflow wireframes | Field job, supervisor review, scheduler, quote variation, dependency blocker |
 | Permission-aware UI rules | What each role can see/do in every surface |
 | Offline state patterns | Banners, queue drawer, retry state, conflict review |

@@ -9,6 +9,7 @@ Repository: https://github.com/ajdench/ProJob-Wiki
 
 - [Overview](https://ajdench.github.io/ProJob-Wiki/): plain-English explanation of what ProJob is, why one existing app is unlikely to be enough, and what needs proving next.
 - [Research Overview](https://ajdench.github.io/ProJob-Wiki/research-overview/): research summary, recommended product shape, shortlist, and next POC steps.
+- [Design Brief](https://github.com/ajdench/ProJob-Wiki/blob/main/design.md): root design contract with tokens, responsive layout rules, UI component guidance, and framework recommendation.
 - [Product Requirements](https://ajdench.github.io/ProJob-Wiki/requirements/product-requirements/): users, core functions, and offline acceptance criteria.
 - [Workflow Map](https://ajdench.github.io/ProJob-Wiki/workflows/workflow-map/): quote-to-cash, site execution, cross-company dependencies, and resource flows.
 - [Shortlist](https://ajdench.github.io/ProJob-Wiki/evaluation/shortlist/): recommended evaluation order.

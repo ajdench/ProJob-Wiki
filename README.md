@@ -5,6 +5,9 @@ This workspace contains an internal research pack for an offline-first PWA platf
 Start here:
 
 - [Research overview](docs/index.md)
+- [Design brief](design.md)
+- [DESIGN.md standard](docs/architecture/design-md-standard.md)
+- [Prototype UI](experiments/prototype-ui/README.md)
 - [Recommended shortlist](docs/evaluation/shortlist.md)
 - [Scoring matrix](docs/evaluation/scoring-matrix.md)
 - [Target architecture](docs/architecture/target-architecture.md)
@@ -34,3 +37,18 @@ jj new
 ```
 
 See [Jujutsu workflow](docs/operations/jujutsu-workflow.md) for the local documentation workflow.
+
+## Checks Before Publishing
+
+Run the full local validation before describing and pushing a change:
+
+```bash
+make check
+```
+
+This runs:
+
+- `npx --yes @google/design.md lint design.md`
+- `mkdocs build --strict`
+
+The GitHub Pages workflow runs the same design lint before building the published wiki.

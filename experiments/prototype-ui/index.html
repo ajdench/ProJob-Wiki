@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ProJob Prototype UI</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="Primary navigation">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true">PJ</span>
+          <div>
+            <strong>ProJob</strong>
+            <span>Field operations</span>
+          </div>
+        </div>
+        <nav class="nav-list">
+          <a class="nav-item active" href="#jobs">Jobs</a>
+          <a class="nav-item" href="#schedule">Schedule</a>
+          <a class="nav-item" href="#review">Review</a>
+          <a class="nav-item" href="#resources">Resources</a>
+          <a class="nav-item" href="#sync">Sync queue</a>
+        </nav>
+        <div class="sync-summary">
+          <span class="sync-dot"></span>
+          <span>Online, 3 pending</span>
+        </div>
+      </aside>
+
+      <main class="workspace">
+        <header class="topbar">
+          <div>
+            <span class="eyebrow">Today, 25 Apr</span>
+            <h1>South London service run</h1>
+          </div>
+          <div class="topbar-actions">
+            <button class="button secondary" type="button">Filter</button>
+            <button class="button primary" type="button">New job</button>
+          </div>
+        </header>
+
+        <section class="sync-banner" aria-live="polite">
+          <div>
+            <strong>Offline-ready field pack cached</strong>
+            <span>12 jobs, 28 documents, 6 checklist templates. Last sync 09:42.</span>
+          </div>
+          <button class="button secondary compact" type="button">View queue</button>
+        </section>
+
+        <section class="grid">
+          <article class="phone-frame" id="jobs" aria-label="Field mobile prototype">
+            <div class="phone-status">
+              <span>09:48</span>
+              <span class="chip sync">Online</span>
+            </div>
+            <div class="mobile-header">
+              <div>
+                <span class="eyebrow">Next job</span>
+                <h2>PJ-1048</h2>
+              </div>
+              <span class="chip warning">Blocked</span>
+            </div>
+            <div class="job-card selected">
+              <div>
+                <strong>Replace extractor fan</strong>
+                <span>Flat 12, Brixton Hill</span>
+              </div>
+              <span>10:30-12:00</span>
+            </div>
+            <div class="job-card">
+              <div>
+                <strong>Electrical condition photo set</strong>
+                <span>Unit B, Clapham Works</span>
+              </div>
+              <span>13:00</span>
+            </div>
+            <div class="panel">
+              <div class="panel-heading">
+                <h3>Checklist</h3>
+                <span class="chip info">4 of 7</span>
+              </div>
+              <label class="check-row">
+                <input type="checkbox" checked>
+                <span>Risk assessment saved locally</span>
+              </label>
+              <label class="check-row">
+                <input type="checkbox" checked>
+                <span>Before photos attached</span>
+              </label>
+              <label class="check-row">
+                <input type="checkbox">
+                <span>Material use recorded</span>
+              </label>
+            </div>
+            <div class="action-row">
+              <button class="button secondary" type="button">Photo</button>
+              <button class="button primary" type="button">Continue</button>
+            </div>
+          </article>
+
+          <section class="desktop-surface" aria-label="Office desktop prototype">
+            <div class="surface-header">
+              <div>
+                <span class="eyebrow">Office workspace</span>
+                <h2>Schedule and review</h2>
+              </div>
+              <div class="segmented" role="tablist" aria-label="Workspace view">
+                <button class="active" type="button">Board</button>
+                <button type="button">Table</button>
+                <button type="button">Map</button>
+              </div>
+            </div>
+
+            <div class="metrics-row">
+              <div class="metric">
+                <span>Ready today</span>
+                <strong>18</strong>
+              </div>
+              <div class="metric">
+                <span>Needs review</span>
+                <strong>7</strong>
+              </div>
+              <div class="metric">
+                <span>Sync pending</span>
+                <strong>3</strong>
+              </div>
+            </div>
+
+            <div class="work-columns">
+              <article class="work-panel">
+                <div class="panel-heading">
+                  <h3>Dispatch</h3>
+                  <span class="chip info">6</span>
+                </div>
+                <div class="task-row">
+                  <div>
+                    <strong>PJ-1048 Extractor fan</strong>
+                    <span>Brixton Hill - A. Patel</span>
+                  </div>
+                  <span class="chip warning">Blocked</span>
+                </div>
+                <div class="task-row">
+                  <div>
+                    <strong>PJ-1051 EICR photos</strong>
+                    <span>Clapham Works - D. Morgan</span>
+                  </div>
+                  <span class="chip sync">Cached</span>
+                </div>
+                <div class="task-row">
+                  <div>
+                    <strong>PJ-1055 Boiler panel</strong>
+                    <span>Peckham Rye - M. Singh</span>
+                  </div>
+                  <span class="chip success">Ready</span>
+                </div>
+              </article>
+
+              <article class="work-panel" id="review">
+                <div class="panel-heading">
+                  <h3>Supervisor review</h3>
+                  <span class="chip warning">7</span>
+                </div>
+                <div class="review-item">
+                  <span class="status-rail warning"></span>
+                  <div>
+                    <strong>Variation requested</strong>
+                    <span>PJ-1039 added fire stopping around cable route</span>
+                  </div>
+                  <button class="button secondary compact" type="button">Open</button>
+                </div>
+                <div class="review-item">
+                  <span class="status-rail danger"></span>
+                  <div>
+                    <strong>Sync failed</strong>
+                    <span>PJ-1042 signature image needs retry</span>
+                  </div>
+                  <button class="button secondary compact" type="button">Retry</button>
+                </div>
+                <div class="review-item">
+                  <span class="status-rail success"></span>
+                  <div>
+                    <strong>Completion evidence ready</strong>
+                    <span>PJ-1044 photos, time, materials, signature</span>
+                  </div>
+                  <button class="button secondary compact" type="button">Approve</button>
+                </div>
+              </article>
+            </div>
+
+            <div class="data-table" aria-label="Scheduling table">
+              <div class="table-row table-head">
+                <span>Job</span>
+                <span>Site</span>
+                <span>Crew</span>
+                <span>Status</span>
+              </div>
+              <div class="table-row">
+                <span>PJ-1048</span>
+                <span>Brixton Hill</span>
+                <span>Patel + Lee</span>
+                <span class="chip warning">Blocked</span>
+              </div>
+              <div class="table-row">
+                <span>PJ-1051</span>
+                <span>Clapham Works</span>
+                <span>Morgan</span>
+                <span class="chip sync">Cached</span>
+              </div>
+            </div>
+          </section>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>

@@ -10,6 +10,8 @@ The plain-English entry point is the homepage: https://ajdench.github.io/ProJob-
 
 The detailed research overview is: https://ajdench.github.io/ProJob-Wiki/research-overview/
 
+The root design contract is: https://github.com/ajdench/ProJob-Wiki/blob/main/design.md
+
 ## Key Architectural Position
 
 No single open-source product appears to satisfy the full requirement set cleanly. The strongest direction is:
@@ -27,6 +29,7 @@ The wiki now includes a gap register and explicit stack architecture:
 - Web and Stack Architecture: separates the current documentation stack, local POC stack, and future product stack.
 - Suite Composition and Design: defines how upstream components should be synthesised into one ProJob application suite with shared navigation, terminology, styling, roles, and workflow surfaces.
 - UI Framework Options: compares open-source UI framework and component-library families for aligned mobile, tablet, and desktop ProJob screens. Current first research direction is React + TypeScript + Tailwind + shadcn/ui/Radix + TanStack tools, with Quasar, Ionic, MUI, Mantine, Chakra, PrimeReact, Skeleton, and Shoelace/Web Components as comparisons.
+- DESIGN.md Standard: explains how the root design contract is validated, used by prototypes, and kept aligned with wiki architecture.
 - Component Map: maps ownership of customers, jobs, quotes, checklists, materials, files, dependencies, reporting, and audit across ERP/FSM, Field PWA, Sync API, file storage, and planning.
 - Integration Contracts: defines canonical entities, field read APIs, mutation envelopes, attachment workflow, ERP adapter methods, planning adapter events, and conflict responses.
 - Deployment Runtime: records GitHub Pages/MkDocs hosting, Docker/Colima local runtime, Odoo/OCA compose runtime, and staged future production deployment.
@@ -115,6 +118,7 @@ KoboToolbox / ODK: strong offline forms/checklist/data-collection tools; useful 
 
 - Site / plain-English overview: https://ajdench.github.io/ProJob-Wiki/
 - Research Overview: https://ajdench.github.io/ProJob-Wiki/research-overview/
+- Design Brief: https://github.com/ajdench/ProJob-Wiki/blob/main/design.md
 - Repository: https://github.com/ajdench/ProJob-Wiki
 - Sources: https://ajdench.github.io/ProJob-Wiki/references/sources/
 - Gap Register: https://ajdench.github.io/ProJob-Wiki/evaluation/gap-register/

@@ -4,7 +4,7 @@ Date: 2026-04-25
 
 ## Purpose
 
-This page records open-source web UI framework and component-library options for building the ProJob suite across mobile, tablet, and desktop. It should be read alongside [Suite Composition and Design](suite-composition-and-design.md), [Web and Stack Architecture](web-stack-architecture.md), and the [offline-first PWA stack](../options/offline-first-pwa-stack.md).
+This page records open-source web UI framework and component-library options for building the ProJob suite across mobile, tablet, and desktop. It should be read alongside [Suite Composition and Design](suite-composition-and-design.md), [Web and Stack Architecture](web-stack-architecture.md), the [offline-first PWA stack](../options/offline-first-pwa-stack.md), and the root [`design.md`](https://github.com/ajdench/ProJob-Wiki/blob/main/design.md) design brief.
 
 The goal is not to find a theme that looks nice. The goal is to choose a UI foundation that can express functional ProJob components consistently:
 
@@ -24,7 +24,7 @@ The strongest default direction is:
 | Layer | Recommended research direction | Why |
 | --- | --- | --- |
 | App framework | React + TypeScript, likely Vite or a light router-first app | Good PWA fit, broad library support, avoids forcing the field app through a server-rendered mental model |
-| Styling/design tokens | Tailwind CSS plus ProJob-owned tokens | Flexible enough for a custom operational design system |
+| Styling/design tokens | Tailwind CSS plus ProJob-owned tokens from root [`design.md`](https://github.com/ajdench/ProJob-Wiki/blob/main/design.md) | Flexible enough for a custom operational design system |
 | Base components | shadcn/ui over Radix UI primitives | Gives component source ownership, accessible primitives, and strong Tailwind alignment |
 | Accessibility fallback | React Aria Components | Useful when a complex control needs stronger accessibility semantics than a styled component kit gives |
 | Data tables | TanStack Table | Headless tables for dense desktop office workflows |
