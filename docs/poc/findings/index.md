@@ -37,6 +37,7 @@ Examples:
 | Odoo + OCA Field Service | [Odoo + OCA Findings](odoo-oca.md) |
 | ERPNext / Frappe | [ERPNext Findings](erpnext.md) |
 | Offline-first PWA | [Offline PWA Findings](offline-pwa.md) |
+| UI framework spike | [UI Framework Spike Findings](ui-framework-spike.md) |
 
 ## Rules
 
@@ -45,4 +46,3 @@ Examples:
 - Keep raw notes, failures, and workarounds; do not only record successful paths.
 - Update the scoring matrix only after evidence exists.
 - Add an ADR when a POC changes a platform decision.
-

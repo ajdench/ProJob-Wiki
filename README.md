@@ -49,6 +49,8 @@ make check
 This runs:
 
 - `npx --yes @google/design.md lint design.md`
+- `npm --prefix experiments/projob-ui-spike run lint`
+- `npm --prefix experiments/projob-ui-spike run build`
 - `mkdocs build --strict`
 
-The GitHub Pages workflow runs the same design lint before building the published wiki.
+The GitHub Pages workflow runs the same design lint and UI spike checks before building the published wiki.

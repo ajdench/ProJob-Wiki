@@ -1,5 +1,6 @@
 .venv/
 site/
+.playwright-cli/
 .DS_Store
 experiments/odoo-oca/.env
 experiments/odoo-oca/addons/*

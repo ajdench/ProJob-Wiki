@@ -53,6 +53,7 @@ nav:
           - Odoo + OCA Findings: poc/findings/odoo-oca.md
           - ERPNext Findings: poc/findings/erpnext.md
           - Offline PWA Findings: poc/findings/offline-pwa.md
+          - UI Framework Spike Findings: poc/findings/ui-framework-spike.md
   - Architecture:
       - Target Architecture: architecture/target-architecture.md
       - Web and Stack Architecture: architecture/web-stack-architecture.md

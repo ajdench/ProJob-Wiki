@@ -17,6 +17,7 @@ Repository: https://github.com/ajdench/ProJob-Wiki
 - [Gap Register](https://ajdench.github.io/ProJob-Wiki/evaluation/gap-register/): missing/thin areas, augmentations added, and remaining POC evidence needs.
 - [POC Plan](https://ajdench.github.io/ProJob-Wiki/poc/): proof-of-concept schedule, decision gates, and evidence requirements.
 - [Common Test Scenario](https://ajdench.github.io/ProJob-Wiki/poc/common-test-scenario/): the workflow every candidate must run.
+- [UI Framework Spike Findings](https://ajdench.github.io/ProJob-Wiki/poc/findings/ui-framework-spike/): first React/Vite/Tailwind/shadcn implementation spike findings and browser verification notes.
 - [Target Architecture](https://ajdench.github.io/ProJob-Wiki/architecture/target-architecture/): proposed ERP/FSM core plus offline PWA architecture.
 - [Web and Stack Architecture](https://ajdench.github.io/ProJob-Wiki/architecture/web-stack-architecture/): documentation, POC, and future product runtime architecture.
 - [Suite Composition and Design](https://ajdench.github.io/ProJob-Wiki/architecture/suite-composition-and-design/): how components should be synthesised into one ProJob application suite with common visuals and styling.

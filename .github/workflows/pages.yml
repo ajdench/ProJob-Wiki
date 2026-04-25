@@ -27,11 +27,26 @@ jobs:
         with:
           python-version: "3.13"
 
+      - name: Set up Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: experiments/projob-ui-spike/package-lock.json
+
       - name: Install dependencies
         run: pip install mkdocs-material
 
+      - name: Install UI spike dependencies
+        run: npm --prefix experiments/projob-ui-spike ci
+
       - name: Lint design contract
         run: npx --yes @google/design.md lint design.md
+
+      - name: Check UI spike
+        run: |
+          npm --prefix experiments/projob-ui-spike run lint
+          npm --prefix experiments/projob-ui-spike run build
 
       - name: Configure Pages
         uses: actions/configure-pages@v6
