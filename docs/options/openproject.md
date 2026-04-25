@@ -22,6 +22,10 @@ Source: [OpenProject Gantt chart docs](https://www.openproject.org/docs/user-gui
 
 Source: [OpenProject Gantt chart docs](https://www.openproject.org/docs/user-guide/gantt-chart)
 
+## Suite Integration Distinction
+
+OpenProject is being evaluated as a planning/programme capability, not the full ProJob interface. If adopted, everyday users should see ProJob-native dependency, blocker, and programme summaries, with native OpenProject screens reserved for project/programme administrators where useful.
+
 ## Functional Fit
 
 | Area | Fit |

@@ -26,6 +26,10 @@ Source: [Odoo Field Service app page](https://www.odoo.com/app/field-service)
 
 Source: [Odoo Field Service app page](https://www.odoo.com/app/field-service)
 
+## Suite Integration Distinction
+
+Odoo/OCA is being evaluated primarily as a backend ERP/FSM system of record and optional internal admin surface. The everyday ProJob field, supervisor, scheduler, and external portal screens should use a ProJob-native UI over Odoo/OCA data and workflows rather than exposing a raw Odoo experience to every user.
+
 ## Functional Fit
 
 | Area | Fit |

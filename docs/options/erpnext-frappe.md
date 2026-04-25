@@ -25,6 +25,10 @@ Source: [ERPNext official site](https://frappe.io/erpnext)
 
 Source: [ERPNext official site](https://frappe.io/erpnext)
 
+## Suite Integration Distinction
+
+ERPNext/Frappe is being evaluated as a coherent ERP/customization platform and possible backend for ProJob workflows. If selected, ProJob should still define the field PWA, supervisor review, external portal, and offline/sync experience with common ProJob styling and terminology.
+
 ## Functional Fit
 
 | Area | Fit |

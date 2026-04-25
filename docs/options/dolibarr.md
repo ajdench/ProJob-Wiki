@@ -22,6 +22,10 @@ Source: [Dolibarr screenshots wiki](https://wiki.dolibarr.org/index.php/Screensh
 
 Source: [Dolibarr screenshots wiki](https://wiki.dolibarr.org/index.php/Screenshots)
 
+## Suite Integration Distinction
+
+Dolibarr is being evaluated as a simpler SME ERP/CRM baseline. If used, it should mainly provide commercial records and lightweight back-office capability. ProJob should provide the unified field and cross-company operating experience.
+
 ## Functional Fit
 
 | Area | Fit |

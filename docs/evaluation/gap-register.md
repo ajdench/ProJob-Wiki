@@ -20,6 +20,7 @@ This page records where the wiki was thin or missing information, and what has n
 | Reporting/BI | Mentioned only as a component | Component map explains projection/reporting role | Define report catalogue after POCs |
 | Accounting integration | Covered only through ERP candidates | Integration contracts identify commercial ownership | Confirm whether accounting remains inside ERP |
 | Multi-company workflow | Permissions page covers roles/scopes, but legal/entity model is unresolved | Integration contracts separate tenant, company, project, job scopes | Define tenant/entity model with real user examples |
+| Unified suite UX | Option screenshots existed, but final app composition/styling distinction was implicit | Added [Suite Composition and Design](../architecture/suite-composition-and-design.md) and option-page distinction notes | Create real wireframes after POC evidence |
 
 ## Missing Information That Still Requires POC Evidence
 
@@ -40,6 +41,7 @@ These cannot be responsibly filled from research alone:
 - Added component responsibility map.
 - Added canonical integration boundaries and draft contract shapes.
 - Added runtime distinction between current wiki infrastructure, POC infrastructure, and future product infrastructure.
+- Added product-suite composition guidance so upstream product screens are treated as references, not final UI.
 - Updated source references for Odoo Docker, OCA Field Service, CouchDB/PouchDB replication, RxDB replication, and PowerSync.
 
 ## Next Fill Actions
@@ -49,4 +51,3 @@ These cannot be responsibly filled from research alone:
 3. Convert Odoo findings into a pass/fail row update in the scoring matrix.
 4. Repeat for ERPNext.
 5. Build the offline PWA spike only after the ERP adapter assumptions are clearer.
-

@@ -17,6 +17,8 @@ The field app should not be a thin responsive view over an ERP. It should be an 
 
 For a deeper responsibility split, see [Component Map](component-map.md). For the runtime view, see [Web and Stack Architecture](web-stack-architecture.md) and [Deployment Runtime](deployment-runtime.md).
 
+For user-facing composition, the selected capabilities should be synthesised into one ProJob application suite with common visuals, terminology, navigation, and role-aware workflows. See [Suite Composition and Design](suite-composition-and-design.md).
+
 ## Logical Data Ownership
 
 | Data | Owner |

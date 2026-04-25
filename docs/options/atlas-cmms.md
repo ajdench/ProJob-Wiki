@@ -22,6 +22,10 @@ Source: [Atlas CMMS official site](https://atlas-cmms.com/)
 
 Source: [Atlas CMMS official site](https://atlas-cmms.com/)
 
+## Suite Integration Distinction
+
+Atlas CMMS is being evaluated as a work-order, mobile, asset, and inventory UX benchmark. Its screens are useful references for technician workflows, but the final ProJob field experience should remain one consistent offline-first PWA.
+
 ## Functional Fit
 
 | Area | Fit |

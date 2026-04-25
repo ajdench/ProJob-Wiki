@@ -21,6 +21,7 @@ The wiki now includes a gap register and explicit stack architecture:
 
 - Gap Register: records missing/thin areas, completed augmentations, and remaining POC evidence needs.
 - Web and Stack Architecture: separates the current documentation stack, local POC stack, and future product stack.
+- Suite Composition and Design: defines how upstream components should be synthesised into one ProJob application suite with shared navigation, terminology, styling, roles, and workflow surfaces.
 - Component Map: maps ownership of customers, jobs, quotes, checklists, materials, files, dependencies, reporting, and audit across ERP/FSM, Field PWA, Sync API, file storage, and planning.
 - Integration Contracts: defines canonical entities, field read APIs, mutation envelopes, attachment workflow, ERP adapter methods, planning adapter events, and conflict responses.
 - Deployment Runtime: records GitHub Pages/MkDocs hosting, Docker/Colima local runtime, Odoo/OCA compose runtime, and staged future production deployment.
@@ -112,4 +113,5 @@ KoboToolbox / ODK: strong offline forms/checklist/data-collection tools; useful 
 - Sources: https://ajdench.github.io/ProJob-Wiki/references/sources/
 - Gap Register: https://ajdench.github.io/ProJob-Wiki/evaluation/gap-register/
 - Web and Stack Architecture: https://ajdench.github.io/ProJob-Wiki/architecture/web-stack-architecture/
+- Suite Composition and Design: https://ajdench.github.io/ProJob-Wiki/architecture/suite-composition-and-design/
 - Integration Contracts: https://ajdench.github.io/ProJob-Wiki/architecture/integration-contracts/

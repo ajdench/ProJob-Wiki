@@ -17,6 +17,7 @@ Repository: https://github.com/ajdench/ProJob-Wiki
 - [Common Test Scenario](https://ajdench.github.io/ProJob-Wiki/poc/common-test-scenario/): the workflow every candidate must run.
 - [Target Architecture](https://ajdench.github.io/ProJob-Wiki/architecture/target-architecture/): proposed ERP/FSM core plus offline PWA architecture.
 - [Web and Stack Architecture](https://ajdench.github.io/ProJob-Wiki/architecture/web-stack-architecture/): documentation, POC, and future product runtime architecture.
+- [Suite Composition and Design](https://ajdench.github.io/ProJob-Wiki/architecture/suite-composition-and-design/): how components should be synthesised into one ProJob application suite with common visuals and styling.
 - [Component Map](https://ajdench.github.io/ProJob-Wiki/architecture/component-map/): ownership map for capabilities across ERP, PWA, Sync API, files, and planning.
 - [Integration Contracts](https://ajdench.github.io/ProJob-Wiki/architecture/integration-contracts/): canonical entities, field APIs, mutation envelope, attachment flow, and ERP adapter boundary.
 - [Deployment Runtime](https://ajdench.github.io/ProJob-Wiki/architecture/deployment-runtime/): current wiki hosting, local container runtime, POC runtime, and future production stages.

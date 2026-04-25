@@ -2,6 +2,20 @@
 
 The options are grouped by the role they could play in the architecture.
 
+## Suite Composition Distinction
+
+The options below should not be interpreted as separate products that users would jump between all day. The target direction is a unified ProJob suite with common navigation, terminology, permissions, visual styling, and offline/sync behaviour.
+
+Upstream products may contribute in three different ways:
+
+| Contribution type | Meaning | Examples |
+| --- | --- | --- |
+| System of record | Owns authoritative business records behind the scenes | Odoo/OCA, ERPNext, Dolibarr |
+| Specialist capability | Provides planning, CMMS, forms, or reporting patterns | OpenProject, Atlas CMMS, openMAINT, ODK/Kobo |
+| Reference UX | Shows mature patterns that can inspire ProJob workflows | Gantt views, work-order views, mobile form widgets |
+
+The screenshots on option pages are indicative references. They do not define the final ProJob UI. See [Suite Composition and Design](../architecture/suite-composition-and-design.md).
+
 ## Back-Office / ERP Candidates
 
 | Option | Best fit | Main concern |
@@ -34,4 +48,3 @@ The options are grouped by the role they could play in the architecture.
 | Dexie.js + custom sync | Maximum control, simple IndexedDB abstraction | More custom engineering and sync correctness burden |
 | ElectricSQL | Postgres-centered local-first sync | Write model and maturity need validation for field workflows |
 | PowerSync | Strong offline write queue and local SQLite model | Check open-source/open-core constraints before committing |
-

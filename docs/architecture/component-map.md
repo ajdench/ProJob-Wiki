@@ -4,6 +4,8 @@
 
 This page maps proposed product capabilities to the component that should own them. It is a guardrail against building every feature directly into the field PWA or overloading the ERP with offline behavior it is not designed to handle.
 
+This map describes ownership of records and capabilities. It does not imply the user should see each upstream component's native interface. The preferred final shape is a unified ProJob suite UI over these capabilities; see [Suite Composition and Design](suite-composition-and-design.md).
+
 ## Component Responsibilities
 
 | Capability | Primary owner | Supporting component | Notes |
@@ -74,6 +76,18 @@ flowchart LR
 
 Do not add OpenProject, separate BI, route optimization, or complex subcontractor portals until the core offline job workflow is proven.
 
+## Suite Presentation Rule
+
+| Component | User-facing presentation |
+| --- | --- |
+| ERP/FSM core | Mostly hidden behind ProJob office/admin workflows; native admin UI acceptable for specialist configuration |
+| Field PWA | Fully ProJob-native UI |
+| Sync API | Not directly visible except through sync state, queue, and conflict review UI |
+| Planning layer | Prefer ProJob project/dependency views; native OpenProject UI acceptable for programme admins |
+| Forms/checklist engine | ProJob-native checklist UI for field users; upstream form builder can be admin-only if used |
+| CMMS/asset system | ProJob resource/asset summaries for everyday users; native CMMS UI only for asset administrators |
+| File storage | ProJob evidence/document UI; raw storage UI hidden |
+
 ## Component Selection Rule
 
 When deciding where a new feature belongs:
@@ -83,4 +97,3 @@ When deciding where a new feature belongs:
 3. If it is about programme dependencies across jobs/projects, the planning layer owns it.
 4. If it is a derived view, reporting owns it.
 5. If it is a file or photo, object/document storage owns the bytes and ERP owns the business link.
-

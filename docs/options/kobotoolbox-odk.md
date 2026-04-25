@@ -23,6 +23,10 @@ Source: [ODK Collect form filling docs](https://docs.getodk.org/collect-filling-
 
 Source: [ODK Collect form filling docs](https://docs.getodk.org/collect-filling-forms/)
 
+## Suite Integration Distinction
+
+KoboToolbox/ODK is being evaluated as a forms/checklist and offline data-capture reference. The preferred ProJob direction is a native checklist/evidence UI in the field PWA. An upstream form builder may still be useful for admins if it can be integrated cleanly.
+
 ## Functional Fit
 
 | Area | Fit |

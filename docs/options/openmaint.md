@@ -21,6 +21,10 @@ Source: [openMAINT screenshots](https://www.openmaint.org/en/resources/screensho
 
 Source: [openMAINT screenshots](https://www.openmaint.org/en/resources/screenshots)
 
+## Suite Integration Distinction
+
+openMAINT is being evaluated as an asset/facility-maintenance benchmark. If any openMAINT-style capability is adopted, it should appear in ProJob as asset/resource/maintenance views with consistent styling, rather than as a separate everyday UI for trades users.
+
 ## Functional Fit
 
 | Area | Fit |

@@ -72,6 +72,8 @@ flowchart TD
   ERP --> Reports["Reporting/BI projections"]
 ```
 
+The user-facing product should be composed as one ProJob suite with shared navigation, terminology, permissions, visual styling, and status language. Upstream tools should contribute capability through APIs/adapters where possible. See [Suite Composition and Design](suite-composition-and-design.md).
+
 ## Browser/PWA Layer
 
 The field PWA should:
@@ -138,4 +140,3 @@ For the next proof-of-concept phase:
 3. Keep the offline PWA stack open until the Odoo and ERPNext API boundaries are understood.
 4. For the offline PWA spike, test **PouchDB/CouchDB** and **RxDB custom sync** first.
 5. Treat **PowerSync** as a serious later option if the team chooses a Postgres-centric custom backend instead of relying primarily on ERP APIs.
-
