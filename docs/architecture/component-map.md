@@ -4,7 +4,7 @@
 
 This page maps proposed product capabilities to the component that should own them. It is a guardrail against building every feature directly into the field PWA or overloading the ERP with offline behavior it is not designed to handle.
 
-This map describes ownership of records and capabilities. It does not imply the user should see each upstream component's native interface. The preferred final shape is a unified ProJob suite UI over these capabilities; see [Suite Composition and Design](suite-composition-and-design.md).
+This map describes ownership of records and capabilities. It does not imply the user should see each upstream component's native interface. The preferred final shape is a unified ProJob suite UI over these capabilities; see [Suite Composition and Design](suite-composition-and-design.md) and [Application Suite Blueprint](application-suite-blueprint.md).
 
 ## Component Responsibilities
 
@@ -75,6 +75,8 @@ flowchart LR
 ```
 
 Do not add [OpenProject](../options/openproject.md), separate BI, route optimization, or complex subcontractor portals until the core [offline job workflow](../poc/offline-pwa-test-plan.md) is proven.
+
+The first end-to-end product slice is defined in [Application Suite Blueprint](application-suite-blueprint.md#first-vertical-slice).
 
 ## Suite Presentation Rule
 

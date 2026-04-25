@@ -39,6 +39,8 @@ Examples:
 | Offline-first PWA | [Offline PWA Findings](offline-pwa.md) |
 | UI framework spike | [UI Framework Spike Findings](ui-framework-spike.md) |
 
+The next app-level product slice is defined in [Application Suite Blueprint](../../architecture/application-suite-blueprint.md#first-vertical-slice).
+
 ## Rules
 
 - Record the installed version or commit for each candidate.

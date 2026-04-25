@@ -4,6 +4,8 @@
 
 The target product should feel like one ProJob application suite, not a set of separate open-source products stitched together with links. [Odoo/OCA](../options/odoo-oca-field-service.md), [ERPNext](../options/erpnext-frappe.md), [OpenProject](../options/openproject.md), [Atlas CMMS](../options/atlas-cmms.md), [openMAINT](../options/openmaint.md), [ODK/Kobo](../options/kobotoolbox-odk.md), or [sync libraries](../options/offline-first-pwa-stack.md) may contribute backend capabilities, patterns, or reference workflows, but users should experience a coherent product surface.
 
+For the more concrete screen, workflow, data object, and vertical-slice build plan, see [Application Suite Blueprint](application-suite-blueprint.md).
+
 ## Core Distinction
 
 | Layer | What it means | User-facing implication |
@@ -138,6 +140,8 @@ Use the root [`design.md`](https://github.com/ajdench/ProJob-Wiki/blob/main/desi
 | Offline state patterns | Banners, queue drawer, retry state, conflict review |
 | Evidence pattern | Photos, signatures, documents, audit metadata |
 | UI framework spike | Compare the recommended [UI framework options](ui-framework-options.md) against phone, tablet, and desktop workflows |
+
+The current buildable interpretation of these deliverables is captured in [Application Suite Blueprint](application-suite-blueprint.md).
 
 ## MVP Design Scope
 

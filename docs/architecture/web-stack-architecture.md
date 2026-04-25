@@ -72,7 +72,7 @@ flowchart TD
   ERP --> Reports["Reporting/BI projections"]
 ```
 
-The user-facing product should be composed as one ProJob suite with shared navigation, terminology, permissions, visual styling, and status language. Upstream tools should contribute capability through APIs/adapters where possible. See [Suite Composition and Design](suite-composition-and-design.md) and [UI Framework Options](ui-framework-options.md).
+The user-facing product should be composed as one ProJob suite with shared navigation, terminology, permissions, visual styling, and status language. Upstream tools should contribute capability through APIs/adapters where possible. See [Suite Composition and Design](suite-composition-and-design.md), [Application Suite Blueprint](application-suite-blueprint.md), and [UI Framework Options](ui-framework-options.md).
 
 ## Browser/PWA Layer
 
@@ -86,7 +86,7 @@ The field PWA should:
 
 The service worker handles installability and static assets. It does not solve data sync by itself.
 
-The first UI research direction is React + TypeScript with ProJob-owned components, not raw upstream ERP screens. See [UI Framework Options](ui-framework-options.md) for the proposed component-library and interaction-tool shortlist.
+The first UI research direction is React + TypeScript with ProJob-owned components, not raw upstream ERP screens. See [UI Framework Options](ui-framework-options.md) for the proposed component-library and interaction-tool shortlist, and [Application Suite Blueprint](application-suite-blueprint.md#component-pattern-map) for the current ProJob component pattern map.
 
 ## Local Data Layer
 

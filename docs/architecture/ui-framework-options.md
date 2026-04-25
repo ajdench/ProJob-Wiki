@@ -6,6 +6,8 @@ Date: 2026-04-25
 
 This page records open-source web UI framework and component-library options for building the ProJob suite across mobile, tablet, and desktop. It should be read alongside [Suite Composition and Design](suite-composition-and-design.md), [Web and Stack Architecture](web-stack-architecture.md), the [offline-first PWA stack](../options/offline-first-pwa-stack.md), and the root [`design.md`](https://github.com/ajdench/ProJob-Wiki/blob/main/design.md) design brief.
 
+The current app-level interpretation of this research is [Application Suite Blueprint](application-suite-blueprint.md).
+
 The goal is not to find a theme that looks nice. The goal is to choose a UI foundation that can express functional ProJob components consistently:
 
 - Field job list and job detail.
@@ -192,6 +194,8 @@ Use **React + TypeScript + Tailwind + shadcn/ui/Radix + TanStack tools** as the 
 Keep **Quasar**, **Ionic**, **MUI**, **Mantine**, **Chakra**, **PrimeReact**, **Skeleton**, and **Shoelace/Web Components** as comparison families.
 
 The final decision should be made only after a real responsive UI spike proves that the same component language can support field mobile, supervisor tablet, and office desktop workflows.
+
+The first [UI framework spike findings](../poc/findings/ui-framework-spike.md) support continuing this direction. The next step is the [first vertical slice](application-suite-blueprint.md#first-vertical-slice) described in the application suite blueprint.
 
 ## Sources
 

@@ -23,7 +23,7 @@ Most business systems are good in the office but weak on site.
 
 Most field apps are good for checklists but weak at quotes, materials, invoices, project dependencies, and cross-company coordination.
 
-ProJob is exploring how to combine the useful parts into one coherent application suite. The architecture direction is described in [Suite Composition and Design](architecture/suite-composition-and-design.md), [Web and Stack Architecture](architecture/web-stack-architecture.md), [UI Framework Options](architecture/ui-framework-options.md), and [Component Map](architecture/component-map.md).
+ProJob is exploring how to combine the useful parts into one coherent application suite. The architecture direction is described in [Suite Composition and Design](architecture/suite-composition-and-design.md), [Application Suite Blueprint](architecture/application-suite-blueprint.md), [Web and Stack Architecture](architecture/web-stack-architecture.md), [UI Framework Options](architecture/ui-framework-options.md), and [Component Map](architecture/component-map.md).
 
 ## What A Worker Would See
 
@@ -89,6 +89,8 @@ The current research direction is:
 2. Build a dedicated [offline-first ProJob field app](options/offline-first-pwa-stack.md) for site workers.
 3. Add planning/dependency tools such as [OpenProject](options/openproject.md) only where they are really needed.
 4. Keep documentation, decisions, and findings in this wiki.
+
+The next product-shaping step is the [Application Suite Blueprint](architecture/application-suite-blueprint.md), which maps workspaces, workflows, data objects, and UI component patterns into one buildable app shape.
 
 ## What Needs Proving Next
 

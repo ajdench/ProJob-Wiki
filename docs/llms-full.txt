@@ -14,6 +14,8 @@ The root design contract is: https://github.com/ajdench/ProJob-Wiki/blob/main/de
 
 The first UI implementation spike is: https://github.com/ajdench/ProJob-Wiki/tree/main/experiments/projob-ui-spike
 
+The current application suite blueprint is: https://ajdench.github.io/ProJob-Wiki/architecture/application-suite-blueprint/
+
 ## Key Architectural Position
 
 No single open-source product appears to satisfy the full requirement set cleanly. The strongest direction is:
@@ -30,6 +32,7 @@ The wiki now includes a gap register and explicit stack architecture:
 - Gap Register: records missing/thin areas, completed augmentations, and remaining POC evidence needs.
 - Web and Stack Architecture: separates the current documentation stack, local POC stack, and future product stack.
 - Suite Composition and Design: defines how upstream components should be synthesised into one ProJob application suite with shared navigation, terminology, styling, roles, and workflow surfaces.
+- Application Suite Blueprint: maps ProJob workspaces, workflows, data objects, component patterns, and the first vertical slice into a buildable app-suite plan.
 - UI Framework Options: compares open-source UI framework and component-library families for aligned mobile, tablet, and desktop ProJob screens. Current first research direction is React + TypeScript + Tailwind + shadcn/ui/Radix + TanStack tools, with Quasar, Ionic, MUI, Mantine, Chakra, PrimeReact, Skeleton, and Shoelace/Web Components as comparisons.
 - DESIGN.md Standard: explains how the root design contract is validated, used by prototypes, and kept aligned with wiki architecture.
 - UI Framework Spike Findings: records the first React/Vite/Tailwind/shadcn implementation spike, including component ownership, responsive fit, offline/sync UI behavior, and browser verification notes.
@@ -60,6 +63,23 @@ Use Dolibarr, Atlas CMMS, openMAINT, OpenProject, and KoboToolbox/ODK as seconda
 - Documents: site docs, drawings, method statements, risk assessments, versioned attachments.
 - Collaboration: comments, mentions, external portal, subcontractor-scoped access.
 - Permissions: role-based access plus company/project/site/job/document scoping.
+
+## Application Suite Blueprint
+
+The suite should be organised as role-aware workspaces in one shared shell:
+
+- Field workspace for assigned jobs, offline checklists, evidence, time, materials, and sync queue.
+- Supervisor workspace for review, approvals, exceptions, variations, and blockers.
+- Scheduling workspace for crews, skills, vehicles, dates, dependencies, and planned materials.
+- Estimating workspace for quotes, variations, approvals, and quote-to-job handoff.
+- Resources workspace for people, skills, vehicles, tools, equipment, material availability, and stock movements.
+- Projects workspace for milestones, blockers, dependencies, subcontractor tasks, and programme impact.
+- Portal workspace for scoped client/subcontractor status, approvals, documents, evidence, and comments.
+- Admin workspace for templates, roles, permissions, integrations, mappings, and audit exports.
+
+The first vertical slice should prove: office assigns a job with checklist/materials; field user opens it online, works offline, records checklist answers, notes, material usage, time, photo, and signature; sync queue applies mutations when the network returns; supervisor reviews completion and raises a variation or approves invoice-ready completion.
+
+The shadcn MCP confirms the repo is configured for the `@shadcn` registry and exposes table/data-table and form/RHF examples that match ProJob's office and checklist surfaces. shadcn remains a primitive source; ProJob should own app shell, job cards, checklist rows, evidence panels, sync queue, review queues, scheduler views, and dependency views.
 
 ## Offline Acceptance Criteria
 
@@ -128,5 +148,6 @@ KoboToolbox / ODK: strong offline forms/checklist/data-collection tools; useful 
 - Gap Register: https://ajdench.github.io/ProJob-Wiki/evaluation/gap-register/
 - Web and Stack Architecture: https://ajdench.github.io/ProJob-Wiki/architecture/web-stack-architecture/
 - Suite Composition and Design: https://ajdench.github.io/ProJob-Wiki/architecture/suite-composition-and-design/
+- Application Suite Blueprint: https://ajdench.github.io/ProJob-Wiki/architecture/application-suite-blueprint/
 - UI Framework Options: https://ajdench.github.io/ProJob-Wiki/architecture/ui-framework-options/
 - Integration Contracts: https://ajdench.github.io/ProJob-Wiki/architecture/integration-contracts/

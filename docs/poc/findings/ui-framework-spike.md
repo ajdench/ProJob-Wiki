@@ -12,6 +12,8 @@ The spike lives in [`experiments/projob-ui-spike`](https://github.com/ajdench/Pr
 
 Validate whether the recommended UI framework path from [UI Framework Options](../../architecture/ui-framework-options.md) can express the ProJob design contract in [`design.md`](https://github.com/ajdench/ProJob-Wiki/blob/main/design.md).
 
+The app-level follow-on from this spike is the [Application Suite Blueprint](../../architecture/application-suite-blueprint.md).
+
 ## Current Scope
 
 The first spike includes:
@@ -69,3 +71,4 @@ This validates:
 - Browser-test the spike at mobile, tablet, and desktop viewports.
 - Add TanStack Table once schedule/resource rows become materially denser.
 - Compare Quasar or Ionic only if the React spike shows mobile ergonomics or packaging weaknesses.
+- Extend the spike into the [first vertical slice](../../architecture/application-suite-blueprint.md#first-vertical-slice): job assignment, offline checklist/evidence, sync queue, supervisor review, and variation/approval.

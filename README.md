@@ -7,6 +7,7 @@ Start here:
 - [Research overview](docs/index.md)
 - [Design brief](design.md)
 - [DESIGN.md standard](docs/architecture/design-md-standard.md)
+- [Application suite blueprint](docs/architecture/application-suite-blueprint.md)
 - [Prototype UI](experiments/prototype-ui/README.md)
 - [Recommended shortlist](docs/evaluation/shortlist.md)
 - [Scoring matrix](docs/evaluation/scoring-matrix.md)
