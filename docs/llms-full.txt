@@ -6,6 +6,8 @@ This file summarizes the current research wiki for LLM tools. The source of trut
 
 ProJob Wiki researches open-source options for a multi-functional, offline-first PWA solution for tradespeople and work-site projects. The platform scope includes checklists, job lists, resource management, scheduling, cross-project dependencies, quoting, field evidence, materials, stock, and cross-company collaboration.
 
+The plain-English entry point is: https://ajdench.github.io/ProJob-Wiki/in-simple-terms/
+
 ## Key Architectural Position
 
 No single open-source product appears to satisfy the full requirement set cleanly. The strongest direction is:
@@ -109,6 +111,7 @@ KoboToolbox / ODK: strong offline forms/checklist/data-collection tools; useful 
 ## Important URLs
 
 - Site: https://ajdench.github.io/ProJob-Wiki/
+- In Simple Terms: https://ajdench.github.io/ProJob-Wiki/in-simple-terms/
 - Repository: https://github.com/ajdench/ProJob-Wiki
 - Sources: https://ajdench.github.io/ProJob-Wiki/references/sources/
 - Gap Register: https://ajdench.github.io/ProJob-Wiki/evaluation/gap-register/

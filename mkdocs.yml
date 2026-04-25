@@ -22,6 +22,7 @@ markdown_extensions:
           format: !!python/name:pymdownx.superfences.fence_code_format
 nav:
   - Overview: index.md
+  - In Simple Terms: in-simple-terms.md
   - Requirements:
       - Product Requirements: requirements/product-requirements.md
       - Workflow Map: workflows/workflow-map.md
