@@ -9,6 +9,19 @@ Sources:
 - [KoboToolbox offline data collection](https://support.kobotoolbox.org/data-offline.html)
 - [KoboToolbox data collection tools](https://support.kobotoolbox.org/data-collection-tools.html)
 - [ODK overview](https://docs.getodk.org/)
+- [ODK Collect form filling docs](https://docs.getodk.org/collect-filling-forms/)
+
+## Indicative Screenshots
+
+These ODK Collect screenshots are relevant to the offline checklist/forms part of the platform. They show the kind of mobile field-data flow that KoboToolbox/ODK can support, not a complete trades job-management system.
+
+![ODK Collect start new form menu](https://docs.getodk.org/_images/main-menu-start-new-form.png)
+
+Source: [ODK Collect form filling docs](https://docs.getodk.org/collect-filling-forms/)
+
+![ODK Collect signature widget](https://docs.getodk.org/_images/signature-widget.png)
+
+Source: [ODK Collect form filling docs](https://docs.getodk.org/collect-filling-forms/)
 
 ## Functional Fit
 
@@ -42,4 +55,3 @@ Use as either:
 
 - A companion forms/checklist subsystem, or
 - A reference implementation for offline checklist behavior.
-

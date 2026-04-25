@@ -13,6 +13,18 @@ Sources:
 - [ERPNext mobile](https://frappe.io/erpnext/mobile)
 - [ERPNext Maintenance Visit documentation](https://docs.frappe.io/erpnext/user/manual/en/maintenance-visit)
 
+## Indicative Screenshots
+
+These upstream ERPNext/Frappe screenshots show the business-app style and project/inventory-adjacent surfaces relevant to this evaluation. The POC still needs to verify whether the native doctypes map cleanly to trades work orders, checklists, evidence, and variations.
+
+![ERPNext business application interface](https://frappe.io/files/image1f5eff.png)
+
+Source: [ERPNext official site](https://frappe.io/erpnext)
+
+![ERPNext projects module thumbnail](https://frappe.io/files/projectscb689c.png)
+
+Source: [ERPNext official site](https://frappe.io/erpnext)
+
 ## Functional Fit
 
 | Area | Fit |
@@ -49,4 +61,3 @@ Use as a system-of-record candidate when customization velocity and framework co
 2. Create custom checklist and evidence capture doctypes.
 3. Build a small PWA page backed by Frappe APIs.
 4. Validate offline queue approach with IndexedDB and retrying `frappe.call`-style mutations.
-

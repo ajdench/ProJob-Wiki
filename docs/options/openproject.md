@@ -8,6 +8,19 @@ Sources:
 
 - [OpenProject official site](https://www.openproject.org/)
 - [OpenProject resource management docs](https://www.openproject.org/docs/use-cases/resource-management/)
+- [OpenProject Gantt chart docs](https://www.openproject.org/docs/user-guide/gantt-chart)
+
+## Indicative Screenshots
+
+These screenshots show the specific planning views that make OpenProject relevant as a cross-project dependency and programme layer.
+
+![OpenProject filtered multi-project Gantt view](https://www.openproject.org/docs/user-guide/gantt-chart/openproject-user-guide-gantt-charts-filters-3e70eae8.png)
+
+Source: [OpenProject Gantt chart docs](https://www.openproject.org/docs/user-guide/gantt-chart)
+
+![OpenProject overarching project planning view](https://www.openproject.org/docs/user-guide/gantt-chart/OpenProject-overarching-project-planning-5f83c833.png)
+
+Source: [OpenProject Gantt chart docs](https://www.openproject.org/docs/user-guide/gantt-chart)
 
 ## Functional Fit
 
@@ -45,4 +58,3 @@ Use as a planning and programme coordination layer, not as the core operational 
 1. Model several projects with dependency-linked work packages.
 2. Track blockers, milestones, baseline schedule, and time/cost reporting.
 3. Test whether work packages can map cleanly to ERP jobs/work orders.
-

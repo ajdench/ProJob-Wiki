@@ -50,3 +50,13 @@ Research date: 2026-04-24
 
 - [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/)
 - [MkDocs](https://www.mkdocs.org/)
+
+## Screenshot Sources
+
+- [Odoo Field Service app page](https://www.odoo.com/app/field-service)
+- [ERPNext official site](https://frappe.io/erpnext)
+- [Dolibarr screenshots wiki](https://wiki.dolibarr.org/index.php/Screenshots)
+- [OpenProject Gantt chart docs](https://www.openproject.org/docs/user-guide/gantt-chart)
+- [Atlas CMMS official site](https://atlas-cmms.com/)
+- [openMAINT screenshots](https://www.openmaint.org/en/resources/screenshots)
+- [ODK Collect form filling docs](https://docs.getodk.org/collect-filling-forms/)

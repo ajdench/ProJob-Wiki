@@ -8,6 +8,19 @@ Sources:
 
 - [Dolibarr official site](https://www.dolibarr.org/)
 - [Dolibarr Projects module](https://wiki.dolibarr.org/index.php/Projects)
+- [Dolibarr screenshots](https://wiki.dolibarr.org/index.php/Screenshots)
+
+## Indicative Screenshots
+
+These screenshots show Dolibarr's conventional ERP/CRM interface style. They are useful as a lower-complexity SME baseline for proposals, invoices, projects, tasks, interventions, stock, and agenda workflows.
+
+![Dolibarr dashboard screenshot](https://wiki.dolibarr.org/images/e/e0/Dolibarr_screenshot1.png)
+
+Source: [Dolibarr screenshots wiki](https://wiki.dolibarr.org/index.php/Screenshots)
+
+![Dolibarr customer invoice screenshot](https://wiki.dolibarr.org/images/9/93/Dolibarr_screenshot4.png)
+
+Source: [Dolibarr screenshots wiki](https://wiki.dolibarr.org/index.php/Screenshots)
 
 ## Functional Fit
 
@@ -46,4 +59,3 @@ Use as a lower-complexity benchmark and possible core for small companies with s
 2. Attach intervention and documents to a project.
 3. Test custom fields and API access for a field PWA.
 4. Compare admin simplicity against feature gaps.
-

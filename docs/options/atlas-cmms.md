@@ -10,6 +10,18 @@ Sources:
 - [Atlas CMMS GitHub repository](https://github.com/Grashjs/cmms)
 - [Atlas CMMS docs](https://docs.atlas-cmms.com/)
 
+## Indicative Screenshots
+
+These screenshots show Atlas CMMS work-order and mobile-field surfaces, which are relevant as a technician/work-order UX benchmark.
+
+![Atlas CMMS work orders screenshot](https://atlas-cmms.com/static/images/overview/work_order_screenshot.png)
+
+Source: [Atlas CMMS official site](https://atlas-cmms.com/)
+
+![Atlas CMMS mobile home screenshot](https://atlas-cmms.com/static/images/overview/mobile_home.png)
+
+Source: [Atlas CMMS official site](https://atlas-cmms.com/)
+
 ## Functional Fit
 
 | Area | Fit |
@@ -47,4 +59,3 @@ Use as a field-work/maintenance benchmark, especially for asset-heavy trades, fa
 2. Create assets, locations, work requests, work orders, checklists, and parts.
 3. Test mobile offline mode with real device behavior.
 4. Validate API/integration options for ERP and project systems.
-
