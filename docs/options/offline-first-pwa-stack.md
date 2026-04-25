@@ -15,11 +15,17 @@ A dedicated offline-first PWA is likely required regardless of the selected ERP.
 | PowerSync | SQLite local store with sync | Strong offline-write pattern; check open edition and licensing |
 | Service Worker + Workbox | App shell caching | Needed for installability and offline assets, not enough for data sync |
 
+See [Web and Stack Architecture](../architecture/web-stack-architecture.md) for how these choices fit into the full application stack.
+
 Sources:
 
 - [Offline First sync comparison](https://offlinefirst.org/sync/)
+- [PouchDB replication guide](https://pouchdb.com/guides/replication.html)
+- [CouchDB replication introduction](https://docs.couchdb.org/en/stable/replication/intro.html)
 - [PouchDB/CouchDB offline-first discussion](https://fosdem.org/2026/schedule/event/SDHGJY-local-first-meet-pouchdb-couchdb/)
 - [RxDB offline database guide](https://rxdb.info/articles/offline-database.html)
+- [RxDB replication docs](https://rxdb.info/replication.html)
+- [PowerSync docs](https://docs.powersync.com/)
 
 ## Field App Responsibilities
 
@@ -54,4 +60,3 @@ The first POC should not attempt to solve full ERP integration. It should prove 
 - Material use and time can be recorded offline.
 - Sync queue survives app close/reopen.
 - Conflicts are visible.
-

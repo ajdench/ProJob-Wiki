@@ -15,6 +15,8 @@ The field app should not be a thin responsive view over an ERP. It should be an 
 | Document store | Drawings, RAMS, photos, signed PDFs, generated quotes/invoices |
 | Internal wiki | Requirements, workflows, architecture, ADRs, runbooks, research sources |
 
+For a deeper responsibility split, see [Component Map](component-map.md). For the runtime view, see [Web and Stack Architecture](web-stack-architecture.md) and [Deployment Runtime](deployment-runtime.md).
+
 ## Logical Data Ownership
 
 | Data | Owner |
@@ -44,6 +46,8 @@ flowchart TD
   ERP --> Docs["Markdown Internal Wiki<br/>human-readable decisions"]
 ```
 
+The important boundary is the Sync API. The field PWA should submit idempotent field mutations to the Sync API, not write directly into ERP tables. The ERP adapter then maps canonical field events into Odoo/OCA, ERPNext, or another selected core. See [Integration Contracts](integration-contracts.md).
+
 ## MVP Boundary
 
 The MVP should include:
@@ -64,4 +68,3 @@ The MVP should defer:
 - Complex earned value reporting.
 - AI scheduling.
 - Full subcontractor marketplace behavior.
-

@@ -12,9 +12,14 @@ Repository: https://github.com/ajdench/ProJob-Wiki
 - [Workflow Map](https://ajdench.github.io/ProJob-Wiki/workflows/workflow-map/): quote-to-cash, site execution, cross-company dependencies, and resource flows.
 - [Shortlist](https://ajdench.github.io/ProJob-Wiki/evaluation/shortlist/): recommended evaluation order.
 - [Scoring Matrix](https://ajdench.github.io/ProJob-Wiki/evaluation/scoring-matrix/): initial comparative scoring and weighted criteria.
+- [Gap Register](https://ajdench.github.io/ProJob-Wiki/evaluation/gap-register/): missing/thin areas, augmentations added, and remaining POC evidence needs.
 - [POC Plan](https://ajdench.github.io/ProJob-Wiki/poc/): proof-of-concept schedule, decision gates, and evidence requirements.
 - [Common Test Scenario](https://ajdench.github.io/ProJob-Wiki/poc/common-test-scenario/): the workflow every candidate must run.
 - [Target Architecture](https://ajdench.github.io/ProJob-Wiki/architecture/target-architecture/): proposed ERP/FSM core plus offline PWA architecture.
+- [Web and Stack Architecture](https://ajdench.github.io/ProJob-Wiki/architecture/web-stack-architecture/): documentation, POC, and future product runtime architecture.
+- [Component Map](https://ajdench.github.io/ProJob-Wiki/architecture/component-map/): ownership map for capabilities across ERP, PWA, Sync API, files, and planning.
+- [Integration Contracts](https://ajdench.github.io/ProJob-Wiki/architecture/integration-contracts/): canonical entities, field APIs, mutation envelope, attachment flow, and ERP adapter boundary.
+- [Deployment Runtime](https://ajdench.github.io/ProJob-Wiki/architecture/deployment-runtime/): current wiki hosting, local container runtime, POC runtime, and future production stages.
 - [Offline Sync Model](https://ajdench.github.io/ProJob-Wiki/architecture/offline-sync-model/): local data, mutation queue, conflicts, and attachment handling.
 
 ## Candidate Option Pages
@@ -31,4 +36,3 @@ Repository: https://github.com/ajdench/ProJob-Wiki
 ## Machine-Readable Full Context
 
 - [llms-full.txt](https://ajdench.github.io/ProJob-Wiki/llms-full.txt)
-

@@ -39,6 +39,7 @@ nav:
       - Shortlist: evaluation/shortlist.md
       - Scoring Matrix: evaluation/scoring-matrix.md
       - Research Questions: evaluation/research-questions.md
+      - Gap Register: evaluation/gap-register.md
   - Proofs of Concept:
       - POC Plan: poc/index.md
       - Common Test Scenario: poc/common-test-scenario.md
@@ -53,6 +54,10 @@ nav:
           - Offline PWA Findings: poc/findings/offline-pwa.md
   - Architecture:
       - Target Architecture: architecture/target-architecture.md
+      - Web and Stack Architecture: architecture/web-stack-architecture.md
+      - Component Map: architecture/component-map.md
+      - Integration Contracts: architecture/integration-contracts.md
+      - Deployment Runtime: architecture/deployment-runtime.md
       - Offline Sync Model: architecture/offline-sync-model.md
       - Permissions and Tenancy: architecture/permissions-and-tenancy.md
   - Decisions:

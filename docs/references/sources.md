@@ -4,6 +4,7 @@ Research date: 2026-04-24
 
 ## Core Business / ERP
 
+- [Odoo official Docker image](https://hub.docker.com/_/odoo/)
 - [OCA Field Service GitHub repository](https://github.com/OCA/field-service)
 - [Dolibarr official site](https://www.dolibarr.org/)
 - [Dolibarr Projects module](https://wiki.dolibarr.org/index.php/Projects)
@@ -30,14 +31,22 @@ Research date: 2026-04-24
 ## Offline-First / PWA / Sync
 
 - [Offline First sync comparison](https://offlinefirst.org/sync/)
+- [PouchDB replication guide](https://pouchdb.com/guides/replication.html)
+- [CouchDB replication introduction](https://docs.couchdb.org/en/stable/replication/intro.html)
 - [PouchDB / CouchDB FOSDEM 2026 offline-first session](https://fosdem.org/2026/schedule/event/SDHGJY-local-first-meet-pouchdb-couchdb/)
 - [RxDB offline database guide](https://rxdb.info/articles/offline-database.html)
+- [RxDB replication docs](https://rxdb.info/replication.html)
+- [PowerSync docs](https://docs.powersync.com/)
 - [KoboToolbox offline data collection](https://support.kobotoolbox.org/data-offline.html)
 - [KoboToolbox data collection tools](https://support.kobotoolbox.org/data-collection-tools.html)
 - [ODK documentation](https://docs.getodk.org/)
+
+## Local Runtime / Tooling
+
+- [Colima](https://github.com/abiosoft/colima)
+- [Podman machine documentation](https://docs.podman.io/en/latest/markdown/podman-machine.1.html)
 
 ## Documentation / Human-Readable Wiki
 
 - [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/)
 - [MkDocs](https://www.mkdocs.org/)
-

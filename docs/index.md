@@ -65,3 +65,11 @@ Run a two-week proof-of-concept against three options:
 
 Use the same test scenario for each: quote, schedule, dispatch, complete job offline, use materials, capture evidence, sync, raise variation, invoice, and report cross-project impact.
 
+## Current Documentation Gaps
+
+The gap register is now tracked as a first-class page: [Gap Register](evaluation/gap-register.md). The main remaining gaps require proof-of-concept evidence rather than more desk research:
+
+- Whether Odoo/OCA or ERPNext is the better ERP/FSM system of record.
+- Which offline PWA sync stack is safest for field writes and attachments.
+- The exact API contract between field app, sync service, ERP adapter, and file storage.
+- The real multi-company permission model after user/workflow examples are tested.
