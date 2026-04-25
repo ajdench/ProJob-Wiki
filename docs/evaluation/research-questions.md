@@ -20,22 +20,21 @@
 
 ## Evaluation Questions by Option
 
-### Odoo + OCA Field Service
+### [Odoo + OCA Field Service](../options/odoo-oca-field-service.md)
 
 - Can OCA modules cover the core job lifecycle without heavy customization?
 - How cleanly do stock, timesheets, sales, invoicing, and field orders connect?
 - Can subcontractor/portal access be scoped safely?
-- What API shape is needed for a custom offline PWA?
+- What [API shape](../architecture/integration-contracts.md) is needed for a custom [offline PWA](../options/offline-first-pwa-stack.md)?
 
-### ERPNext / Frappe
+### [ERPNext / Frappe](../options/erpnext-frappe.md)
 
 - Is maintenance visit/workflow flexible enough for trades jobs?
 - How fast can custom doctypes model checklists, evidence, variations, and field events?
-- Is Frappe a good backend for the custom PWA?
+- Is Frappe a good backend for the custom [PWA](../options/offline-first-pwa-stack.md)?
 
-### Offline PWA
+### [Offline PWA](../options/offline-first-pwa-stack.md)
 
 - Which local database/sync engine best fits the write patterns?
 - Can sync survive app restarts, poor signal, large photo queues, and duplicate retries?
-- What is the lowest-risk attachment strategy?
-
+- What is the lowest-risk [attachment strategy](../architecture/integration-contracts.md#attachment-contract)?

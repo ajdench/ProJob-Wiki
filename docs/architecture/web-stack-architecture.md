@@ -92,19 +92,19 @@ Candidate local data approaches:
 
 | Approach | Web storage model | Best fit |
 | --- | --- | --- |
-| PouchDB + CouchDB | IndexedDB plus CouchDB replication | Maximum open-source replication maturity |
-| RxDB | IndexedDB or other storage adapters with replication plugins | Reactive UI and custom sync flexibility |
-| Dexie.js + custom sync | IndexedDB wrapper plus custom queue | Smallest abstraction, highest sync responsibility |
-| PowerSync | Client-side SQLite, including web support | SQL-style local-first app backed by server database |
+| [PouchDB + CouchDB](../options/offline-first-pwa-stack.md) | IndexedDB plus CouchDB replication | Maximum open-source replication maturity |
+| [RxDB](../options/offline-first-pwa-stack.md) | IndexedDB or other storage adapters with replication plugins | Reactive UI and custom sync flexibility |
+| [Dexie.js + custom sync](../options/offline-first-pwa-stack.md) | IndexedDB wrapper plus custom queue | Smallest abstraction, highest sync responsibility |
+| [PowerSync](../options/offline-first-pwa-stack.md) | Client-side SQLite, including web support | SQL-style local-first app backed by server database |
 
 ## Backend Layer
 
 The backend should be split into:
 
-- **Application API** for office/admin screens.
-- **Sync API** for offline field mutations.
-- **ERP adapter** for translating canonical jobs, materials, time, and commercial events into the chosen ERP.
-- **Attachment service** for photos, signatures, PDFs, and drawings.
+- **[Application API](integration-contracts.md#field-read-api)** for office/admin screens.
+- **[Sync API](integration-contracts.md#field-mutation-api)** for offline field mutations.
+- **[ERP adapter](integration-contracts.md#erp-adapter-contract)** for translating canonical jobs, materials, time, and commercial events into the chosen ERP.
+- **[Attachment service](integration-contracts.md#attachment-contract)** for photos, signatures, PDFs, and drawings.
 - **Reporting projections** for dashboards and project controls.
 
 ## ERP/FSM Layer
@@ -136,7 +136,7 @@ Planning layer responsibilities:
 For the next proof-of-concept phase:
 
 1. Use **Docker/Colima** for local ERP experiments.
-2. Continue testing **Odoo/OCA** first as the ERP/FSM candidate.
-3. Keep the offline PWA stack open until the Odoo and ERPNext API boundaries are understood.
-4. For the offline PWA spike, test **PouchDB/CouchDB** and **RxDB custom sync** first.
-5. Treat **PowerSync** as a serious later option if the team chooses a Postgres-centric custom backend instead of relying primarily on ERP APIs.
+2. Continue testing **[Odoo/OCA](../options/odoo-oca-field-service.md)** first as the ERP/FSM candidate.
+3. Keep the [offline PWA stack](../options/offline-first-pwa-stack.md) open until the [Odoo](../options/odoo-oca-field-service.md) and [ERPNext](../options/erpnext-frappe.md) API boundaries are understood.
+4. For the offline PWA spike, test **[PouchDB/CouchDB](../options/offline-first-pwa-stack.md)** and **[RxDB custom sync](../options/offline-first-pwa-stack.md)** first.
+5. Treat **[PowerSync](../options/offline-first-pwa-stack.md)** as a serious later option if the team chooses a Postgres-centric custom backend instead of relying primarily on ERP APIs.

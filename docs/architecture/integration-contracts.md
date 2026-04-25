@@ -2,35 +2,35 @@
 
 ## Purpose
 
-This page defines the first-pass contracts between the offline field PWA, Sync API, ERP/FSM core, file storage, and planning layer. These contracts are deliberately canonical so they can survive the Odoo vs ERPNext decision.
+This page defines the first-pass contracts between the [offline field PWA](../options/offline-first-pwa-stack.md), [Sync API](#field-mutation-api), [ERP/FSM core](component-map.md#suite-presentation-rule), [file storage](deployment-runtime.md#future-product-runtime), and [planning layer](../options/openproject.md). These contracts are deliberately canonical so they can survive the [Odoo](../options/odoo-oca-field-service.md) vs [ERPNext](../options/erpnext-frappe.md) decision.
 
 ## Contract Principle
 
-The field app should not be tightly coupled to the selected ERP's internal tables. It should exchange canonical records and mutations with a Sync API. The ERP adapter then maps those records to Odoo/OCA, ERPNext, or another system.
+The field app should not be tightly coupled to the selected ERP's internal tables. It should exchange canonical records and mutations with a [Sync API](#field-mutation-api). The [ERP adapter](#erp-adapter-contract) then maps those records to [Odoo/OCA](../options/odoo-oca-field-service.md), [ERPNext](../options/erpnext-frappe.md), or another system.
 
 ## Canonical Entity Set
 
 | Entity | Purpose | Authoritative owner |
 | --- | --- | --- |
 | `tenant` | Top-level deployment/customer boundary | Platform |
-| `company` | Internal company, subcontractor, supplier, client | ERP/FSM |
-| `user` | Human account | Identity provider / ERP |
-| `project` | Commercial/project grouping | ERP/FSM or planning layer |
-| `site` | Physical location | ERP/FSM |
-| `job` | Work order / field task | ERP/FSM |
-| `job_assignment` | Worker/crew/vehicle schedule | ERP/FSM or scheduler |
-| `checklist_template` | Versioned field form | ERP/FSM or app admin |
-| `checklist_response` | Completed checklist instance | Sync API -> ERP/FSM |
-| `time_entry` | Labour time | Sync API -> ERP/FSM |
-| `material_usage` | Material consumed/returned | Sync API -> ERP/FSM |
-| `attachment` | Photo, signature, drawing, PDF | File storage + ERP link |
-| `variation_request` | Field-raised commercial change | ERP/FSM |
-| `dependency` | Cross-job/project blocker | Planning layer or ERP/FSM |
-| `sync_mutation` | Offline write envelope | Sync API |
+| `company` | Internal company, subcontractor, supplier, client | [ERP/FSM](component-map.md#suite-presentation-rule) |
+| `user` | Human account | Identity provider / [ERP](component-map.md#suite-presentation-rule) |
+| `project` | Commercial/project grouping | [ERP/FSM](component-map.md#suite-presentation-rule) or [planning layer](../options/openproject.md) |
+| `site` | Physical location | [ERP/FSM](component-map.md#suite-presentation-rule) |
+| `job` | Work order / field task | [ERP/FSM](component-map.md#suite-presentation-rule) |
+| `job_assignment` | Worker/crew/vehicle schedule | [ERP/FSM](component-map.md#suite-presentation-rule) or scheduler |
+| `checklist_template` | Versioned field form | [ERP/FSM](component-map.md#suite-presentation-rule) or app admin |
+| `checklist_response` | Completed checklist instance | [Sync API](#field-mutation-api) -> [ERP/FSM](component-map.md#suite-presentation-rule) |
+| `time_entry` | Labour time | [Sync API](#field-mutation-api) -> [ERP/FSM](component-map.md#suite-presentation-rule) |
+| `material_usage` | Material consumed/returned | [Sync API](#field-mutation-api) -> [ERP/FSM](component-map.md#suite-presentation-rule) |
+| `attachment` | Photo, signature, drawing, PDF | [File storage](deployment-runtime.md#future-product-runtime) + [ERP link](#erp-adapter-contract) |
+| `variation_request` | Field-raised commercial change | [ERP/FSM](component-map.md#suite-presentation-rule) |
+| `dependency` | Cross-job/project blocker | [Planning layer](../options/openproject.md) or [ERP/FSM](component-map.md#suite-presentation-rule) |
+| `sync_mutation` | Offline write envelope | [Sync API](#field-mutation-api) |
 
 ## Field Read API
 
-The field PWA needs a scoped download/read API:
+The [field PWA](../options/offline-first-pwa-stack.md) needs a scoped download/read API:
 
 ```http
 GET /sync/bootstrap?device_id=...&since=...
@@ -41,7 +41,7 @@ GET /field/documents?job_id=...
 GET /field/catalog/materials?scope=vehicle-or-company
 ```
 
-The response should be a compact read model, not the ERP's raw schema.
+The response should be a compact read model, not the [ERP](component-map.md#suite-presentation-rule)'s raw schema.
 
 ## Field Mutation API
 
@@ -87,7 +87,7 @@ Expected server response:
 
 ## Attachment Contract
 
-Attachments should be uploaded separately from structured field mutations.
+[Attachments](#attachment-contract) should be uploaded separately from structured field mutations.
 
 ```mermaid
 sequenceDiagram
@@ -120,7 +120,7 @@ Required metadata:
 
 ## ERP Adapter Contract
 
-The ERP adapter should expose stable methods to the Sync API:
+The [ERP adapter](#erp-adapter-contract) should expose stable methods to the [Sync API](#field-mutation-api):
 
 | Method | Purpose |
 | --- | --- |
@@ -135,7 +135,7 @@ The ERP adapter should expose stable methods to the Sync API:
 
 ## Planning Adapter Contract
 
-If OpenProject or another planning tool is used, it should receive summarized events rather than raw field mutations.
+If [OpenProject](../options/openproject.md) or another planning tool is used, it should receive summarized events rather than raw field mutations.
 
 Examples:
 
@@ -168,10 +168,9 @@ The field app must keep the local change visible until a user or supervisor reso
 
 | Gap | Validation route |
 | --- | --- |
-| Odoo/OCA field-service object names and module dependencies | Odoo POC |
-| ERPNext doctypes for maintenance/job/checklist mapping | ERPNext POC |
-| Attachment storage location and ERP link behavior | Odoo and ERPNext POCs |
-| Material consumption semantics | Odoo and ERPNext POCs |
-| Multi-company/subcontractor access checks | ERP POCs plus permission review |
-| Offline conflict UI | Offline PWA spike |
-
+| Odoo/OCA field-service object names and module dependencies | [Odoo POC](../poc/odoo-oca-test-plan.md) |
+| ERPNext doctypes for maintenance/job/checklist mapping | [ERPNext POC](../poc/erpnext-test-plan.md) |
+| Attachment storage location and ERP link behavior | [Odoo](../poc/odoo-oca-test-plan.md) and [ERPNext](../poc/erpnext-test-plan.md) POCs |
+| Material consumption semantics | [Odoo](../poc/odoo-oca-test-plan.md) and [ERPNext](../poc/erpnext-test-plan.md) POCs |
+| Multi-company/subcontractor access checks | [ERP POCs](../poc/index.md) plus [permission review](permissions-and-tenancy.md) |
+| Offline conflict UI | [Offline PWA spike](../poc/offline-pwa-test-plan.md) |

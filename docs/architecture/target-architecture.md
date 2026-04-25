@@ -8,12 +8,12 @@ The field app should not be a thin responsive view over an ERP. It should be an 
 
 | Component | Responsibility |
 | --- | --- |
-| ERP/FSM core | Customers, sites, quotes, jobs, stock, invoices, approvals, audit records |
-| Field PWA | Offline job execution, checklists, photos, signatures, time, materials, notes |
-| Sync API | Mutation queue ingestion, conflict detection, attachment handling, status projection |
-| Planning layer | Cross-project dependencies, Gantt, blocker tracking, programme reporting |
-| Document store | Drawings, RAMS, photos, signed PDFs, generated quotes/invoices |
-| Internal wiki | Requirements, workflows, architecture, ADRs, runbooks, research sources |
+| [ERP/FSM core](component-map.md#suite-presentation-rule) | Customers, sites, quotes, jobs, stock, invoices, approvals, audit records |
+| [Field PWA](../options/offline-first-pwa-stack.md) | Offline job execution, checklists, photos, signatures, time, materials, notes |
+| [Sync API](integration-contracts.md#field-mutation-api) | Mutation queue ingestion, conflict detection, attachment handling, status projection |
+| [Planning layer](../options/openproject.md) | Cross-project dependencies, Gantt, blocker tracking, programme reporting |
+| [Document store](deployment-runtime.md#future-product-runtime) | Drawings, RAMS, photos, signed PDFs, generated quotes/invoices |
+| [Internal wiki](../operations/jujutsu-workflow.md) | Requirements, workflows, architecture, ADRs, runbooks, research sources |
 
 For a deeper responsibility split, see [Component Map](component-map.md). For the runtime view, see [Web and Stack Architecture](web-stack-architecture.md) and [Deployment Runtime](deployment-runtime.md).
 
@@ -23,16 +23,16 @@ For user-facing composition, the selected capabilities should be synthesised int
 
 | Data | Owner |
 | --- | --- |
-| Customer / client | ERP |
-| Site / location | ERP |
-| Quote / proposal | ERP |
-| Job / work order | ERP/FSM |
-| Checklist template | ERP/FSM or field app admin |
-| Checklist response | Field PWA, synchronized to ERP/FSM |
-| Photos / signatures | Field PWA capture, document store persistence |
-| Time/materials | Field PWA capture, ERP/FSM financial posting |
-| Project dependencies | Planning layer, projected into ERP/FSM where needed |
-| Audit events | Sync API / ERP |
+| Customer / client | [ERP/FSM core](component-map.md#suite-presentation-rule) |
+| Site / location | [ERP/FSM core](component-map.md#suite-presentation-rule) |
+| Quote / proposal | [ERP/FSM core](component-map.md#suite-presentation-rule) |
+| Job / work order | [ERP/FSM core](component-map.md#suite-presentation-rule) |
+| Checklist template | [ERP/FSM core](component-map.md#suite-presentation-rule) or field app admin |
+| Checklist response | [Field PWA](../options/offline-first-pwa-stack.md), synchronized to [ERP/FSM core](component-map.md#suite-presentation-rule) |
+| Photos / signatures | [Field PWA](../options/offline-first-pwa-stack.md) capture, [document store](deployment-runtime.md#future-product-runtime) persistence |
+| Time/materials | [Field PWA](../options/offline-first-pwa-stack.md) capture, [ERP/FSM core](component-map.md#suite-presentation-rule) financial posting |
+| Project dependencies | [Planning layer](../options/openproject.md), projected into [ERP/FSM core](component-map.md#suite-presentation-rule) where needed |
+| Audit events | [Sync API](integration-contracts.md#field-mutation-api) / [ERP/FSM core](component-map.md#suite-presentation-rule) |
 
 ## Integration Model
 

@@ -14,15 +14,14 @@ No single open-source option appears to cover all of these strongly.
 
 Evaluate these first:
 
-1. Odoo Community + OCA Field Service.
-2. ERPNext / Frappe.
-3. A custom offline-first field PWA using RxDB or PouchDB/CouchDB.
+1. [Odoo Community + OCA Field Service](../options/odoo-oca-field-service.md).
+2. [ERPNext / Frappe](../options/erpnext-frappe.md).
+3. A custom [offline-first field PWA](../options/offline-first-pwa-stack.md) using RxDB or PouchDB/CouchDB.
 
-Use OpenProject, Atlas CMMS, openMAINT, Dolibarr, and KoboToolbox/ODK as secondary benchmarks or companion systems.
+Use [OpenProject](../options/openproject.md), [Atlas CMMS](../options/atlas-cmms.md), [openMAINT](../options/openmaint.md), [Dolibarr](../options/dolibarr.md), and [KoboToolbox/ODK](../options/kobotoolbox-odk.md) as secondary benchmarks or companion systems.
 
 ## Consequences
 
 - The research will focus on integration and product architecture, not just feature comparison.
-- Offline field execution will be validated as an independent technical spike.
-- The ERP decision should not be made until the PWA sync requirements are proven against realistic field workflows.
-
+- Offline field execution will be validated as an independent [technical spike](../poc/offline-pwa-test-plan.md).
+- The ERP decision should not be made until the [PWA sync requirements](../architecture/offline-sync-model.md) are proven against realistic field workflows.

@@ -2,15 +2,15 @@
 
 ## Purpose
 
-The target product should feel like one ProJob application suite, not a set of separate open-source products stitched together with links. Odoo/OCA, ERPNext, OpenProject, Atlas CMMS, openMAINT, ODK/Kobo, or sync libraries may contribute backend capabilities, patterns, or reference workflows, but users should experience a coherent product surface.
+The target product should feel like one ProJob application suite, not a set of separate open-source products stitched together with links. [Odoo/OCA](../options/odoo-oca-field-service.md), [ERPNext](../options/erpnext-frappe.md), [OpenProject](../options/openproject.md), [Atlas CMMS](../options/atlas-cmms.md), [openMAINT](../options/openmaint.md), [ODK/Kobo](../options/kobotoolbox-odk.md), or [sync libraries](../options/offline-first-pwa-stack.md) may contribute backend capabilities, patterns, or reference workflows, but users should experience a coherent product surface.
 
 ## Core Distinction
 
 | Layer | What it means | User-facing implication |
 | --- | --- | --- |
-| Upstream product UI | Native screens from Odoo, ERPNext, OpenProject, Atlas, openMAINT, ODK, etc. | Useful for administrators, POCs, and reference patterns, but inconsistent if exposed directly |
+| Upstream product UI | Native screens from [Odoo](../options/odoo-oca-field-service.md), [ERPNext](../options/erpnext-frappe.md), [OpenProject](../options/openproject.md), [Atlas](../options/atlas-cmms.md), [openMAINT](../options/openmaint.md), [ODK](../options/kobotoolbox-odk.md), etc. | Useful for administrators, POCs, and reference patterns, but inconsistent if exposed directly |
 | ProJob suite UI | A shared application shell, navigation model, design system, terminology, and workflow language | Preferred final experience for tradespeople, supervisors, schedulers, estimators, and clients |
-| Backend capability | ERP, FSM, CMMS, planning, forms, sync, storage, and reporting components | Hidden behind APIs/adapters where possible |
+| Backend capability | [ERP/FSM](component-map.md#suite-presentation-rule), [CMMS](../options/atlas-cmms.md), [planning](../options/openproject.md), [forms](../options/kobotoolbox-odk.md), [sync](integration-contracts.md#field-mutation-api), [storage](deployment-runtime.md#future-product-runtime), and reporting components | Hidden behind APIs/adapters where possible |
 | Embedded specialist UI | Select upstream admin screens exposed only when cost-effective | Acceptable for internal admins, not ideal for everyday field workflows |
 
 ## Product-Suite Principle
@@ -87,10 +87,10 @@ Use upstream systems behind APIs/adapters. Build the user-facing workflow in Pro
 
 Best for:
 
-- Field PWA.
+- [Field PWA](../options/offline-first-pwa-stack.md).
 - Supervisor review.
 - Cross-company portal.
-- Sync queue and conflict review.
+- [Sync queue and conflict review](offline-sync-model.md).
 - Customer-facing/client-facing views.
 
 ### Acceptable Pattern: Embedded Admin UI
@@ -99,14 +99,14 @@ Expose upstream UI only for specialist internal users where rebuilding it would 
 
 Possible examples:
 
-- ERP accounting setup.
+- [ERP](component-map.md#suite-presentation-rule) accounting setup.
 - Advanced stock configuration.
-- OpenProject programme administration.
-- CMMS asset hierarchy administration.
+- [OpenProject](../options/openproject.md) programme administration.
+- [CMMS](../options/atlas-cmms.md) asset hierarchy administration.
 
 ### Avoided Pattern: Patchwork Navigation
 
-Avoid sending ordinary users between unrelated Odoo, OpenProject, CMMS, and form-tool screens to complete one workflow. That produces inconsistent terminology, permissions, styling, mobile behaviour, and audit expectations.
+Avoid sending ordinary users between unrelated [Odoo](../options/odoo-oca-field-service.md), [OpenProject](../options/openproject.md), [CMMS](../options/atlas-cmms.md), and [form-tool](../options/kobotoolbox-odk.md) screens to complete one workflow. That produces inconsistent terminology, permissions, styling, mobile behaviour, and audit expectations.
 
 ## How Screenshots Should Be Read
 
@@ -149,5 +149,4 @@ The first visual design target should cover:
 5. Basic scheduling board/calendar.
 6. Variation request review.
 
-Do not attempt a full design system before the Odoo/ERPNext POCs reveal the real data and workflow constraints.
-
+Do not attempt a full design system before the [Odoo](../poc/odoo-oca-test-plan.md) and [ERPNext](../poc/erpnext-test-plan.md) POCs reveal the real data and workflow constraints.

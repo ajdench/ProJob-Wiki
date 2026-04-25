@@ -10,23 +10,23 @@ This map describes ownership of records and capabilities. It does not imply the 
 
 | Capability | Primary owner | Supporting component | Notes |
 | --- | --- | --- | --- |
-| Customer records | ERP/FSM core | Application API | Commercial source of truth |
-| Sites/locations | ERP/FSM core | Field PWA read model | Field users need cached site summaries |
-| Quotes/proposals | ERP/FSM core | Office web app | Field app may raise variation requests, not final commercial documents |
-| Jobs/work orders | ERP/FSM core | Field PWA, Sync API | ERP owns authoritative job; PWA owns local execution state while offline |
-| Checklist templates | ERP/FSM or app admin | Field PWA cache | Templates should be versioned |
-| Checklist responses | Field PWA then Sync API | ERP/FSM evidence record | Preserve history and conflicts |
-| Photos/signatures | Field PWA capture | Attachment service, ERP links | Append-only with checksums |
-| Time entries | Field PWA then Sync API | ERP/FSM timesheets | Corrections should be audited |
-| Material usage | Field PWA then Sync API | ERP/FSM stock moves | Avoid direct offline stock mutation |
-| Vehicle/tool stock | ERP/FSM core | Field PWA cache | Device may hold a scoped stock view |
-| Scheduling | ERP/FSM or scheduler service | Office web app | Depends on ERP selected |
-| Cross-project dependencies | Planning layer | Office web app, ERP links | OpenProject-style ownership if needed |
-| Subcontractor visibility | Permission service / ERP portal | Field PWA | Must be scoped by company/project/job |
-| Reports/dashboards | Reporting projections | ERP/FSM, planning layer | Avoid heavy reporting queries against mobile sync API |
-| Documents/drawings | Document store | Field PWA cache, ERP links | Needs versioning and expiry |
-| Notifications | Application API | Email/SMS/push provider | Should reference canonical records |
-| Audit trail | Sync API + ERP/FSM | Reporting | Every offline mutation needs traceability |
+| Customer records | [ERP/FSM core](#suite-presentation-rule) | [Application API](integration-contracts.md#erp-adapter-contract) | Commercial source of truth |
+| Sites/locations | [ERP/FSM core](#suite-presentation-rule) | [Field PWA](../options/offline-first-pwa-stack.md) read model | Field users need cached site summaries |
+| Quotes/proposals | [ERP/FSM core](#suite-presentation-rule) | [Office web app](suite-composition-and-design.md#recommended-suite-surfaces) | Field app may raise variation requests, not final commercial documents |
+| Jobs/work orders | [ERP/FSM core](#suite-presentation-rule) | [Field PWA](../options/offline-first-pwa-stack.md), [Sync API](integration-contracts.md#field-mutation-api) | ERP owns authoritative job; PWA owns local execution state while offline |
+| Checklist templates | [ERP/FSM core](#suite-presentation-rule) or [app admin](suite-composition-and-design.md#recommended-suite-surfaces) | [Field PWA](../options/offline-first-pwa-stack.md) cache | Templates should be versioned |
+| Checklist responses | [Field PWA](../options/offline-first-pwa-stack.md) then [Sync API](integration-contracts.md#field-mutation-api) | [ERP/FSM](#suite-presentation-rule) evidence record | Preserve history and conflicts |
+| Photos/signatures | [Field PWA](../options/offline-first-pwa-stack.md) capture | [Attachment service](integration-contracts.md#attachment-contract), [ERP links](integration-contracts.md#erp-adapter-contract) | Append-only with checksums |
+| Time entries | [Field PWA](../options/offline-first-pwa-stack.md) then [Sync API](integration-contracts.md#field-mutation-api) | [ERP/FSM](#suite-presentation-rule) timesheets | Corrections should be audited |
+| Material usage | [Field PWA](../options/offline-first-pwa-stack.md) then [Sync API](integration-contracts.md#field-mutation-api) | [ERP/FSM](#suite-presentation-rule) stock moves | Avoid direct offline stock mutation |
+| Vehicle/tool stock | [ERP/FSM core](#suite-presentation-rule) | [Field PWA](../options/offline-first-pwa-stack.md) cache | Device may hold a scoped stock view |
+| Scheduling | [ERP/FSM](#suite-presentation-rule) or scheduler service | [Office web app](suite-composition-and-design.md#recommended-suite-surfaces) | Depends on ERP selected |
+| Cross-project dependencies | [Planning layer](../options/openproject.md) | [Office web app](suite-composition-and-design.md#recommended-suite-surfaces), [ERP links](integration-contracts.md#planning-adapter-contract) | OpenProject-style ownership if needed |
+| Subcontractor visibility | [Permission service](permissions-and-tenancy.md) / ERP portal | [Field PWA](../options/offline-first-pwa-stack.md) | Must be scoped by company/project/job |
+| Reports/dashboards | [Reporting projections](deployment-runtime.md#stage-3-programme-and-reporting-layer) | [ERP/FSM](#suite-presentation-rule), [planning layer](../options/openproject.md) | Avoid heavy reporting queries against mobile sync API |
+| Documents/drawings | [Document store](deployment-runtime.md#future-product-runtime) | [Field PWA](../options/offline-first-pwa-stack.md) cache, [ERP links](integration-contracts.md#erp-adapter-contract) | Needs versioning and expiry |
+| Notifications | [Application API](integration-contracts.md) | Email/SMS/push provider | Should reference canonical records |
+| Audit trail | [Sync API](integration-contracts.md#field-mutation-api) + [ERP/FSM](#suite-presentation-rule) | [Reporting](deployment-runtime.md#stage-3-programme-and-reporting-layer) | Every offline mutation needs traceability |
 
 ## Capability Boundaries
 
@@ -63,7 +63,7 @@ This map describes ownership of records and capabilities. It does not imply the 
 
 ## MVP Component Set
 
-The smallest credible MVP component set is:
+The smallest credible MVP component set is the [Field PWA](../options/offline-first-pwa-stack.md), [Sync API](integration-contracts.md#field-mutation-api), [ERP/FSM core](#suite-presentation-rule), [file storage](deployment-runtime.md#future-product-runtime), [office workspace](suite-composition-and-design.md#recommended-suite-surfaces), and basic reporting:
 
 ```mermaid
 flowchart LR
@@ -74,26 +74,26 @@ flowchart LR
   ERP --> Reports["Basic reports"]
 ```
 
-Do not add OpenProject, separate BI, route optimization, or complex subcontractor portals until the core offline job workflow is proven.
+Do not add [OpenProject](../options/openproject.md), separate BI, route optimization, or complex subcontractor portals until the core [offline job workflow](../poc/offline-pwa-test-plan.md) is proven.
 
 ## Suite Presentation Rule
 
 | Component | User-facing presentation |
 | --- | --- |
-| ERP/FSM core | Mostly hidden behind ProJob office/admin workflows; native admin UI acceptable for specialist configuration |
-| Field PWA | Fully ProJob-native UI |
-| Sync API | Not directly visible except through sync state, queue, and conflict review UI |
-| Planning layer | Prefer ProJob project/dependency views; native OpenProject UI acceptable for programme admins |
-| Forms/checklist engine | ProJob-native checklist UI for field users; upstream form builder can be admin-only if used |
-| CMMS/asset system | ProJob resource/asset summaries for everyday users; native CMMS UI only for asset administrators |
-| File storage | ProJob evidence/document UI; raw storage UI hidden |
+| [ERP/FSM core](../options/odoo-oca-field-service.md) | Mostly hidden behind ProJob office/admin workflows; native admin UI acceptable for specialist configuration |
+| [Field PWA](../options/offline-first-pwa-stack.md) | Fully ProJob-native UI |
+| [Sync API](integration-contracts.md#field-mutation-api) | Not directly visible except through sync state, queue, and conflict review UI |
+| [Planning layer](../options/openproject.md) | Prefer ProJob project/dependency views; native OpenProject UI acceptable for programme admins |
+| [Forms/checklist engine](../options/kobotoolbox-odk.md) | ProJob-native checklist UI for field users; upstream form builder can be admin-only if used |
+| [CMMS/asset system](../options/atlas-cmms.md) | ProJob resource/asset summaries for everyday users; native CMMS UI only for asset administrators |
+| [File storage](deployment-runtime.md#future-product-runtime) | ProJob evidence/document UI; raw storage UI hidden |
 
 ## Component Selection Rule
 
 When deciding where a new feature belongs:
 
-1. If it must work offline during site work, it belongs in the Field PWA and Sync API.
-2. If it affects money, stock, or legal/audit state, ERP/FSM must own the authoritative record.
-3. If it is about programme dependencies across jobs/projects, the planning layer owns it.
+1. If it must work offline during site work, it belongs in the [Field PWA](../options/offline-first-pwa-stack.md) and [Sync API](integration-contracts.md#field-mutation-api).
+2. If it affects money, stock, or legal/audit state, [ERP/FSM](../options/odoo-oca-field-service.md) must own the authoritative record.
+3. If it is about programme dependencies across jobs/projects, the [planning layer](../options/openproject.md) owns it.
 4. If it is a derived view, reporting owns it.
-5. If it is a file or photo, object/document storage owns the bytes and ERP owns the business link.
+5. If it is a file or photo, [object/document storage](deployment-runtime.md#future-product-runtime) owns the bytes and [ERP/FSM](../options/odoo-oca-field-service.md) owns the business link.
