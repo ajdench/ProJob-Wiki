@@ -72,7 +72,7 @@ flowchart TD
   ERP --> Reports["Reporting/BI projections"]
 ```
 
-The user-facing product should be composed as one ProJob suite with shared navigation, terminology, permissions, visual styling, and status language. Upstream tools should contribute capability through APIs/adapters where possible. See [Suite Composition and Design](suite-composition-and-design.md).
+The user-facing product should be composed as one ProJob suite with shared navigation, terminology, permissions, visual styling, and status language. Upstream tools should contribute capability through APIs/adapters where possible. See [Suite Composition and Design](suite-composition-and-design.md) and [UI Framework Options](ui-framework-options.md).
 
 ## Browser/PWA Layer
 
@@ -85,6 +85,8 @@ The field PWA should:
 - Continue working through tab reloads, app restarts, and poor signal.
 
 The service worker handles installability and static assets. It does not solve data sync by itself.
+
+The first UI research direction is React + TypeScript with ProJob-owned components, not raw upstream ERP screens. See [UI Framework Options](ui-framework-options.md) for the proposed component-library and interaction-tool shortlist.
 
 ## Local Data Layer
 
@@ -137,6 +139,7 @@ For the next proof-of-concept phase:
 
 1. Use **Docker/Colima** for local ERP experiments.
 2. Continue testing **[Odoo/OCA](../options/odoo-oca-field-service.md)** first as the ERP/FSM candidate.
-3. Keep the [offline PWA stack](../options/offline-first-pwa-stack.md) open until the [Odoo](../options/odoo-oca-field-service.md) and [ERPNext](../options/erpnext-frappe.md) API boundaries are understood.
-4. For the offline PWA spike, test **[PouchDB/CouchDB](../options/offline-first-pwa-stack.md)** and **[RxDB custom sync](../options/offline-first-pwa-stack.md)** first.
-5. Treat **[PowerSync](../options/offline-first-pwa-stack.md)** as a serious later option if the team chooses a Postgres-centric custom backend instead of relying primarily on ERP APIs.
+3. Prototype the shared UI language using the [UI Framework Options](ui-framework-options.md) shortlist.
+4. Keep the [offline PWA stack](../options/offline-first-pwa-stack.md) open until the [Odoo](../options/odoo-oca-field-service.md) and [ERPNext](../options/erpnext-frappe.md) API boundaries are understood.
+5. For the offline PWA spike, test **[PouchDB/CouchDB](../options/offline-first-pwa-stack.md)** and **[RxDB custom sync](../options/offline-first-pwa-stack.md)** first.
+6. Treat **[PowerSync](../options/offline-first-pwa-stack.md)** as a serious later option if the team chooses a Postgres-centric custom backend instead of relying primarily on ERP APIs.

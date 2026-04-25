@@ -52,7 +52,7 @@ flowchart TD
 
 ## Visual System Direction
 
-The visual system should be quiet, operational, and work-focused. This is a repeated-use field and office tool, not a marketing site.
+The visual system should be quiet, operational, and work-focused. This is a repeated-use field and office tool, not a marketing site. The current UI technology shortlist is tracked in [UI Framework Options](ui-framework-options.md).
 
 | Area | Direction |
 | --- | --- |
@@ -137,6 +137,7 @@ Create these once the first POC findings exist:
 | Permission-aware UI rules | What each role can see/do in every surface |
 | Offline state patterns | Banners, queue drawer, retry state, conflict review |
 | Evidence pattern | Photos, signatures, documents, audit metadata |
+| UI framework spike | Compare the recommended [UI framework options](ui-framework-options.md) against phone, tablet, and desktop workflows |
 
 ## MVP Design Scope
 

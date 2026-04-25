@@ -41,6 +41,28 @@ Research date: 2026-04-24
 - [KoboToolbox data collection tools](https://support.kobotoolbox.org/data-collection-tools.html)
 - [ODK documentation](https://docs.getodk.org/)
 
+## UI Frameworks / Components
+
+- [shadcn/ui documentation](https://ui.shadcn.com/docs)
+- [Radix Primitives documentation](https://www.radix-ui.com/primitives/docs/overview/introduction)
+- [React Aria Components documentation](https://react-spectrum.adobe.com/react-aria/components.html)
+- [Ionic Framework documentation](https://ionicframework.com/docs)
+- [MUI documentation](https://mui.com/material-ui/getting-started/)
+- [Mantine documentation](https://mantine.dev/)
+- [Chakra UI documentation](https://chakra-ui.com/docs/components/concepts/overview)
+- [PrimeReact documentation](https://primereact.org/)
+- [Quasar Framework PWA documentation](https://quasar.dev/quasar-cli-webpack/developing-pwa/introduction)
+- [Skeleton documentation](https://www.skeleton.dev/)
+- [Shoelace documentation](https://shoelace.style/)
+- [TanStack Table repository](https://github.com/TanStack/table)
+- [TanStack Query documentation](https://tanstack.com/query/docs/docs)
+- [TanStack Router documentation](https://tanstack.com/router/router/docs)
+- [FullCalendar documentation](https://fullcalendar.io/docs)
+- [dnd kit documentation](https://docs.dndkit.com/)
+- [React Hook Form documentation](https://react-hook-form.com/)
+- [Zod documentation](https://odocs-zod.vercel.app/)
+- [Lucide documentation](https://lucide.dev/)
+
 ## Local Runtime / Tooling
 
 - [Colima](https://github.com/abiosoft/colima)

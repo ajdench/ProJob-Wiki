@@ -21,6 +21,7 @@ This page records where the wiki was thin or missing information, and what has n
 | Accounting integration | Covered only through ERP candidates | Integration contracts identify commercial ownership | Confirm whether accounting remains inside ERP |
 | Multi-company workflow | Permissions page covers roles/scopes, but legal/entity model is unresolved | Integration contracts separate tenant, company, project, job scopes | Define tenant/entity model with real user examples |
 | Unified suite UX | Option screenshots existed, but final app composition/styling distinction was implicit | Added [Suite Composition and Design](../architecture/suite-composition-and-design.md) and option-page distinction notes | Create real wireframes after POC evidence |
+| UI framework selection | Need an open-source UI stack that can support mobile, tablet, and desktop with one visual language | Added [UI Framework Options](../architecture/ui-framework-options.md) | Build a responsive UI spike with at least two framework families |
 
 ## Missing Information That Still Requires POC Evidence
 

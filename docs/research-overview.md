@@ -55,7 +55,7 @@ flowchart LR
   PM --> Docs
 ```
 
-See [Target Architecture](architecture/target-architecture.md), [Web and Stack Architecture](architecture/web-stack-architecture.md), and [Suite Composition and Design](architecture/suite-composition-and-design.md).
+See [Target Architecture](architecture/target-architecture.md), [Web and Stack Architecture](architecture/web-stack-architecture.md), [Suite Composition and Design](architecture/suite-composition-and-design.md), and [UI Framework Options](architecture/ui-framework-options.md).
 
 ## Immediate Next Step
 
@@ -75,4 +75,3 @@ The gap register is now tracked as a first-class page: [Gap Register](evaluation
 - Which [offline PWA sync stack](poc/findings/offline-pwa.md) is safest for field writes and attachments.
 - The exact [API contract](architecture/integration-contracts.md) between field app, sync service, ERP adapter, and file storage.
 - The real [multi-company permission model](architecture/permissions-and-tenancy.md) after user/workflow examples are tested.
-
