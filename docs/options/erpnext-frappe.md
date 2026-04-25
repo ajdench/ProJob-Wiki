@@ -15,15 +15,15 @@ Sources:
 
 ## Indicative Screenshots
 
-These upstream ERPNext/Frappe screenshots show the business-app style and project/inventory-adjacent surfaces relevant to this evaluation. The POC still needs to verify whether the native doctypes map cleanly to trades work orders, checklists, evidence, and variations.
+These upstream ERPNext/Frappe screenshots show maintenance-visit and material-request flows relevant to trades work orders, materials, and service visits. The POC still needs to verify whether the native doctypes map cleanly to checklists, evidence, and variations.
 
-![ERPNext business application interface](https://frappe.io/files/image1f5eff.png)
+![ERPNext maintenance visit screenshot](../assets/vendor-screenshots/erpnext/maintenance-visit.png)
 
-Source: [ERPNext official site](https://frappe.io/erpnext)
+Source: [ERPNext Maintenance Visit documentation](https://docs.frappe.io/erpnext/user/manual/en/maintenance-visit)
 
-![ERPNext projects module thumbnail](https://frappe.io/files/projectscb689c.png)
+![ERPNext material request screenshot](../assets/vendor-screenshots/erpnext/material-request.png)
 
-Source: [ERPNext official site](https://frappe.io/erpnext)
+Source: [ERPNext Material Request documentation](https://docs.frappe.io/erpnext/user/manual/en/material-request)
 
 ## Suite Integration Distinction
 

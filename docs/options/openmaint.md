@@ -13,11 +13,11 @@ Source:
 
 These screenshots show openMAINT's maintenance-oriented asset/facility workflows. They are most relevant where the trades platform becomes asset-heavy or facilities-maintenance-heavy.
 
-![openMAINT corrective maintenance screenshot](https://www.openmaint.org/en/resources/screenshots/corrective-maintenance/@@images/1f43f2f2-7749-4dcb-9e51-672018b07e6c.jpeg)
+![openMAINT corrective maintenance screenshot](../assets/vendor-screenshots/openmaint/corrective-maintenance.jpeg)
 
 Source: [openMAINT screenshots](https://www.openmaint.org/en/resources/screenshots)
 
-![openMAINT preventive maintenance screenshot](https://www.openmaint.org/en/resources/screenshots/preventive-maintenance/@@images/d613d328-aeed-4066-95f1-eb3f8594fd46.jpeg)
+![openMAINT preventive maintenance screenshot](../assets/vendor-screenshots/openmaint/preventive-maintenance.jpeg)
 
 Source: [openMAINT screenshots](https://www.openmaint.org/en/resources/screenshots)
 

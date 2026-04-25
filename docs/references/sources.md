@@ -55,8 +55,11 @@ Research date: 2026-04-24
 
 - [Odoo Field Service app page](https://www.odoo.com/app/field-service)
 - [ERPNext official site](https://frappe.io/erpnext)
+- [ERPNext Maintenance Visit documentation](https://docs.frappe.io/erpnext/user/manual/en/maintenance-visit)
+- [ERPNext Material Request documentation](https://docs.frappe.io/erpnext/user/manual/en/material-request)
 - [Dolibarr screenshots wiki](https://wiki.dolibarr.org/index.php/Screenshots)
 - [OpenProject Gantt chart docs](https://www.openproject.org/docs/user-guide/gantt-chart)
 - [Atlas CMMS official site](https://atlas-cmms.com/)
+- [Atlas CMMS work-order documentation](https://docs.atlas-cmms.com/workflows-management/work-order/managing-manual-work-orders/viewing-work-orders/)
 - [openMAINT screenshots](https://www.openmaint.org/en/resources/screenshots)
 - [ODK Collect form filling docs](https://docs.getodk.org/collect-filling-forms/)

@@ -12,15 +12,15 @@ Sources:
 
 ## Indicative Screenshots
 
-These screenshots show Atlas CMMS work-order and mobile-field surfaces, which are relevant as a technician/work-order UX benchmark.
+These screenshots show Atlas CMMS work-order list and calendar surfaces, which are relevant as a technician/work-order UX benchmark. They replace the earlier app-store style visual because that did not show useful product functionality.
 
-![Atlas CMMS work orders screenshot](https://atlas-cmms.com/static/images/overview/work_order_screenshot.png)
+![Atlas CMMS work orders list screenshot](../assets/vendor-screenshots/atlas/work-orders-list.png)
 
-Source: [Atlas CMMS official site](https://atlas-cmms.com/)
+Source: [Atlas CMMS work-order documentation](https://docs.atlas-cmms.com/workflows-management/work-order/managing-manual-work-orders/viewing-work-orders/)
 
-![Atlas CMMS mobile home screenshot](https://atlas-cmms.com/static/images/overview/mobile_home.png)
+![Atlas CMMS work-order calendar screenshot](../assets/vendor-screenshots/atlas/work-order-table.png)
 
-Source: [Atlas CMMS official site](https://atlas-cmms.com/)
+Source: [Atlas CMMS work-order documentation](https://docs.atlas-cmms.com/workflows-management/work-order/managing-manual-work-orders/viewing-work-orders/)
 
 ## Suite Integration Distinction
 

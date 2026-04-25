@@ -18,11 +18,11 @@ The [OCA field-service repository](https://github.com/OCA/field-service) include
 
 These upstream Odoo screenshots are useful for understanding the kind of field-service planning and mobile worksheet experience being evaluated. They are not proof that the OCA community modules provide the exact same screens without configuration or customization.
 
-![Odoo Field Service planning Gantt view](https://odoocdn.com/openerp_website/static/src/img/apps/field-service/field-service-planning.webp)
+![Odoo Field Service planning Gantt view](../assets/vendor-screenshots/odoo/field-service-planning.webp)
 
 Source: [Odoo Field Service app page](https://www.odoo.com/app/field-service)
 
-![Odoo Field Service worksheet and signature flow](https://odoocdn.com/openerp_website/static/src/img/apps/field-service/field-service-worksheet.webp)
+![Odoo Field Service worksheet and signature flow](../assets/vendor-screenshots/odoo/field-service-worksheet.webp)
 
 Source: [Odoo Field Service app page](https://www.odoo.com/app/field-service)
 

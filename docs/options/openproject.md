@@ -14,11 +14,11 @@ Sources:
 
 These screenshots show the specific planning views that make OpenProject relevant as a cross-project dependency and programme layer.
 
-![OpenProject filtered multi-project Gantt view](https://www.openproject.org/docs/user-guide/gantt-chart/openproject-user-guide-gantt-charts-filters-3e70eae8.png)
+![OpenProject filtered multi-project Gantt view](../assets/vendor-screenshots/openproject/gantt-filters.png)
 
 Source: [OpenProject Gantt chart docs](https://www.openproject.org/docs/user-guide/gantt-chart)
 
-![OpenProject overarching project planning view](https://www.openproject.org/docs/user-guide/gantt-chart/OpenProject-overarching-project-planning-5f83c833.png)
+![OpenProject overarching project planning view](../assets/vendor-screenshots/openproject/overarching-planning.png)
 
 Source: [OpenProject Gantt chart docs](https://www.openproject.org/docs/user-guide/gantt-chart)
 

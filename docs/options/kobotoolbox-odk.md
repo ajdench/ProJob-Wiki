@@ -15,11 +15,11 @@ Sources:
 
 These ODK Collect screenshots are relevant to the offline checklist/forms part of the platform. They show the kind of mobile field-data flow that KoboToolbox/ODK can support, not a complete trades job-management system.
 
-![ODK Collect start new form menu](https://docs.getodk.org/_images/main-menu-start-new-form.png)
+![ODK Collect start new form menu](../assets/vendor-screenshots/odk/start-new-form.png)
 
 Source: [ODK Collect form filling docs](https://docs.getodk.org/collect-filling-forms/)
 
-![ODK Collect signature widget](https://docs.getodk.org/_images/signature-widget.png)
+![ODK Collect signature widget](../assets/vendor-screenshots/odk/signature-widget.png)
 
 Source: [ODK Collect form filling docs](https://docs.getodk.org/collect-filling-forms/)
 

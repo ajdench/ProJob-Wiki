@@ -14,11 +14,11 @@ Sources:
 
 These screenshots show Dolibarr's conventional ERP/CRM interface style. They are useful as a lower-complexity SME baseline for proposals, invoices, projects, tasks, interventions, stock, and agenda workflows.
 
-![Dolibarr dashboard screenshot](https://wiki.dolibarr.org/images/e/e0/Dolibarr_screenshot1.png)
+![Dolibarr dashboard screenshot](../assets/vendor-screenshots/dolibarr/dashboard.png)
 
 Source: [Dolibarr screenshots wiki](https://wiki.dolibarr.org/index.php/Screenshots)
 
-![Dolibarr customer invoice screenshot](https://wiki.dolibarr.org/images/9/93/Dolibarr_screenshot4.png)
+![Dolibarr customer invoice screenshot](../assets/vendor-screenshots/dolibarr/invoice.png)
 
 Source: [Dolibarr screenshots wiki](https://wiki.dolibarr.org/index.php/Screenshots)
 
