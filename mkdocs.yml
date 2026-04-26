@@ -22,7 +22,9 @@ markdown_extensions:
           format: !!python/name:pymdownx.superfences.fence_code_format
 nav:
   - Overview: index.md
-  - Demo: demo.md
+  - Demo:
+      - ProJob UI Demo: demo.md
+      - Demo Notes: demo-notes.md
   - Research Overview: research-overview.md
   - Requirements:
       - Product Requirements: requirements/product-requirements.md

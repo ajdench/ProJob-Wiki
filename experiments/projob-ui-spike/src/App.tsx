@@ -71,6 +71,7 @@ import type {
   QuoteRecord,
   QueueEntry,
   QueueState,
+  ScenarioStep,
   StatusTone,
 } from '@/adapters/projob'
 import { cn } from '@/lib/utils'
@@ -84,6 +85,8 @@ const navigation = [
   { label: 'Sync queue', icon: RefreshCw },
 ]
 
+const finalScenarioStep: ScenarioStep = 6
+
 function loadPersistedState(): PersistedState {
   if (typeof window === 'undefined') {
     return createInitialState('combined')
@@ -96,7 +99,7 @@ function loadPersistedState(): PersistedState {
     }
 
     const parsed = JSON.parse(raw) as Partial<PersistedState>
-    if (!parsed.quote || !parsed.fieldJob || !parsed.sourceMode) {
+    if (!parsed.quote || !parsed.fieldJob || !parsed.sourceMode || parsed.scenarioStep === undefined) {
       return createInitialState('combined')
     }
 
@@ -106,11 +109,154 @@ function loadPersistedState(): PersistedState {
   }
 }
 
+function buildScenarioState(current: PersistedState, nextStep: ScenarioStep): PersistedState {
+  const checkedChecklist = current.fieldJob.checklist.map((row) => ({ ...row, checked: true }))
+  const startedChecklist = current.fieldJob.checklist.map((row, index) => ({
+    ...row,
+    checked: index < 2 || row.checked,
+  }))
+  const evidence = Array.from(
+    new Set([
+      ...current.fieldJob.evidence,
+      'Array and battery photos',
+      'Customer MCS handover signature',
+      'DNO dependency check captured',
+    ]),
+  )
+  const makeEntry = (label: string, detail: string, state: QueueState) => makeQueueEntry(label, detail, state)
+  const convertedQuote = {
+    ...current.quote,
+    status: 'Converted' as const,
+  }
+
+  switch (nextStep) {
+    case 0:
+      return createInitialState(current.sourceMode)
+    case 1:
+      return {
+        ...current,
+        quote: convertedQuote,
+        scenarioStep: nextStep,
+        fieldJob: {
+          ...current.fieldJob,
+          nextAction: 'Install job created from accepted quote; confirm survey pack, DNO dependency, and kit',
+        },
+        queue: [
+          makeEntry(
+            `${current.quote.id} conversion`,
+            'Accepted quote converted into install job and handover workflow',
+            'synced',
+          ),
+          ...current.queue,
+        ].slice(0, 12),
+      }
+    case 2:
+      return {
+        ...current,
+        quote: convertedQuote,
+        scenarioStep: nextStep,
+        fieldJob: {
+          ...current.fieldJob,
+          nextAction: 'DNO dependency checked; install can proceed with current export assumption',
+          evidence: current.fieldJob.evidence.includes('DNO dependency check captured')
+            ? current.fieldJob.evidence
+            : [...current.fieldJob.evidence, 'DNO dependency check captured'],
+        },
+        queue: [
+          makeEntry(`${current.fieldJob.id} DNO check`, 'G98/G99 dependency state accepted into the job', 'synced'),
+          ...current.queue,
+        ].slice(0, 12),
+      }
+    case 3:
+      return {
+        ...current,
+        quote: convertedQuote,
+        scenarioStep: nextStep,
+        fieldJob: {
+          ...current.fieldJob,
+          status: 'In progress',
+          checklist: startedChecklist,
+          note: 'Survey pack confirmed, DNO dependency checked, and install started.',
+          nextAction: 'Complete field commissioning, evidence, and customer handover signature',
+        },
+        queue: [
+          makeEntry(`${current.fieldJob.id} install start`, 'Install team started the field job', 'synced'),
+          ...current.queue,
+        ].slice(0, 12),
+      }
+    case 4:
+      return {
+        ...current,
+        quote: convertedQuote,
+        scenarioStep: nextStep,
+        offlineMode: true,
+        fieldJob: {
+          ...current.fieldJob,
+          status: 'Completed offline',
+          checklist: checkedChecklist,
+          evidence,
+          note: 'Commissioning complete. Battery handover, photos, and customer signature captured offline.',
+          signatureCaptured: true,
+          nextAction: 'Commissioning captured offline; sync required before MCS handover review',
+        },
+        queue: [
+          makeEntry(`${current.fieldJob.id} offline commissioning`, 'Field commissioning pack waiting for network', 'pending'),
+          ...current.queue,
+        ].slice(0, 12),
+      }
+    case 5:
+      return {
+        ...current,
+        quote: convertedQuote,
+        scenarioStep: nextStep,
+        offlineMode: false,
+        fieldJob: {
+          ...current.fieldJob,
+          status: 'Ready for review',
+          checklist: checkedChecklist,
+          evidence,
+          note: current.fieldJob.note || 'Commissioning complete and ready for MCS handover review.',
+          signatureCaptured: true,
+          nextAction: 'MCS and DNO handover review required',
+        },
+        queue: [
+          makeEntry(`${current.fieldJob.id} handover sync`, 'Offline commissioning pack synced for review', 'synced'),
+          ...current.queue.map((entry) =>
+            entry.state === 'pending' || entry.state === 'failed'
+              ? { ...entry, state: 'synced' as const, detail: 'Install record accepted by office system' }
+              : entry,
+          ),
+        ].slice(0, 12),
+      }
+    case 6:
+      return {
+        ...current,
+        quote: convertedQuote,
+        scenarioStep: nextStep,
+        offlineMode: false,
+        fieldJob: {
+          ...current.fieldJob,
+          status: 'Approved',
+          checklist: checkedChecklist,
+          evidence,
+          note: current.fieldJob.note || 'Commissioning complete and approved.',
+          signatureCaptured: true,
+          approvedAt: 'Approved in compliance workspace',
+          nextAction: 'MCS handover pack approved',
+        },
+        queue: [
+          makeEntry(`${current.fieldJob.id} approval`, 'Compliance lead approved MCS handover pack', 'synced'),
+          ...current.queue,
+        ].slice(0, 12),
+      }
+  }
+}
+
 function App() {
   const [persisted, setPersisted] = useState<PersistedState>(() => loadPersistedState())
   const [selectedJobId, setSelectedJobId] = useState(() => loadPersistedState().fieldJob.id)
 
-  const { fieldJob, offlineMode, queue, quote, sourceMode } = persisted
+  const { fieldJob, offlineMode, queue, quote, scenarioStep, sourceMode } = persisted
   const dispatchJobs = useMemo(
     () => [fieldJobToDispatch(fieldJob, queue), ...sourceDispatchJobs(sourceMode)],
     [fieldJob, queue, sourceMode],
@@ -154,6 +300,21 @@ function App() {
     window.localStorage.setItem(storageKey, JSON.stringify(nextState))
   }
 
+  function advanceScenario() {
+    setPersisted((current) => {
+      const nextStep = Math.min(current.scenarioStep + 1, finalScenarioStep) as ScenarioStep
+      return buildScenarioState(current, nextStep)
+    })
+    setSelectedJobId(fieldJob.id)
+  }
+
+  function resetScenario() {
+    const nextState = createInitialState(sourceMode)
+    setPersisted(nextState)
+    setSelectedJobId(nextState.fieldJob.id)
+    window.localStorage.setItem(storageKey, JSON.stringify(nextState))
+  }
+
   function convertQuoteToJob() {
     setPersisted((current) => {
       if (current.quote.status === 'Converted') {
@@ -166,6 +327,7 @@ function App() {
           ...current.quote,
           status: 'Converted',
         },
+        scenarioStep: current.scenarioStep === 0 ? 1 : current.scenarioStep,
         fieldJob: {
           ...current.fieldJob,
           nextAction: 'Install job created from accepted quote; confirm survey pack, DNO dependency, and kit',
@@ -373,7 +535,14 @@ function App() {
 
           <QuoteWorkflow fieldJob={fieldJob} onConvertQuote={convertQuoteToJob} quote={quote} />
 
-          <ScenarioPath fieldJob={fieldJob} offlineMode={offlineMode} quote={quote} />
+          <ScenarioPath
+            fieldJob={fieldJob}
+            offlineMode={offlineMode}
+            onAdvanceScenario={advanceScenario}
+            onResetScenario={resetScenario}
+            quote={quote}
+            scenarioStep={scenarioStep}
+          />
 
           <AdapterMap sourceMode={sourceMode} />
 
@@ -576,16 +745,18 @@ function WorkflowStep({
 function ScenarioPath({
   fieldJob,
   offlineMode,
+  onAdvanceScenario,
+  onResetScenario,
   quote,
+  scenarioStep,
 }: {
   fieldJob: FieldJob
   offlineMode: boolean
+  onAdvanceScenario: () => void
+  onResetScenario: () => void
   quote: QuoteRecord
+  scenarioStep: ScenarioStep
 }) {
-  const quoteConverted = quote.status === 'Converted'
-  const commissioned =
-    fieldJob.status === 'Completed offline' || fieldJob.status === 'Ready for review' || fieldJob.status === 'Approved'
-  const approved = fieldJob.status === 'Approved'
   const steps: Array<{
     label: string
     source: string
@@ -593,7 +764,7 @@ function ScenarioPath({
     ui: string
     offline: string
     icon: LucideIcon
-    tone: StatusTone
+    activeTone: StatusTone
   }> = [
     {
       label: 'Quote accepted',
@@ -602,7 +773,7 @@ function ScenarioPath({
       ui: 'Customer, property, price, system size, storage, and DNO assumption',
       offline: 'Read-only quote pack can be cached before survey',
       icon: FileSignature,
-      tone: 'success',
+      activeTone: 'info',
     },
     {
       label: 'Survey pack',
@@ -611,7 +782,7 @@ function ScenarioPath({
       ui: 'Site notes, roof layout, kit assumptions, customer contact, and risk notes',
       offline: 'Survey pack is available on the field device',
       icon: HardHat,
-      tone: quoteConverted ? 'success' : 'info',
+      activeTone: 'info',
     },
     {
       label: 'DNO check',
@@ -620,7 +791,7 @@ function ScenarioPath({
       ui: 'G98/G99 dependency, blocker status, export limit, and decision owner',
       offline: 'Dependency state is visible even when the device is offline',
       icon: GitBranch,
-      tone: quoteConverted ? 'sync' : 'neutral',
+      activeTone: 'sync',
     },
     {
       label: 'Install scheduled',
@@ -629,7 +800,7 @@ function ScenarioPath({
       ui: 'One install job merges customer, kit, team, DNO dependency, and checklist',
       offline: 'Assigned work remains actionable without network',
       icon: CalendarDays,
-      tone: fieldJob.status === 'Assigned' ? 'neutral' : 'sync',
+      activeTone: 'sync',
     },
     {
       label: 'Field commissioning',
@@ -638,7 +809,7 @@ function ScenarioPath({
       ui: 'Checklist, photos, kit exception, note, time, and signature capture',
       offline: offlineMode ? 'Writes queue locally until sync can run' : 'Writes can sync immediately',
       icon: ClipboardCheck,
-      tone: commissioned ? 'success' : 'warning',
+      activeTone: 'warning',
     },
     {
       label: 'MCS handover review',
@@ -647,9 +818,10 @@ function ScenarioPath({
       ui: 'Compliance workspace resolves evidence, DNO dependency, and kit changes',
       offline: 'Pending evidence stays visible in the sync queue',
       icon: CheckCircle2,
-      tone: approved ? 'success' : commissioned ? 'info' : 'neutral',
+      activeTone: 'info',
     },
   ]
+  const complete = scenarioStep >= finalScenarioStep
 
   return (
     <Card className="mb-5">
@@ -658,10 +830,22 @@ function ScenarioPath({
         <CardDescription>
           The demo now follows the full PV and storage job path across quote, DNO, install, and handover.
         </CardDescription>
+        <CardAction>
+          <div className="flex flex-wrap justify-end gap-2">
+            <Button disabled={complete} onClick={onAdvanceScenario} size="sm">
+              <CheckCircle2 data-icon="inline-start" />
+              {complete ? 'Scenario complete' : scenarioStep === 0 ? 'Run scenario' : 'Advance scenario'}
+            </Button>
+            <Button onClick={onResetScenario} size="sm" variant="outline">
+              <RefreshCw data-icon="inline-start" />
+              Reset scenario
+            </Button>
+          </div>
+        </CardAction>
       </CardHeader>
       <CardContent className="grid gap-2 md:grid-cols-2 xl:grid-cols-3">
-        {steps.map((step) => (
-          <ScenarioStep key={step.label} step={step} />
+        {steps.map((step, index) => (
+          <ScenarioStep key={step.label} scenarioStep={scenarioStep} step={step} stepIndex={index} />
         ))}
       </CardContent>
     </Card>
@@ -669,8 +853,11 @@ function ScenarioPath({
 }
 
 function ScenarioStep({
+  scenarioStep,
   step,
+  stepIndex,
 }: {
+  scenarioStep: ScenarioStep
   step: {
     label: string
     source: string
@@ -678,13 +865,22 @@ function ScenarioStep({
     ui: string
     offline: string
     icon: LucideIcon
-    tone: StatusTone
+    activeTone: StatusTone
   }
+  stepIndex: number
 }) {
   const Icon = step.icon
+  const isDone = scenarioStep > stepIndex
+  const isCurrent = scenarioStep === stepIndex
+  const tone = isDone ? 'success' : isCurrent ? step.activeTone : 'neutral'
 
   return (
-    <div className="grid min-w-0 grid-cols-[1.25rem_minmax(0,1fr)] gap-x-3 gap-y-2 rounded-md border bg-background p-3">
+    <div
+      className={cn(
+        'grid min-w-0 grid-cols-[1.25rem_minmax(0,1fr)] gap-x-3 gap-y-2 rounded-md border bg-background p-3',
+        isCurrent && 'border-primary bg-muted/60',
+      )}
+    >
       <Icon aria-hidden="true" className="mt-0.5 justify-self-center" />
       <div className="min-w-0">
         <div className="grid min-w-0 gap-2 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-start">
@@ -695,7 +891,7 @@ function ScenarioStep({
           <span
             className={cn(
               'max-w-full rounded-sm px-2 py-1 text-xs font-bold break-words sm:max-w-44 sm:justify-self-end sm:text-right',
-              statusBadgeClass(step.tone),
+              statusBadgeClass(tone),
             )}
           >
             {step.record}

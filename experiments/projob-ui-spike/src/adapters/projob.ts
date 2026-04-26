@@ -6,6 +6,7 @@ export type QueueState = 'pending' | 'synced' | 'failed' | 'conflict'
 export type JobStatus = 'Assigned' | 'In progress' | 'Completed offline' | 'Ready for review' | 'Approved'
 export type QuoteStatus = 'Accepted' | 'Converted'
 export type DemoSourceMode = 'combined' | 'odoo' | 'openproject'
+export type ScenarioStep = 0 | 1 | 2 | 3 | 4 | 5 | 6
 
 export type ChecklistRow = {
   id: string
@@ -78,9 +79,10 @@ export type PersistedState = {
   queue: QueueEntry[]
   offlineMode: boolean
   sourceMode: DemoSourceMode
+  scenarioStep: ScenarioStep
 }
 
-export const storageKey = 'projob-ui-spike.vertical-slice.v4'
+export const storageKey = 'projob-ui-spike.vertical-slice.v5'
 
 export const sourceOptions: Array<{ value: DemoSourceMode; label: string; detail: string }> = [
   {
@@ -107,6 +109,7 @@ export function createInitialState(sourceMode: DemoSourceMode): PersistedState {
     queue: [],
     offlineMode: false,
     sourceMode,
+    scenarioStep: 0,
   }
 }
 

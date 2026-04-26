@@ -36,3 +36,5 @@ Simulated behaviours include:
 - Service worker installability.
 
 The architecture boundary is documented in [Demo Architecture](architecture/demo-architecture.md).
+
+See also [Demo Notes](demo-notes.md) for the current implementation boundary and what remains simulated.
