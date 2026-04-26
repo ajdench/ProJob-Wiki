@@ -579,7 +579,7 @@ function FieldPhone({
   return (
     <article
       aria-label="Field mobile prototype"
-      className="rounded-xl border bg-card p-4 shadow-[0_24px_50px_rgba(23,50,77,0.16)] xl:rounded-[28px]"
+      className="min-w-0 max-w-full rounded-xl border bg-card p-4 shadow-[0_24px_50px_rgba(23,50,77,0.16)] xl:rounded-[28px]"
       id="jobs"
     >
       <div className="mb-4 flex items-center justify-between text-sm font-bold">
@@ -587,10 +587,10 @@ function FieldPhone({
         <StatusChip tone={offlineMode ? 'warning' : 'sync'}>{offlineMode ? 'Offline' : 'Online'}</StatusChip>
       </div>
 
-      <div className="mb-3 flex items-start justify-between gap-3">
-        <div>
+      <div className="mb-3 flex flex-wrap items-start justify-between gap-3">
+        <div className="min-w-0">
           <p className="text-sm font-semibold text-muted-foreground">Field job</p>
-          <h2 className="text-2xl font-bold">{fieldJob.id}</h2>
+          <h2 className="text-2xl font-bold break-words">{fieldJob.id}</h2>
         </div>
         <StatusChip tone={jobTone(fieldJob.status)}>{fieldJob.status}</StatusChip>
       </div>
@@ -635,7 +635,7 @@ function FieldPhone({
             placeholder="Completion note"
             value={fieldJob.note}
           />
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-[repeat(auto-fit,minmax(8rem,1fr))] gap-2">
             <Button onClick={onSaveNote} variant="outline">
               <Save data-icon="inline-start" />
               Save note
@@ -681,12 +681,12 @@ function DesktopWorkspace({
   onSelectJob: (id: string) => void
 }) {
   return (
-    <section aria-label="Office desktop prototype" className="rounded-lg border bg-card p-4 lg:p-6">
+    <section aria-label="Office desktop prototype" className="min-w-0 rounded-lg border bg-card p-4 lg:p-6">
       <Tabs defaultValue="board" className="gap-0">
         <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-          <div>
+          <div className="min-w-0">
             <p className="text-sm font-semibold text-muted-foreground">Office workspace</p>
-            <h2 className="mt-1 text-2xl font-bold">Schedule, sync, review</h2>
+            <h2 className="mt-1 text-2xl font-bold break-words">Schedule, sync, review</h2>
           </div>
           <TabsList>
             <TabsTrigger value="board">Board</TabsTrigger>
@@ -702,7 +702,7 @@ function DesktopWorkspace({
         </div>
 
         <TabsContent className="mt-5" value="board">
-          <div className="grid gap-4 xl:grid-cols-2">
+          <div className="grid min-w-0 gap-4 xl:grid-cols-2">
             <Card>
               <CardHeader>
                 <CardTitle>Dispatch</CardTitle>
@@ -826,7 +826,7 @@ function JobSummary({ job, selected = false }: { job: DispatchJob; selected?: bo
   return (
     <div
       className={cn(
-        'flex items-start justify-between gap-3 rounded-md border p-3',
+        'grid min-w-0 grid-cols-1 gap-3 rounded-md border p-3 min-[380px]:grid-cols-[minmax(0,1fr)_auto] min-[380px]:items-start',
         selected ? 'border-primary bg-muted/60' : 'border-border bg-card',
       )}
     >
@@ -855,13 +855,13 @@ function ReviewQueueRow({
   tone: StatusTone
 }) {
   return (
-    <div className="grid grid-cols-[4px_minmax(0,1fr)_auto] items-center gap-3 border-t pt-3">
+    <div className="grid grid-cols-[4px_minmax(0,1fr)] items-center gap-3 border-t pt-3 min-[380px]:grid-cols-[4px_minmax(0,1fr)_auto]">
       <span className={cn('h-10 rounded-full', statusRailClass(tone))} aria-hidden="true" />
       <div className="min-w-0">
         <strong className="block truncate">{title}</strong>
         <span className="block truncate text-sm text-muted-foreground">{detail}</span>
       </div>
-      <Button variant="outline" size="sm">
+      <Button className="col-start-2 justify-self-start min-[380px]:col-start-auto" variant="outline" size="sm">
         {action}
       </Button>
     </div>
@@ -898,10 +898,10 @@ function EvidencePanel({ job }: { job: FieldJob }) {
       </CardHeader>
       <CardContent className="flex flex-col gap-3">
         {job.evidence.map((item) => (
-          <div className="flex items-center justify-between gap-3 rounded-md border p-3" key={item}>
-            <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center justify-between gap-3 rounded-md border p-3" key={item}>
+            <div className="flex min-w-0 items-center gap-2">
               <FileSignature aria-hidden="true" />
-              <span className="text-sm font-semibold">{item}</span>
+              <span className="text-sm font-semibold break-words">{item}</span>
             </div>
             <StatusChip tone="sync">Local</StatusChip>
           </div>
@@ -968,11 +968,11 @@ function InfoRow({
   value: string
 }) {
   return (
-    <div className="flex items-start gap-3 rounded-md border bg-background p-3">
-      <Icon aria-hidden="true" />
+    <div className="flex min-w-0 items-start gap-3 rounded-md border bg-background p-3">
+      <Icon aria-hidden="true" className="shrink-0" />
       <div className="min-w-0">
         <span className="block text-xs font-bold text-muted-foreground">{label}</span>
-        <strong className="block text-sm">{value}</strong>
+        <strong className="block text-sm break-words">{value}</strong>
       </div>
     </div>
   )
