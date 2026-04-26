@@ -75,6 +75,7 @@ const navigation = [
   { label: 'Jobs', icon: BriefcaseBusiness },
   { label: 'Schedule', icon: CalendarDays },
   { label: 'Review', icon: ClipboardCheck },
+  { label: 'Quotes', icon: FileSignature },
   { label: 'Resources', icon: Truck },
   { label: 'Sync queue', icon: RefreshCw },
 ]
