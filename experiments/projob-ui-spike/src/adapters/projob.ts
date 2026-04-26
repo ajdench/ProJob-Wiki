@@ -130,7 +130,7 @@ export function createInitialQuote(sourceMode: DemoSourceMode): QuoteRecord {
     storage: sourceMode === 'openproject' ? '48kWh BESS' : '9.5kWh HESS',
     dno: sourceMode === 'openproject' ? 'G99 application dependency' : 'G98 assumed, G99 check if export changes',
     price: sourceMode === 'openproject' ? 'GBP 68,400' : 'GBP 12,840',
-    margin: sourceMode === 'openproject' ? '24% target margin' : '28% target margin',
+    margin: sourceMode === 'openproject' ? '24% target' : '28% target',
     status: 'Accepted',
     source: sourceLabel,
   }
