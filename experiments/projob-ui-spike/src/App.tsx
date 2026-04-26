@@ -72,11 +72,11 @@ import type {
 import { cn } from '@/lib/utils'
 
 const navigation = [
+  { label: 'Quotes', icon: FileSignature },
   { label: 'Jobs', icon: BriefcaseBusiness },
   { label: 'Schedule', icon: CalendarDays },
-  { label: 'Review', icon: ClipboardCheck },
-  { label: 'Quotes', icon: FileSignature },
   { label: 'Resources', icon: Truck },
+  { label: 'Review', icon: ClipboardCheck },
   { label: 'Sync queue', icon: RefreshCw },
 ]
 
