@@ -318,7 +318,7 @@ function App() {
         <Sidebar offlineMode={offlineMode} queueCounts={queueCounts} />
 
         <section className="min-w-0 p-4 sm:p-6 xl:p-8">
-          <header className="mb-5 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <header className="mb-5 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
             <div>
               <p className="text-sm font-semibold text-muted-foreground">Today, 25 Apr</p>
               <h1 className="mt-1 text-2xl font-bold tracking-normal text-foreground sm:text-3xl">
