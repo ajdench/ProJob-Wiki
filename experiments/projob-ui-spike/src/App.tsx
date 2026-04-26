@@ -397,11 +397,12 @@ function DemoSourcePanel({
         </CardAction>
       </CardHeader>
       <CardContent className="grid gap-3 xl:grid-cols-[minmax(0,1fr)_minmax(280px,0.7fr)]">
-        <div className="grid gap-2 sm:grid-cols-[repeat(auto-fit,minmax(11rem,1fr))]">
+        <div className="grid gap-2 sm:grid-cols-2">
           {sourceOptions.map((option) => (
             <button
               className={cn(
                 'grid min-h-24 grid-cols-[1.25rem_minmax(0,1fr)] content-start gap-x-3 gap-y-1 rounded-md border p-3 text-left transition-colors hover:bg-muted',
+                option.value === 'combined' && 'sm:col-span-2',
                 sourceMode === option.value && 'border-primary bg-muted/70',
               )}
               key={option.value}
