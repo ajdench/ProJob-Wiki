@@ -395,18 +395,22 @@ function DemoSourcePanel({
           {sourceOptions.map((option) => (
             <button
               className={cn(
-                'min-h-24 rounded-md border p-3 text-left transition-colors hover:bg-muted',
+                'grid min-h-24 content-start gap-2 rounded-md border p-3 text-left transition-colors hover:bg-muted',
                 sourceMode === option.value && 'border-primary bg-muted/70',
               )}
               key={option.value}
               onClick={() => onChangeSourceMode(option.value)}
               type="button"
             >
-              <span className="flex items-center gap-2 text-sm font-bold">
-                {option.value === 'openproject' ? <GitBranch aria-hidden="true" /> : <Database aria-hidden="true" />}
-                {option.label}
+              <span className="grid min-h-10 grid-cols-[1.25rem_minmax(0,1fr)] items-center gap-2 text-sm font-bold">
+                {option.value === 'openproject' ? (
+                  <GitBranch aria-hidden="true" className="justify-self-center" />
+                ) : (
+                  <Database aria-hidden="true" className="justify-self-center" />
+                )}
+                <span className="break-words">{option.label}</span>
               </span>
-              <span className="mt-2 block text-sm text-muted-foreground">{option.detail}</span>
+              <span className="block text-sm text-muted-foreground">{option.detail}</span>
             </button>
           ))}
         </div>
