@@ -417,7 +417,7 @@ function DemoSourcePanel({
           ))}
         </div>
         <div className="grid gap-2 text-sm">
-          <InfoRow icon={Database} label="Odoo adapter" value="Normalises customer, survey, install, kit, time, and MCS review records" />
+          <InfoRow icon={Blocks} label="Odoo adapter" value="Normalises customer, survey, install, kit, time, and MCS review records" />
           <InfoRow icon={GitBranch} label="OpenProject adapter" value="Normalises DNO, scaffold, work package, blocker, and handover milestone records" />
         </div>
       </CardContent>
