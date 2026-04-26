@@ -5,6 +5,7 @@ This workspace contains an internal research pack for an offline-first PWA platf
 Start here:
 
 - [Research overview](docs/index.md)
+- [ProJob UI demo page](docs/demo.md)
 - [Design brief](design.md)
 - [DESIGN.md standard](docs/architecture/design-md-standard.md)
 - [Application suite blueprint](docs/architecture/application-suite-blueprint.md)

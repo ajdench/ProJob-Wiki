@@ -103,7 +103,7 @@ The next implementation slice should prove one complete offline-first loop:
 8. Supervisor reviews completion, evidence, and material exceptions.
 9. Supervisor raises a variation or approves invoice-ready completion.
 
-This slice has started in the existing [UI framework spike](../poc/findings/ui-framework-spike.md) with mocked `localStorage` persistence, offline mode, mutation queue states, sync, supervisor review, and approval. The [offline PWA test plan](../poc/offline-pwa-test-plan.md) remains the reliability test once a real local database and sync engine are selected.
+This slice has started in the existing [UI framework spike](../poc/findings/ui-framework-spike.md) with mocked `localStorage` persistence, offline mode, mutation queue states, sync, supervisor review, approval, and static Odoo/OpenProject-shaped fixture modes. The [offline PWA test plan](../poc/offline-pwa-test-plan.md) remains the reliability test once a real local database and sync engine are selected.
 
 ## Decision Records Needed
 

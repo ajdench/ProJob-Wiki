@@ -23,7 +23,9 @@ Most business systems are good in the office but weak on site.
 
 Most field apps are good for checklists but weak at quotes, materials, invoices, project dependencies, and cross-company coordination.
 
-ProJob is exploring how to combine the useful parts into one coherent application suite. The architecture direction is described in [Suite Composition and Design](architecture/suite-composition-and-design.md), [Application Suite Blueprint](architecture/application-suite-blueprint.md), [Web and Stack Architecture](architecture/web-stack-architecture.md), [UI Framework Options](architecture/ui-framework-options.md), and [Component Map](architecture/component-map.md).
+ProJob is exploring how to combine the useful parts into one coherent application suite. The architecture direction is described in [Suite Composition and Design](architecture/suite-composition-and-design.md), [Application Suite Blueprint](architecture/application-suite-blueprint.md), [Demo Architecture](architecture/demo-architecture.md), [Web and Stack Architecture](architecture/web-stack-architecture.md), [UI Framework Options](architecture/ui-framework-options.md), and [Component Map](architecture/component-map.md).
+
+The current interactive demo is linked from [ProJob UI Demo](demo.md).
 
 ## What A Worker Would See
 

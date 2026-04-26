@@ -6,7 +6,9 @@ import {
   CheckCircle2,
   ClipboardCheck,
   Clock3,
+  Database,
   FileSignature,
+  GitBranch,
   HardHat,
   ListChecks,
   PackageCheck,
@@ -52,6 +54,7 @@ import { cn } from '@/lib/utils'
 type StatusTone = 'success' | 'warning' | 'danger' | 'info' | 'sync' | 'neutral'
 type QueueState = 'pending' | 'synced' | 'failed' | 'conflict'
 type JobStatus = 'Assigned' | 'In progress' | 'Completed offline' | 'Ready for review' | 'Approved'
+type DemoSourceMode = 'combined' | 'odoo' | 'openproject'
 
 type ChecklistRow = {
   id: string
@@ -75,6 +78,7 @@ type FieldJob = {
   materialUsed: string
   materialException: boolean
   signatureCaptured: boolean
+  source: string
   approvedAt?: string
 }
 
@@ -92,6 +96,7 @@ type DispatchJob = {
   evidence: string[]
   syncState: string
   material: string
+  source: string
 }
 
 type QueueEntry = {
@@ -106,9 +111,10 @@ type PersistedState = {
   fieldJob: FieldJob
   queue: QueueEntry[]
   offlineMode: boolean
+  sourceMode: DemoSourceMode
 }
 
-const storageKey = 'projob-ui-spike.vertical-slice.v1'
+const storageKey = 'projob-ui-spike.vertical-slice.v2'
 
 const initialFieldJob: FieldJob = {
   id: 'PJ-1048',
@@ -131,9 +137,10 @@ const initialFieldJob: FieldJob = {
   materialUsed: 'Extractor fan x1, isolator x1',
   materialException: false,
   signatureCaptured: false,
+  source: 'Odoo work order fixture',
 }
 
-const seededDispatchJobs: DispatchJob[] = [
+const odooDispatchJobs: DispatchJob[] = [
   {
     id: 'PJ-1051',
     title: 'Electrical condition photo set',
@@ -148,6 +155,7 @@ const seededDispatchJobs: DispatchJob[] = [
     evidence: ['Site document cached'],
     syncState: 'Available offline',
     material: 'No planned materials',
+    source: 'Odoo field service fixture',
   },
   {
     id: 'PJ-1055',
@@ -163,6 +171,62 @@ const seededDispatchJobs: DispatchJob[] = [
     evidence: ['Method statement cached'],
     syncState: 'Synced 09:42',
     material: 'Panel clips, sealant',
+    source: 'Odoo maintenance fixture',
+  },
+]
+
+const openProjectFieldJob: FieldJob = {
+  ...initialFieldJob,
+  id: 'OP-2187',
+  title: 'Fire stopping dependency inspection',
+  site: 'Block C riser, Brixton Hill',
+  owner: 'Southline Fire + A. Patel',
+  status: 'Assigned',
+  nextAction: 'Confirm blocker is cleared before handoff',
+  checklist: [
+    { id: 'access', label: 'Access route confirmed', required: true, checked: false },
+    { id: 'blocker', label: 'Dependency blocker reviewed', required: true, checked: false },
+    { id: 'photos', label: 'Riser photos attached', required: true, checked: false },
+    { id: 'materials', label: 'Sealant/fire collar requirement recorded', required: true, checked: false },
+    { id: 'signature', label: 'Subcontractor handoff signed', required: true, checked: false },
+  ],
+  evidence: ['OpenProject work package cached'],
+  materialUsed: 'Fire collar check, sealant allowance',
+  source: 'OpenProject work package fixture',
+}
+
+const openProjectDispatchJobs: DispatchJob[] = [
+  {
+    id: 'OP-2189',
+    title: 'Cable route predecessor check',
+    site: 'Block C riser, Brixton Hill',
+    window: 'Today',
+    owner: 'Subcontractor: Southline Fire',
+    status: 'Blocked',
+    tone: 'warning',
+    nextAction: 'Waiting on containment completion from electrical crew',
+    checklistDone: 1,
+    checklistTotal: 4,
+    evidence: ['Dependency note', 'Programme snapshot'],
+    syncState: 'Planning event imported',
+    material: 'Dependency: electrical containment',
+    source: 'OpenProject dependency fixture',
+  },
+  {
+    id: 'OP-2194',
+    title: 'Client handover milestone',
+    site: 'Brixton Hill programme',
+    window: 'Fri 01 May',
+    owner: 'Project manager',
+    status: 'At risk',
+    tone: 'danger',
+    nextAction: 'Riser inspection drives handover date',
+    checklistDone: 0,
+    checklistTotal: 3,
+    evidence: ['Milestone baseline'],
+    syncState: 'Planning milestone imported',
+    material: 'No field materials',
+    source: 'OpenProject milestone fixture',
   },
 ]
 
@@ -176,18 +240,32 @@ const navigation = [
 
 function loadPersistedState(): PersistedState {
   if (typeof window === 'undefined') {
-    return { fieldJob: initialFieldJob, queue: [], offlineMode: false }
+    return createInitialState('combined')
   }
 
   try {
     const raw = window.localStorage.getItem(storageKey)
     if (!raw) {
-      return { fieldJob: initialFieldJob, queue: [], offlineMode: false }
+      return createInitialState('combined')
     }
 
-    return JSON.parse(raw) as PersistedState
+    const parsed = JSON.parse(raw) as Partial<PersistedState>
+    if (!parsed.fieldJob || !parsed.sourceMode) {
+      return createInitialState('combined')
+    }
+
+    return parsed as PersistedState
   } catch {
-    return { fieldJob: initialFieldJob, queue: [], offlineMode: false }
+    return createInitialState('combined')
+  }
+}
+
+function createInitialState(sourceMode: DemoSourceMode): PersistedState {
+  return {
+    fieldJob: sourceMode === 'openproject' ? openProjectFieldJob : initialFieldJob,
+    queue: [],
+    offlineMode: false,
+    sourceMode,
   }
 }
 
@@ -195,8 +273,11 @@ function App() {
   const [persisted, setPersisted] = useState<PersistedState>(() => loadPersistedState())
   const [selectedJobId, setSelectedJobId] = useState(initialFieldJob.id)
 
-  const { fieldJob, offlineMode, queue } = persisted
-  const dispatchJobs = useMemo(() => [fieldJobToDispatch(fieldJob, queue), ...seededDispatchJobs], [fieldJob, queue])
+  const { fieldJob, offlineMode, queue, sourceMode } = persisted
+  const dispatchJobs = useMemo(
+    () => [fieldJobToDispatch(fieldJob, queue), ...sourceDispatchJobs(sourceMode)],
+    [fieldJob, queue, sourceMode],
+  )
   const selectedJob = dispatchJobs.find((job) => job.id === selectedJobId) ?? dispatchJobs[0]
   const queueCounts = useMemo(() => countQueueStates(queue), [queue])
   const checklistDone = fieldJob.checklist.filter((row) => row.checked).length
@@ -226,6 +307,13 @@ function App() {
 
   function toggleOfflineMode() {
     setPersisted((current) => ({ ...current, offlineMode: !current.offlineMode }))
+  }
+
+  function changeSourceMode(source: DemoSourceMode) {
+    const nextState = createInitialState(source)
+    setPersisted(nextState)
+    setSelectedJobId(nextState.fieldJob.id)
+    window.localStorage.setItem(storageKey, JSON.stringify(nextState))
   }
 
   function toggleChecklistRow(id: string, checked: boolean) {
@@ -286,7 +374,10 @@ function App() {
       (job) => ({
         ...job,
         materialException: true,
-        materialUsed: 'Extractor fan x1, isolator x1, fire collar x1',
+        materialUsed:
+          job.source.includes('OpenProject')
+            ? 'Fire collar check, sealant allowance, access delay'
+            : 'Extractor fan x1, isolator x1, fire collar x1',
         checklist: job.checklist.map((row) => (row.id === 'materials' ? { ...row, checked: true } : row)),
       }),
       `${fieldJob.id} material exception`,
@@ -376,8 +467,9 @@ function App() {
   }
 
   function resetPrototype() {
-    setPersisted({ fieldJob: initialFieldJob, queue: [], offlineMode: false })
-    setSelectedJobId(initialFieldJob.id)
+    const nextState = createInitialState(sourceMode)
+    setPersisted(nextState)
+    setSelectedJobId(nextState.fieldJob.id)
     window.localStorage.removeItem(storageKey)
   }
 
@@ -391,7 +483,7 @@ function App() {
             <div>
               <p className="text-sm font-semibold text-muted-foreground">Today, 25 Apr</p>
               <h1 className="mt-1 text-2xl font-bold tracking-normal text-foreground sm:text-3xl">
-                Offline job execution loop
+                ProJob integrated operations demo
               </h1>
             </div>
             <div className="grid grid-cols-2 gap-2 sm:flex">
@@ -405,6 +497,8 @@ function App() {
               </Button>
             </div>
           </header>
+
+          <DemoSourcePanel sourceMode={sourceMode} onChangeSourceMode={changeSourceMode} />
 
           <SyncBanner
             offlineMode={offlineMode}
@@ -442,6 +536,71 @@ function App() {
         </section>
       </div>
     </main>
+  )
+}
+
+function DemoSourcePanel({
+  onChangeSourceMode,
+  sourceMode,
+}: {
+  onChangeSourceMode: (sourceMode: DemoSourceMode) => void
+  sourceMode: DemoSourceMode
+}) {
+  const sourceOptions: Array<{ value: DemoSourceMode; label: string; detail: string }> = [
+    {
+      value: 'combined',
+      label: 'Combined',
+      detail: 'Odoo work order plus OpenProject dependencies',
+    },
+    {
+      value: 'odoo',
+      label: 'Odoo-shaped',
+      detail: 'ERP/FSM work orders, sites, materials, and review state',
+    },
+    {
+      value: 'openproject',
+      label: 'OpenProject-shaped',
+      detail: 'Programme work packages, blockers, and milestones',
+    },
+  ]
+
+  return (
+    <Card className="mb-5">
+      <CardHeader>
+        <CardTitle>Static backend stitch demo</CardTitle>
+        <CardDescription>
+          Fixture data is adapted into ProJob records, then rendered through one shared UI.
+        </CardDescription>
+        <CardAction>
+          <StatusChip tone="neutral">GH Pages ready</StatusChip>
+        </CardAction>
+      </CardHeader>
+      <CardContent className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(280px,0.7fr)]">
+        <div className="grid gap-2 sm:grid-cols-3">
+          {sourceOptions.map((option) => (
+            <button
+              className={cn(
+                'min-h-24 rounded-md border p-3 text-left transition-colors hover:bg-muted',
+                sourceMode === option.value && 'border-primary bg-muted/70',
+              )}
+              key={option.value}
+              onClick={() => onChangeSourceMode(option.value)}
+              type="button"
+            >
+              <span className="flex items-center gap-2 text-sm font-bold">
+                {option.value === 'openproject' ? <GitBranch aria-hidden="true" /> : <Database aria-hidden="true" />}
+                {option.label}
+              </span>
+              <span className="mt-2 block text-sm text-muted-foreground">{option.detail}</span>
+            </button>
+          ))}
+        </div>
+        <div className="grid gap-2 text-sm">
+          <InfoRow icon={Database} label="Odoo adapter" value="Normalises customer, site, work order, material, time, and approval records" />
+          <InfoRow icon={GitBranch} label="OpenProject adapter" value="Normalises project, work package, blocker, dependency, and milestone records" />
+        </div>
+      </CardContent>
+    </Card>
   )
 }
 
@@ -857,6 +1016,9 @@ function JobSummary({ job, selected = false }: { job: DispatchJob; selected?: bo
         <strong className="block truncate">{job.title}</strong>
         <span className="block truncate text-sm text-muted-foreground">{job.site}</span>
         <span className="mt-1 block text-sm text-muted-foreground">{job.window}</span>
+        <span className="mt-2 inline-flex rounded-sm bg-secondary px-2 py-1 text-xs font-bold text-secondary-foreground">
+          {job.source}
+        </span>
       </div>
       <StatusChip tone={job.tone}>{job.status}</StatusChip>
     </div>
@@ -899,6 +1061,7 @@ function JobDetailPanel({ job }: { job: DispatchJob }) {
         </CardAction>
       </CardHeader>
       <CardContent className="grid gap-3 md:grid-cols-2">
+        <InfoRow icon={Database} label="Source" value={job.source} />
         <InfoRow icon={HardHat} label="Crew" value={job.owner} />
         <InfoRow icon={Clock3} label="Window" value={job.window} />
         <InfoRow icon={PackageCheck} label="Materials" value={job.material} />
@@ -949,7 +1112,10 @@ function ScheduleTable({ jobs }: { jobs: DispatchJob[] }) {
               <span className="font-mono text-xs font-semibold">{job.id}</span>
               <span>{job.site}</span>
               <span className="text-muted-foreground">{job.owner}</span>
-              <StatusChip tone={job.tone}>{job.status}</StatusChip>
+              <span className="flex flex-wrap gap-2">
+                <StatusChip tone={job.tone}>{job.status}</StatusChip>
+                <StatusChip tone="neutral">{job.source.split(' ')[0]}</StatusChip>
+              </span>
             </div>
           ))}
         </div>
@@ -1022,6 +1188,17 @@ function countQueueStates(queue: QueueEntry[]) {
   )
 }
 
+function sourceDispatchJobs(sourceMode: DemoSourceMode) {
+  switch (sourceMode) {
+    case 'odoo':
+      return odooDispatchJobs
+    case 'openproject':
+      return openProjectDispatchJobs
+    case 'combined':
+      return [...openProjectDispatchJobs, ...odooDispatchJobs]
+  }
+}
+
 function fieldJobToDispatch(job: FieldJob, queue: QueueEntry[]): DispatchJob {
   const checklistDone = job.checklist.filter((row) => row.checked).length
   const pendingCount = queue.filter((entry) => entry.state === 'pending').length
@@ -1046,6 +1223,7 @@ function fieldJobToDispatch(job: FieldJob, queue: QueueEntry[]): DispatchJob {
           ? `${pendingCount} local changes pending`
           : 'Synced locally',
     material: job.materialUsed,
+    source: job.source,
   }
 }
 

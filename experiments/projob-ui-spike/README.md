@@ -17,6 +17,7 @@ It ports the earlier static prototype into reusable React components backed by l
 - shadcn/ui source components over Radix primitives
 - Lucide icons
 - Local mock state in `localStorage`
+- Static Odoo-shaped and OpenProject-shaped fixture data
 
 ## Visible Flow
 
@@ -27,8 +28,11 @@ When running locally, use the buttons in the prototype to:
 3. Mark the job complete while offline.
 4. Return online and sync the queued mutations.
 5. Review the job in the supervisor panel and approve completion.
+6. Switch between combined, Odoo-shaped, and OpenProject-shaped source modes.
 
 This is still a mocked prototype. It proves UI behaviour and state language before selecting the real local database and sync engine.
+
+The app is built into the published wiki artifact under `/demo/projob-ui/`.
 
 ## Commands
 

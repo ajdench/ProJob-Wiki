@@ -54,6 +54,11 @@ jobs:
       - name: Build site
         run: mkdocs build --strict
 
+      - name: Add UI demo to Pages artifact
+        run: |
+          mkdir -p site/demo/projob-ui
+          cp -R experiments/projob-ui-spike/dist/. site/demo/projob-ui/
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v5
         with:

@@ -22,6 +22,7 @@ markdown_extensions:
           format: !!python/name:pymdownx.superfences.fence_code_format
 nav:
   - Overview: index.md
+  - Demo: demo.md
   - Research Overview: research-overview.md
   - Requirements:
       - Product Requirements: requirements/product-requirements.md
@@ -59,6 +60,7 @@ nav:
       - Web and Stack Architecture: architecture/web-stack-architecture.md
       - Suite Composition and Design: architecture/suite-composition-and-design.md
       - Application Suite Blueprint: architecture/application-suite-blueprint.md
+      - Demo Architecture: architecture/demo-architecture.md
       - DESIGN.md Standard: architecture/design-md-standard.md
       - UI Framework Options: architecture/ui-framework-options.md
       - Component Map: architecture/component-map.md

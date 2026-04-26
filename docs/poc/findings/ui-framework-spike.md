@@ -26,6 +26,7 @@ The first spike now includes:
 - Mutation queue with pending, synced, failed, and conflict states.
 - Sync queue sheet.
 - Supervisor review and approval after queued field work is synced.
+- Static Odoo-shaped, OpenProject-shaped, and combined source modes.
 - Desktop/tablet office workspace with dispatch, review, table, and route/dependency tabs.
 - ProJob semantic status chips mapped to design-token colours.
 
@@ -37,6 +38,7 @@ The first spike now includes:
 | Responsive fit | One React surface can express phone, tablet, and desktop layouts without forking the visual language |
 | Offline/sync UX | Sync queue, pending/synced/failed/conflict states, local persistence, and field completion progress can be made first-class UI components |
 | Vertical slice fit | The mocked flow can move a job from assigned, to completed offline, to ready for review, to approved without changing component families |
+| Backend composition | Odoo-shaped work orders and OpenProject-shaped dependencies can be shown in one ProJob UI when normalised through fixture adapters |
 | Desktop density | Cards, tabs, tables, and queues are adequate for a first scheduling/review surface; TanStack Table should be tested once real data density increases |
 | Implementation risk | Tailwind/shadcn setup needs repo checks so generated component and token drift is caught early |
 
@@ -53,6 +55,7 @@ Verified interactions:
 - Returning online and selecting sync changes accepted mutations to `synced`, marks material exception as a `conflict`, and moves the job to `Ready for review`.
 - Supervisor review shows completion evidence, material exception state, and enables approval.
 - Approval moves the job to `Approved`.
+- Source mode buttons switch between combined, Odoo-shaped, and OpenProject-shaped fixture data.
 - Sync queue opens as a shadcn/Radix sheet and can be dismissed.
 - Board/Table/Map tabs switch the office workspace content.
 - Selecting a dispatch job updates the phone job summary, detail panel, and evidence panel.
@@ -80,6 +83,7 @@ This validates:
 ## Next Checks
 
 - Add TanStack Table once schedule/resource rows become materially denser.
+- Add live local Odoo/OpenProject adapter tests after the static fixture demo is published.
 - Compare Quasar or Ionic only if the React spike shows mobile ergonomics or packaging weaknesses.
 - Replace mocked `localStorage` persistence with a candidate local database: Dexie, RxDB, PouchDB/CouchDB, or PowerSync.
 - Split the large spike component into app shell, field job, sync queue, supervisor review, and office workspace modules if the prototype continues growing.

@@ -29,6 +29,9 @@ flowchart LR
 | Hosting | GitHub Pages | Public static site |
 | Automation | GitHub Actions | Strict build and deploy |
 | LLM discovery | `llms.txt`, `llms-full.txt` | Machine-readable entry points |
+| Static UI demo | Vite build under `/demo/projob-ui/` | Fixture-backed ProJob UI demo hosted in the same Pages artifact |
+
+The static demo boundary is described in [Demo Architecture](demo-architecture.md).
 
 ## POC Infrastructure Stack
 
