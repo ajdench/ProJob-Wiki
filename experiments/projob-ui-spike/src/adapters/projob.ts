@@ -70,7 +70,7 @@ export const sourceOptions: Array<{ value: DemoSourceMode; label: string; detail
   {
     value: 'combined',
     label: 'Combined',
-    detail: 'Solar install jobs plus DNO and handover dependencies',
+    detail: 'Solar installs, DNO approvals, and handover dependencies',
   },
   {
     value: 'odoo',
