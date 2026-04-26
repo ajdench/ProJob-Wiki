@@ -322,7 +322,7 @@ function App() {
             <div>
               <p className="text-sm font-semibold text-muted-foreground">Today, 25 Apr</p>
               <h1 className="mt-1 text-2xl font-bold tracking-normal text-foreground sm:text-3xl">
-                ProJob solar and storage operations demo
+                ProJob solar and storage operations
               </h1>
             </div>
             <div className="grid grid-cols-2 gap-2 sm:flex">
