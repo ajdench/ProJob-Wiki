@@ -497,12 +497,12 @@ function SyncBanner({
     >
       {offlineMode ? <WifiOff /> : <Wifi />}
       <AlertTitle>{offlineMode ? 'Offline mode: writes are staying local' : 'Online: sync can run'}</AlertTitle>
-      <AlertDescription className="flex flex-col gap-3 text-white/88 md:flex-row md:items-center md:justify-between">
-        <span>
+      <AlertDescription className="flex flex-wrap items-end justify-between gap-x-3 gap-y-2 text-white/88">
+        <span className="min-w-0">
           {queueCounts.pending} pending, {queueCounts.synced} synced, {queueCounts.failed} failed,{' '}
-          {queueCounts.conflict} conflict.
+          {queueCounts.conflict} conflict
         </span>
-        <div className="flex flex-wrap gap-2">
+        <div className="ml-auto flex flex-wrap justify-end gap-2">
           <Button disabled={offlineMode || queueCounts.pending + queueCounts.failed === 0} onClick={onSyncNow} size="sm" variant="secondary">
             <UploadCloud data-icon="inline-start" />
             Sync now
