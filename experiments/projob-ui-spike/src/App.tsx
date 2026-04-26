@@ -437,7 +437,7 @@ function Sidebar({
         </div>
       </div>
 
-      <nav className="flex gap-2 overflow-x-auto pb-1 lg:grid lg:overflow-visible lg:pb-0" aria-label="Primary">
+      <nav className="flex flex-wrap gap-2 pb-1 lg:grid lg:pb-0" aria-label="Primary">
         {navigation.map((item, index) => {
           const Icon = item.icon
           return (
