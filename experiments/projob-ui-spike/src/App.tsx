@@ -441,7 +441,7 @@ function Sidebar({
         </span>
         <div>
           <strong className="block">ProJob</strong>
-          <span className="block text-sm text-primary-foreground/70">Solar + storage ops</span>
+          <span className="block text-sm text-primary-foreground/70">Solar and Storage Ops</span>
         </div>
       </div>
 
