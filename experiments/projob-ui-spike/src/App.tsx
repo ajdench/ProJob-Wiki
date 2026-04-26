@@ -661,7 +661,7 @@ function QuoteWorkflow({
           <StatusChip tone={quoteTone(quote.status)}>{quote.status}</StatusChip>
         </CardAction>
       </CardHeader>
-      <CardContent className="grid items-start gap-3 lg:grid-cols-[minmax(0,1.05fr)_minmax(300px,0.95fr)]">
+      <CardContent className="grid items-stretch gap-3 lg:grid-cols-[minmax(0,1.05fr)_minmax(300px,0.95fr)]">
         <div className="grid min-w-0 gap-3 rounded-md border bg-background p-3">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
             <div className="min-w-0">
@@ -694,7 +694,7 @@ function QuoteWorkflow({
           </Button>
         </div>
 
-        <div className="grid min-w-0 gap-2">
+        <div className="grid min-w-0 gap-2 self-stretch lg:grid-rows-3">
           <WorkflowStep
             detail={`${quote.price}; ${quote.margin}; ${quote.dno}`}
             icon={FileSignature}
@@ -736,7 +736,7 @@ function WorkflowStep({
   tone: StatusTone
 }) {
   return (
-    <div className="grid min-w-0 grid-cols-[1.25rem_minmax(0,1fr)_auto] items-start gap-3 rounded-md border bg-background p-3">
+    <div className="grid h-full min-w-0 grid-cols-[1.25rem_minmax(0,1fr)_auto] items-start gap-3 rounded-md border bg-background p-3">
       <Icon aria-hidden="true" className="mt-0.5 justify-self-center" />
       <div className="min-w-0">
         <span className="block text-xs font-bold text-muted-foreground">{label}</span>
