@@ -82,7 +82,7 @@ export type PersistedState = {
   scenarioStep: ScenarioStep
 }
 
-export const storageKey = 'projob-ui-spike.vertical-slice.v5'
+export const storageKey = 'projob-ui-spike.vertical-slice.v6'
 
 export const sourceOptions: Array<{ value: DemoSourceMode; label: string; detail: string }> = [
   {

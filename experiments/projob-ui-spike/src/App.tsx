@@ -103,7 +103,13 @@ function loadPersistedState(): PersistedState {
       return createInitialState('combined')
     }
 
-    return parsed as PersistedState
+    return {
+      ...(parsed as PersistedState),
+      quote: {
+        ...(parsed as PersistedState).quote,
+        margin: (parsed as PersistedState).quote.margin.replace(' target margin', ' target'),
+      },
+    }
   } catch {
     return createInitialState('combined')
   }
