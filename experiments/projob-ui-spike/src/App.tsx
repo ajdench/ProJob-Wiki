@@ -438,7 +438,7 @@ function Sidebar({
       </div>
 
       <nav
-        className="grid grid-cols-[repeat(2,max-content)] gap-x-5 gap-y-2 pb-1 sm:grid-cols-[repeat(3,max-content)] lg:grid-cols-1 lg:gap-2 lg:pb-0"
+        className="grid grid-cols-[repeat(auto-fit,minmax(7.5rem,max-content))] gap-x-5 gap-y-2 pb-1 lg:grid-cols-1 lg:gap-2 lg:pb-0"
         aria-label="Primary"
       >
         {navigation.map((item, index) => {
