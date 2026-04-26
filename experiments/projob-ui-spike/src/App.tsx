@@ -373,6 +373,10 @@ function App() {
 
           <QuoteWorkflow fieldJob={fieldJob} onConvertQuote={convertQuoteToJob} quote={quote} />
 
+          <ScenarioPath fieldJob={fieldJob} offlineMode={offlineMode} quote={quote} />
+
+          <AdapterMap sourceMode={sourceMode} />
+
           <SyncBanner
             offlineMode={offlineMode}
             queue={queue}
@@ -569,6 +573,230 @@ function WorkflowStep({
   )
 }
 
+function ScenarioPath({
+  fieldJob,
+  offlineMode,
+  quote,
+}: {
+  fieldJob: FieldJob
+  offlineMode: boolean
+  quote: QuoteRecord
+}) {
+  const quoteConverted = quote.status === 'Converted'
+  const commissioned =
+    fieldJob.status === 'Completed offline' || fieldJob.status === 'Ready for review' || fieldJob.status === 'Approved'
+  const approved = fieldJob.status === 'Approved'
+  const steps: Array<{
+    label: string
+    source: string
+    record: string
+    ui: string
+    offline: string
+    icon: LucideIcon
+    tone: StatusTone
+  }> = [
+    {
+      label: 'Quote accepted',
+      source: quote.source.includes('OpenProject') ? 'OpenProject' : 'Odoo',
+      record: quote.id,
+      ui: 'Customer, property, price, system size, storage, and DNO assumption',
+      offline: 'Read-only quote pack can be cached before survey',
+      icon: FileSignature,
+      tone: 'success',
+    },
+    {
+      label: 'Survey pack',
+      source: 'Odoo',
+      record: quote.site,
+      ui: 'Site notes, roof layout, kit assumptions, customer contact, and risk notes',
+      offline: 'Survey pack is available on the field device',
+      icon: HardHat,
+      tone: quoteConverted ? 'success' : 'info',
+    },
+    {
+      label: 'DNO check',
+      source: 'OpenProject',
+      record: quote.dno,
+      ui: 'G98/G99 dependency, blocker status, export limit, and decision owner',
+      offline: 'Dependency state is visible even when the device is offline',
+      icon: GitBranch,
+      tone: quoteConverted ? 'sync' : 'neutral',
+    },
+    {
+      label: 'Install scheduled',
+      source: 'Combined',
+      record: fieldJob.window,
+      ui: 'One install job merges customer, kit, team, DNO dependency, and checklist',
+      offline: 'Assigned work remains actionable without network',
+      icon: CalendarDays,
+      tone: fieldJob.status === 'Assigned' ? 'neutral' : 'sync',
+    },
+    {
+      label: 'Field commissioning',
+      source: 'Mobile PWA',
+      record: `${fieldJob.checklist.filter((row) => row.checked).length}/${fieldJob.checklist.length} checks`,
+      ui: 'Checklist, photos, kit exception, note, time, and signature capture',
+      offline: offlineMode ? 'Writes queue locally until sync can run' : 'Writes can sync immediately',
+      icon: ClipboardCheck,
+      tone: commissioned ? 'success' : 'warning',
+    },
+    {
+      label: 'MCS handover review',
+      source: 'Combined',
+      record: fieldJob.status,
+      ui: 'Compliance workspace resolves evidence, DNO dependency, and kit changes',
+      offline: 'Pending evidence stays visible in the sync queue',
+      icon: CheckCircle2,
+      tone: approved ? 'success' : commissioned ? 'info' : 'neutral',
+    },
+  ]
+
+  return (
+    <Card className="mb-5">
+      <CardHeader>
+        <CardTitle>Scenario path</CardTitle>
+        <CardDescription>
+          The demo now follows the full PV and storage job path across quote, DNO, install, and handover.
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="grid gap-2 md:grid-cols-2 xl:grid-cols-3">
+        {steps.map((step) => (
+          <ScenarioStep key={step.label} step={step} />
+        ))}
+      </CardContent>
+    </Card>
+  )
+}
+
+function ScenarioStep({
+  step,
+}: {
+  step: {
+    label: string
+    source: string
+    record: string
+    ui: string
+    offline: string
+    icon: LucideIcon
+    tone: StatusTone
+  }
+}) {
+  const Icon = step.icon
+
+  return (
+    <div className="grid min-w-0 grid-cols-[1.25rem_minmax(0,1fr)] gap-x-3 gap-y-2 rounded-md border bg-background p-3">
+      <Icon aria-hidden="true" className="mt-0.5 justify-self-center" />
+      <div className="min-w-0">
+        <div className="grid min-w-0 gap-2 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-start">
+          <div className="min-w-0">
+            <span className="block text-xs font-bold text-muted-foreground">{step.source}</span>
+            <strong className="block text-sm leading-snug break-words">{step.label}</strong>
+          </div>
+          <span
+            className={cn(
+              'max-w-full rounded-sm px-2 py-1 text-xs font-bold break-words sm:max-w-44 sm:justify-self-end sm:text-right',
+              statusBadgeClass(step.tone),
+            )}
+          >
+            {step.record}
+          </span>
+        </div>
+        <span className="mt-2 block text-sm text-muted-foreground break-words">{step.ui}</span>
+        <span className="mt-2 block text-xs font-semibold text-muted-foreground break-words">{step.offline}</span>
+      </div>
+    </div>
+  )
+}
+
+function AdapterMap({ sourceMode }: { sourceMode: DemoSourceMode }) {
+  const sourceLabel = sourceOptions.find((option) => option.value === sourceMode)?.label ?? sourceMode
+
+  return (
+    <Card className="mb-5" id="resources">
+      <CardHeader>
+        <CardTitle>Canonical adapter map</CardTitle>
+        <CardDescription>
+          Odoo and OpenProject keep their own records; ProJob presents a shared field-operations model.
+        </CardDescription>
+        <CardAction>
+          <StatusChip tone={sourceMode === 'combined' ? 'success' : 'info'}>
+            {sourceMode === 'combined' ? 'Combined active' : `${sourceLabel} view`}
+          </StatusChip>
+        </CardAction>
+      </CardHeader>
+      <CardContent className="grid items-start gap-3 xl:grid-cols-[minmax(220px,0.85fr)_minmax(260px,1fr)_minmax(220px,0.85fr)]">
+        <AdapterColumn
+          icon={Blocks}
+          items={[
+            'Quotation and customer account',
+            'FSM task and install team',
+            'Survey pack and roof layout',
+            'Stock moves and kit exceptions',
+            'Timesheet and MCS documents',
+          ]}
+          label="Odoo records"
+          tone={sourceMode === 'openproject' ? 'neutral' : 'info'}
+        />
+        <AdapterColumn
+          icon={Layers3}
+          items={[
+            'Canonical customer and site',
+            'Quote, install job, and checklist',
+            'PV, BESS/HESS, DNO, and handover dependencies',
+            'Evidence, signature, material change, and sync state',
+            'One mobile and desktop UI vocabulary',
+          ]}
+          label="ProJob shared model"
+          tone="success"
+        />
+        <AdapterColumn
+          icon={GitBranch}
+          items={[
+            'Work package and milestone',
+            'DNO application dependency',
+            'Scaffold, access, and blocker dates',
+            'Programme owner and review state',
+            'Handover milestone and exceptions',
+          ]}
+          label="OpenProject records"
+          tone={sourceMode === 'odoo' ? 'neutral' : 'sync'}
+        />
+      </CardContent>
+    </Card>
+  )
+}
+
+function AdapterColumn({
+  icon: Icon,
+  items,
+  label,
+  tone,
+}: {
+  icon: LucideIcon
+  items: string[]
+  label: string
+  tone: StatusTone
+}) {
+  return (
+    <div className="grid min-w-0 gap-3 rounded-md border bg-background p-3">
+      <div className="flex items-center justify-between gap-3">
+        <div className="flex min-w-0 items-center gap-3">
+          <Icon aria-hidden="true" className="shrink-0" />
+          <strong className="block break-words">{label}</strong>
+        </div>
+        <span className={cn('size-2.5 shrink-0 rounded-full', statusRailClass(tone))} aria-hidden="true" />
+      </div>
+      <div className="grid gap-2">
+        {items.map((item) => (
+          <div className="rounded-sm border bg-muted/40 px-3 py-2 text-sm font-semibold break-words" key={item}>
+            {item}
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 function Sidebar({
   offlineMode,
   queueCounts,
@@ -640,6 +868,7 @@ function SyncBanner({
         'mb-5 border-0 pb-2.5 text-white',
         offlineMode ? 'bg-[var(--projob-warning)]' : 'bg-[var(--projob-sync)]',
       )}
+      id="sync-queue"
     >
       {offlineMode ? <WifiOff /> : <Wifi />}
       <AlertTitle>{offlineMode ? 'Offline mode: writes are staying local' : 'Online: sync can run'}</AlertTitle>
@@ -831,7 +1060,7 @@ function DesktopWorkspace({
   onSelectJob: (id: string) => void
 }) {
   return (
-    <section aria-label="Office desktop prototype" className="min-w-0 rounded-lg border bg-card p-4 lg:p-6">
+    <section aria-label="Office desktop prototype" className="min-w-0 rounded-lg border bg-card p-4 lg:p-6" id="schedule">
       <Tabs defaultValue="board" className="gap-0">
         <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
           <div className="min-w-0">
