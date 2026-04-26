@@ -483,7 +483,7 @@ function SyncBanner({
   return (
     <Alert
       className={cn(
-        'mb-5 border-0 text-white',
+        'mb-5 border-0 pb-2.5 text-white',
         offlineMode ? 'bg-[var(--projob-warning)]' : 'bg-[var(--projob-sync)]',
       )}
     >
