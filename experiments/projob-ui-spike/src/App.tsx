@@ -437,19 +437,22 @@ function Sidebar({
         </div>
       </div>
 
-      <nav className="flex flex-wrap gap-2 pb-1 lg:grid lg:pb-0" aria-label="Primary">
+      <nav
+        className="grid grid-cols-[repeat(2,max-content)] gap-x-5 gap-y-2 pb-1 sm:grid-cols-[repeat(3,max-content)] lg:grid-cols-1 lg:gap-2 lg:pb-0"
+        aria-label="Primary"
+      >
         {navigation.map((item, index) => {
           const Icon = item.icon
           return (
             <a
               className={cn(
-                'flex min-h-10 shrink-0 items-center gap-2 rounded-sm px-3 text-sm font-bold text-primary-foreground/75 no-underline transition-colors hover:bg-primary-foreground/10 hover:text-primary-foreground',
+                'grid min-h-10 grid-cols-[1.25rem_max-content] items-center gap-2 rounded-sm px-3 text-sm font-bold text-primary-foreground/75 no-underline transition-colors hover:bg-primary-foreground/10 hover:text-primary-foreground',
                 index === 0 && 'bg-primary-foreground/12 text-primary-foreground',
               )}
               href={`#${item.label.toLowerCase().replaceAll(' ', '-')}`}
               key={item.label}
             >
-              <Icon aria-hidden="true" />
+              <Icon aria-hidden="true" className="justify-self-center" />
               {item.label}
             </a>
           )
