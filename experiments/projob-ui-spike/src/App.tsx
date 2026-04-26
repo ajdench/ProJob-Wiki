@@ -57,6 +57,7 @@ import {
   fieldJobToDispatch,
   jobTone,
   makeQueueEntry,
+  quoteTone,
   queueTone,
   sourceDispatchJobs,
   sourceOptions,
@@ -67,6 +68,7 @@ import type {
   DispatchJob,
   FieldJob,
   PersistedState,
+  QuoteRecord,
   QueueEntry,
   QueueState,
   StatusTone,
@@ -94,7 +96,7 @@ function loadPersistedState(): PersistedState {
     }
 
     const parsed = JSON.parse(raw) as Partial<PersistedState>
-    if (!parsed.fieldJob || !parsed.sourceMode) {
+    if (!parsed.quote || !parsed.fieldJob || !parsed.sourceMode) {
       return createInitialState('combined')
     }
 
@@ -108,7 +110,7 @@ function App() {
   const [persisted, setPersisted] = useState<PersistedState>(() => loadPersistedState())
   const [selectedJobId, setSelectedJobId] = useState(() => loadPersistedState().fieldJob.id)
 
-  const { fieldJob, offlineMode, queue, sourceMode } = persisted
+  const { fieldJob, offlineMode, queue, quote, sourceMode } = persisted
   const dispatchJobs = useMemo(
     () => [fieldJobToDispatch(fieldJob, queue), ...sourceDispatchJobs(sourceMode)],
     [fieldJob, queue, sourceMode],
@@ -117,6 +119,7 @@ function App() {
   const queueCounts = useMemo(() => countQueueStates(queue), [queue])
   const checklistDone = fieldJob.checklist.filter((row) => row.checked).length
   const checklistProgress = Math.round((checklistDone / fieldJob.checklist.length) * 100)
+  const displayDate = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short' }).format(new Date())
   const canComplete =
     checklistDone === fieldJob.checklist.length &&
     fieldJob.note.trim().length > 0 &&
@@ -149,6 +152,35 @@ function App() {
     setPersisted(nextState)
     setSelectedJobId(nextState.fieldJob.id)
     window.localStorage.setItem(storageKey, JSON.stringify(nextState))
+  }
+
+  function convertQuoteToJob() {
+    setPersisted((current) => {
+      if (current.quote.status === 'Converted') {
+        return current
+      }
+
+      return {
+        ...current,
+        quote: {
+          ...current.quote,
+          status: 'Converted',
+        },
+        fieldJob: {
+          ...current.fieldJob,
+          nextAction: 'Install job created from accepted quote; confirm survey pack, DNO dependency, and kit',
+        },
+        queue: [
+          makeQueueEntry(
+            `${current.quote.id} conversion`,
+            'Accepted quote converted into install job and handover workflow',
+            current.offlineMode ? 'pending' : 'synced',
+          ),
+          ...current.queue,
+        ].slice(0, 12),
+      }
+    })
+    setSelectedJobId(fieldJob.id)
   }
 
   function toggleChecklistRow(id: string, checked: boolean) {
@@ -320,7 +352,7 @@ function App() {
         <section className="min-w-0 p-4 sm:p-6 xl:p-8">
           <header className="mb-5 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
             <div>
-              <p className="text-sm font-semibold text-muted-foreground">Today, 25 Apr</p>
+              <p className="text-sm font-semibold text-muted-foreground">Today, {displayDate}</p>
               <h1 className="mt-1 text-2xl font-bold tracking-normal text-foreground sm:text-3xl">
                 ProJob solar and storage operations
               </h1>
@@ -338,6 +370,8 @@ function App() {
           </header>
 
           <DemoSourcePanel sourceMode={sourceMode} onChangeSourceMode={changeSourceMode} />
+
+          <QuoteWorkflow fieldJob={fieldJob} onConvertQuote={convertQuoteToJob} quote={quote} />
 
           <SyncBanner
             offlineMode={offlineMode}
@@ -423,6 +457,115 @@ function DemoSourcePanel({
         </div>
       </CardContent>
     </Card>
+  )
+}
+
+function QuoteWorkflow({
+  fieldJob,
+  onConvertQuote,
+  quote,
+}: {
+  fieldJob: FieldJob
+  onConvertQuote: () => void
+  quote: QuoteRecord
+}) {
+  const converted = quote.status === 'Converted'
+
+  return (
+    <Card className="mb-5" id="quotes">
+      <CardHeader>
+        <CardTitle>Quote to install workflow</CardTitle>
+        <CardDescription>
+          A static GH Pages vertical slice from accepted quote to install job and MCS handover.
+        </CardDescription>
+        <CardAction>
+          <StatusChip tone={quoteTone(quote.status)}>{quote.status}</StatusChip>
+        </CardAction>
+      </CardHeader>
+      <CardContent className="grid items-start gap-3 lg:grid-cols-[minmax(0,1.05fr)_minmax(300px,0.95fr)]">
+        <div className="grid min-w-0 gap-3 rounded-md border bg-background p-3">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+            <div className="min-w-0">
+              <span className="block text-xs font-bold text-muted-foreground">{quote.id}</span>
+              <strong className="block text-lg leading-snug break-words">{quote.customer}</strong>
+              <span className="block text-sm text-muted-foreground break-words">{quote.source}</span>
+            </div>
+            <div className="grid grid-cols-2 gap-2 text-sm sm:text-right">
+              <div>
+                <span className="block text-xs font-bold text-muted-foreground">Price</span>
+                <strong>{quote.price}</strong>
+              </div>
+              <div>
+                <span className="block text-xs font-bold text-muted-foreground">Margin</span>
+                <strong>{quote.margin}</strong>
+              </div>
+            </div>
+          </div>
+
+          <div className="grid gap-2 md:grid-cols-2">
+            <InfoRow icon={Route} label="Site" value={quote.site} />
+            <InfoRow icon={HardHat} label="Property" value={quote.property} />
+            <InfoRow icon={PackageCheck} label="System" value={`${quote.system}, ${quote.storage}`} />
+            <InfoRow icon={AlertTriangle} label="DNO" value={quote.dno} />
+          </div>
+
+          <Button className="justify-self-start" disabled={converted} onClick={onConvertQuote}>
+            <BriefcaseBusiness data-icon="inline-start" />
+            {converted ? 'Converted to job' : 'Convert to install job'}
+          </Button>
+        </div>
+
+        <div className="grid min-w-0 gap-2">
+          <WorkflowStep
+            detail={`${quote.price}; ${quote.margin}; ${quote.dno}`}
+            icon={FileSignature}
+            label="Quote"
+            title={converted ? 'Accepted quote converted' : 'Accepted quote ready'}
+            tone={converted ? 'success' : 'info'}
+          />
+          <WorkflowStep
+            detail={`${fieldJob.id}; ${fieldJob.owner}; ${fieldJob.site}`}
+            icon={BriefcaseBusiness}
+            label="Install"
+            title={converted ? 'Install job created' : 'Field job and kit pack'}
+            tone={converted ? 'sync' : 'neutral'}
+          />
+          <WorkflowStep
+            detail="Commissioning photos, customer signature, MCS pack, and DNO evidence"
+            icon={ClipboardCheck}
+            label="Handover"
+            title={fieldJob.status === 'Approved' ? 'Handover approved' : 'Compliance review path'}
+            tone={fieldJob.status === 'Approved' ? 'success' : 'warning'}
+          />
+        </div>
+      </CardContent>
+    </Card>
+  )
+}
+
+function WorkflowStep({
+  detail,
+  icon: Icon,
+  label,
+  title,
+  tone,
+}: {
+  detail: string
+  icon: LucideIcon
+  label: string
+  title: string
+  tone: StatusTone
+}) {
+  return (
+    <div className="grid min-w-0 grid-cols-[1.25rem_minmax(0,1fr)_auto] items-start gap-3 rounded-md border bg-background p-3">
+      <Icon aria-hidden="true" className="mt-0.5 justify-self-center" />
+      <div className="min-w-0">
+        <span className="block text-xs font-bold text-muted-foreground">{label}</span>
+        <strong className="block text-sm leading-snug break-words">{title}</strong>
+        <span className="mt-1 block text-sm text-muted-foreground break-words">{detail}</span>
+      </div>
+      <span className={cn('mt-1 size-2.5 rounded-full', statusRailClass(tone))} aria-hidden="true" />
+    </div>
   )
 }
 

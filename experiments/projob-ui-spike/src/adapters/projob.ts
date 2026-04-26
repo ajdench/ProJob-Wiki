@@ -4,6 +4,7 @@ import { openProjectDispatchJobs, openProjectFieldJob } from './openproject-fixt
 export type StatusTone = 'success' | 'warning' | 'danger' | 'info' | 'sync' | 'neutral'
 export type QueueState = 'pending' | 'synced' | 'failed' | 'conflict'
 export type JobStatus = 'Assigned' | 'In progress' | 'Completed offline' | 'Ready for review' | 'Approved'
+export type QuoteStatus = 'Accepted' | 'Converted'
 export type DemoSourceMode = 'combined' | 'odoo' | 'openproject'
 
 export type ChecklistRow = {
@@ -32,6 +33,20 @@ export type FieldJob = {
   approvedAt?: string
 }
 
+export type QuoteRecord = {
+  id: string
+  customer: string
+  site: string
+  property: string
+  system: string
+  storage: string
+  dno: string
+  price: string
+  margin: string
+  status: QuoteStatus
+  source: string
+}
+
 export type DispatchJob = {
   id: string
   title: string
@@ -58,13 +73,14 @@ export type QueueEntry = {
 }
 
 export type PersistedState = {
+  quote: QuoteRecord
   fieldJob: FieldJob
   queue: QueueEntry[]
   offlineMode: boolean
   sourceMode: DemoSourceMode
 }
 
-export const storageKey = 'projob-ui-spike.vertical-slice.v3'
+export const storageKey = 'projob-ui-spike.vertical-slice.v4'
 
 export const sourceOptions: Array<{ value: DemoSourceMode; label: string; detail: string }> = [
   {
@@ -86,10 +102,34 @@ export const sourceOptions: Array<{ value: DemoSourceMode; label: string; detail
 
 export function createInitialState(sourceMode: DemoSourceMode): PersistedState {
   return {
+    quote: createInitialQuote(sourceMode),
     fieldJob: sourceMode === 'openproject' ? openProjectFieldJob : initialOdooFieldJob,
     queue: [],
     offlineMode: false,
     sourceMode,
+  }
+}
+
+export function createInitialQuote(sourceMode: DemoSourceMode): QuoteRecord {
+  const sourceLabel =
+    sourceMode === 'openproject'
+      ? 'OpenProject opportunity fixture'
+      : sourceMode === 'odoo'
+        ? 'Odoo quotation fixture'
+        : 'Combined quote fixture'
+
+  return {
+    id: sourceMode === 'openproject' ? 'Q-OP-2187' : 'Q-1048',
+    customer: sourceMode === 'openproject' ? 'Somerset farm workshop' : 'Bristol BS3 homeowner',
+    site: sourceMode === 'openproject' ? 'Farm workshop, Somerset' : 'Semi-detached home, Bristol BS3',
+    property: sourceMode === 'openproject' ? 'Agricultural workshop roof' : 'Semi-detached domestic roof',
+    system: sourceMode === 'openproject' ? '30kW PV array' : '4.3kWp PV array',
+    storage: sourceMode === 'openproject' ? '48kWh BESS' : '9.5kWh HESS',
+    dno: sourceMode === 'openproject' ? 'G99 application dependency' : 'G98 assumed, G99 check if export changes',
+    price: sourceMode === 'openproject' ? 'GBP 68,400' : 'GBP 12,840',
+    margin: sourceMode === 'openproject' ? '24% target margin' : '28% target margin',
+    status: 'Accepted',
+    source: sourceLabel,
   }
 }
 
@@ -164,6 +204,15 @@ export function jobTone(status: JobStatus): StatusTone {
       return 'sync'
     case 'Assigned':
       return 'neutral'
+  }
+}
+
+export function quoteTone(status: QuoteStatus): StatusTone {
+  switch (status) {
+    case 'Converted':
+      return 'success'
+    case 'Accepted':
+      return 'info'
   }
 }
 
