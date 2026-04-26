@@ -173,7 +173,7 @@ function App() {
   }
 
   function saveNote() {
-    mutateJob((job) => job, `${fieldJob.id} completion note`, 'Completion note queued from field device')
+    mutateJob((job) => job, `${fieldJob.id} commissioning note`, 'Commissioning note queued from field device')
   }
 
   function addPhotoEvidence() {
@@ -181,11 +181,13 @@ function App() {
       (job) => ({
         ...job,
         status: job.status === 'Assigned' ? 'In progress' : job.status,
-        evidence: job.evidence.includes('After photo') ? job.evidence : [...job.evidence, 'After photo'],
+        evidence: job.evidence.includes('Array and battery photos')
+          ? job.evidence
+          : [...job.evidence, 'Array and battery photos'],
         checklist: job.checklist.map((row) => (row.id === 'photos' ? { ...row, checked: true } : row)),
       }),
-      `${fieldJob.id} photo evidence`,
-      'After photo staged for upload',
+      `${fieldJob.id} install evidence`,
+      'Array, inverter, and battery photos staged for upload',
     )
   }
 
@@ -194,11 +196,13 @@ function App() {
       (job) => ({
         ...job,
         signatureCaptured: true,
-        evidence: job.evidence.includes('Client signature') ? job.evidence : [...job.evidence, 'Client signature'],
+        evidence: job.evidence.includes('Customer MCS handover signature')
+          ? job.evidence
+          : [...job.evidence, 'Customer MCS handover signature'],
         checklist: job.checklist.map((row) => (row.id === 'signature' ? { ...row, checked: true } : row)),
       }),
-      `${fieldJob.id} signature`,
-      'Client signature stored on device',
+      `${fieldJob.id} handover signature`,
+      'Customer handover signature stored on device',
     )
   }
 
@@ -209,12 +213,12 @@ function App() {
         materialException: true,
         materialUsed:
           job.source.includes('OpenProject')
-            ? 'Fire collar check, sealant allowance, access delay'
-            : 'Extractor fan x1, isolator x1, fire collar x1',
+            ? '30kW inverter, 48kWh BESS, export limitation relay, extra CT clamp'
+            : '10 x 430W modules, 5kW hybrid inverter, 9.5kWh battery, extra roof hooks x8',
         checklist: job.checklist.map((row) => (row.id === 'materials' ? { ...row, checked: true } : row)),
       }),
-      `${fieldJob.id} material exception`,
-      'Extra fire collar needs supervisor approval',
+      `${fieldJob.id} kit exception`,
+      'Extra mounting or metering kit needs office approval',
       offlineMode ? 'pending' : 'conflict',
     )
   }
@@ -228,10 +232,10 @@ function App() {
       (job) => ({
         ...job,
         status: offlineMode ? 'Completed offline' : 'Ready for review',
-        nextAction: 'Supervisor review required',
+        nextAction: 'MCS and DNO handover review required',
       }),
       `${fieldJob.id} completion`,
-      offlineMode ? 'Job completion waiting for network' : 'Job completion ready for supervisor review',
+      offlineMode ? 'Commissioning record waiting for network' : 'Commissioning record ready for compliance review',
       offlineMode ? 'pending' : 'synced',
     )
   }
@@ -247,10 +251,10 @@ function App() {
         if (entry.state !== 'pending' && entry.state !== 'failed') {
           return entry
         }
-        if (hasMaterialConflict && entry.label.includes('material')) {
-          return { ...entry, state: 'conflict' as const, detail: 'Extra material requires office approval' }
+        if (hasMaterialConflict && (entry.label.includes('material') || entry.label.includes('kit'))) {
+          return { ...entry, state: 'conflict' as const, detail: 'Extra mounting or metering kit requires office approval' }
         }
-        return { ...entry, state: 'synced' as const, detail: 'Server accepted mutation' }
+        return { ...entry, state: 'synced' as const, detail: 'Install record accepted by office system' }
       })
 
       return {
@@ -289,11 +293,11 @@ function App() {
       fieldJob: {
         ...current.fieldJob,
         status: 'Approved',
-        approvedAt: 'Approved in supervisor workspace',
-        nextAction: 'Invoice-ready completion approved',
+        approvedAt: 'Approved in compliance workspace',
+        nextAction: 'MCS handover pack approved',
       },
       queue: [
-        makeQueueEntry(`${current.fieldJob.id} approval`, 'Supervisor approved invoice-ready completion', 'synced'),
+        makeQueueEntry(`${current.fieldJob.id} approval`, 'Compliance lead approved MCS handover pack', 'synced'),
         ...current.queue,
       ].slice(0, 12),
     }))
@@ -316,7 +320,7 @@ function App() {
             <div>
               <p className="text-sm font-semibold text-muted-foreground">Today, 25 Apr</p>
               <h1 className="mt-1 text-2xl font-bold tracking-normal text-foreground sm:text-3xl">
-                ProJob integrated operations demo
+                ProJob solar and storage operations demo
               </h1>
             </div>
             <div className="grid grid-cols-2 gap-2 sm:flex">
@@ -382,9 +386,9 @@ function DemoSourcePanel({
   return (
     <Card className="mb-5">
       <CardHeader>
-        <CardTitle>Static backend stitch demo</CardTitle>
+        <CardTitle>PV and storage backend stitch demo</CardTitle>
         <CardDescription>
-          Fixture data is adapted into ProJob records, then rendered through one shared UI.
+          Solar PV, BESS/HESS, DNO, and MCS records are adapted into one shared UI.
         </CardDescription>
         <CardAction>
           <StatusChip tone="neutral">GH Pages ready</StatusChip>
@@ -415,8 +419,8 @@ function DemoSourcePanel({
           ))}
         </div>
         <div className="grid gap-2 text-sm">
-          <InfoRow icon={Database} label="Odoo adapter" value="Normalises customer, site, work order, material, time, and approval records" />
-          <InfoRow icon={GitBranch} label="OpenProject adapter" value="Normalises project, work package, blocker, dependency, and milestone records" />
+          <InfoRow icon={Database} label="Odoo adapter" value="Normalises customer, survey, install, kit, time, and MCS review records" />
+          <InfoRow icon={GitBranch} label="OpenProject adapter" value="Normalises DNO, scaffold, work package, blocker, and handover milestone records" />
         </div>
       </CardContent>
     </Card>
@@ -438,7 +442,7 @@ function Sidebar({
         </span>
         <div>
           <strong className="block">ProJob</strong>
-          <span className="block text-sm text-primary-foreground/70">Field operations</span>
+          <span className="block text-sm text-primary-foreground/70">Solar + storage ops</span>
         </div>
       </div>
 
@@ -593,7 +597,7 @@ function FieldPhone({
 
       <div className="mb-3 flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0">
-          <p className="text-sm font-semibold text-muted-foreground">Field job</p>
+          <p className="text-sm font-semibold text-muted-foreground">Installation job</p>
           <h2 className="text-2xl font-bold break-words">{fieldJob.id}</h2>
         </div>
         <StatusChip tone={jobTone(fieldJob.status)}>{fieldJob.status}</StatusChip>
@@ -629,14 +633,14 @@ function FieldPhone({
 
       <Card className="mt-4 rounded-md" size="sm">
         <CardHeader>
-          <CardTitle>Completion</CardTitle>
-          <CardDescription>Note, time, materials, evidence, and signature</CardDescription>
+          <CardTitle>Commissioning</CardTitle>
+          <CardDescription>Note, time, kit, photos, DNO/MCS evidence, and signature</CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-3">
           <textarea
             className="min-h-24 rounded-md border bg-background p-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
             onChange={(event) => onNoteChange(event.target.value)}
-            placeholder="Completion note"
+            placeholder="Commissioning note"
             value={fieldJob.note}
           />
           <div className="grid grid-cols-[repeat(auto-fit,minmax(8rem,1fr))] gap-2">
@@ -654,12 +658,12 @@ function FieldPhone({
             </Button>
             <Button onClick={onAddMaterialException} variant="outline">
               <Wrench data-icon="inline-start" />
-              Material
+              Kit change
             </Button>
           </div>
           <Button disabled={!canComplete} onClick={onCompleteJob}>
             <ListChecks data-icon="inline-start" />
-            Mark complete
+            Mark commissioned
           </Button>
         </CardContent>
       </Card>
@@ -689,8 +693,8 @@ function DesktopWorkspace({
       <Tabs defaultValue="board" className="gap-0">
         <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
           <div className="min-w-0">
-            <p className="text-sm font-semibold text-muted-foreground">Office workspace</p>
-            <h2 className="mt-1 text-2xl font-bold break-words">Schedule, sync, review</h2>
+            <p className="text-sm font-semibold text-muted-foreground">Installations workspace</p>
+            <h2 className="mt-1 text-2xl font-bold break-words">Schedule, DNO, handover</h2>
           </div>
           <TabsList>
             <TabsTrigger value="board">Board</TabsTrigger>
@@ -701,7 +705,7 @@ function DesktopWorkspace({
 
         <div className="mt-4 grid gap-3 sm:grid-cols-3">
           <Metric label="Ready today" value="18" icon={CheckCircle2} />
-          <Metric label="Needs review" value={fieldJob.status === 'Ready for review' ? '1' : '0'} icon={AlertTriangle} />
+          <Metric label="Needs MCS review" value={fieldJob.status === 'Ready for review' ? '1' : '0'} icon={AlertTriangle} />
           <Metric label="Sync pending" value={String(countQueueStates(queue).pending)} icon={RefreshCw} />
         </div>
 
@@ -765,7 +769,7 @@ function SupervisorReviewCard({
   return (
     <Card id="review">
       <CardHeader>
-        <CardTitle>Supervisor review</CardTitle>
+        <CardTitle>Compliance review</CardTitle>
         <CardAction>
           <StatusChip tone={readyForReview ? 'success' : 'neutral'}>{readyForReview ? 'Ready' : 'Waiting'}</StatusChip>
         </CardAction>
@@ -775,27 +779,27 @@ function SupervisorReviewCard({
           action={readyForReview ? 'Inspect' : 'Queued'}
           detail={
             readyForReview
-              ? `${fieldJob.id} has checklist, evidence, time, and signature`
-              : `${fieldJob.id} is not synced for supervisor review yet`
+              ? `${fieldJob.id} has commissioning checks, evidence, time, and signature`
+              : `${fieldJob.id} is not synced for MCS handover review yet`
           }
-          title={readyForReview ? 'Completion ready' : 'Awaiting field completion'}
+          title={readyForReview ? 'Handover ready' : 'Awaiting commissioning'}
           tone={readyForReview ? 'success' : 'neutral'}
         />
         <ReviewQueueRow
           action={pendingConflict ? 'Resolve' : 'Clear'}
-          detail={fieldJob.materialException ? fieldJob.materialUsed : 'No material exception recorded'}
-          title="Material review"
+          detail={fieldJob.materialException ? fieldJob.materialUsed : 'No kit exception recorded'}
+          title="Kit review"
           tone={pendingConflict ? 'warning' : 'success'}
         />
         <ReviewQueueRow
           action={fieldJob.signatureCaptured ? 'Open' : 'Missing'}
-          detail={fieldJob.signatureCaptured ? 'Client signature captured' : 'Signature still required'}
-          title="Evidence review"
+          detail={fieldJob.signatureCaptured ? 'Customer MCS handover signature captured' : 'Customer handover signature still required'}
+          title="Handover evidence"
           tone={fieldJob.signatureCaptured ? 'success' : 'danger'}
         />
         <Button disabled={!readyForReview || fieldJob.status === 'Approved'} onClick={onApproveJob}>
           <CheckCircle2 data-icon="inline-start" />
-          Approve completion
+          Approve handover
         </Button>
       </CardContent>
     </Card>
@@ -884,9 +888,9 @@ function JobDetailPanel({ job }: { job: DispatchJob }) {
       </CardHeader>
       <CardContent className="grid gap-3 md:grid-cols-2">
         <InfoRow icon={Database} label="Source" value={job.source} />
-        <InfoRow icon={HardHat} label="Crew" value={job.owner} />
+        <InfoRow icon={HardHat} label="Install team" value={job.owner} />
         <InfoRow icon={Clock3} label="Window" value={job.window} />
-        <InfoRow icon={PackageCheck} label="Materials" value={job.material} />
+        <InfoRow icon={PackageCheck} label="Kit" value={job.material} />
         <InfoRow icon={RefreshCw} label="Sync" value={job.syncState} />
       </CardContent>
     </Card>
@@ -923,7 +927,7 @@ function ScheduleTable({ jobs }: { jobs: DispatchJob[] }) {
           <div className="hidden min-h-11 grid-cols-[1fr_1.2fr_1fr_auto] items-center gap-4 bg-muted px-4 font-bold text-primary md:grid">
             <span>Job</span>
             <span>Site</span>
-            <span>Crew</span>
+            <span>Team</span>
             <span>Status</span>
           </div>
           {jobs.map((job) => (
@@ -950,12 +954,12 @@ function RoutePanel({ selectedJob }: { selectedJob: DispatchJob }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Route and dependency view</CardTitle>
-        <CardDescription>Map placeholder for the vertical slice</CardDescription>
+        <CardTitle>Site and DNO dependency view</CardTitle>
+        <CardDescription>Map and grid-connection placeholder for the vertical slice</CardDescription>
       </CardHeader>
       <CardContent className="grid gap-3 md:grid-cols-3">
-        <InfoRow icon={Route} label="Selected stop" value={selectedJob.site} />
-        <InfoRow icon={Users} label="Crew" value={selectedJob.owner} />
+        <InfoRow icon={Route} label="Selected site" value={selectedJob.site} />
+        <InfoRow icon={Users} label="Install team" value={selectedJob.owner} />
         <InfoRow icon={AlertTriangle} label="Blocker" value={selectedJob.nextAction} />
       </CardContent>
     </Card>

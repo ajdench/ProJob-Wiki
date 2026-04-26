@@ -64,23 +64,23 @@ export type PersistedState = {
   sourceMode: DemoSourceMode
 }
 
-export const storageKey = 'projob-ui-spike.vertical-slice.v2'
+export const storageKey = 'projob-ui-spike.vertical-slice.v3'
 
 export const sourceOptions: Array<{ value: DemoSourceMode; label: string; detail: string }> = [
   {
     value: 'combined',
     label: 'Combined',
-    detail: 'Odoo work order plus OpenProject dependencies',
+    detail: 'Solar install jobs plus DNO and handover dependencies',
   },
   {
     value: 'odoo',
     label: 'Odoo-shaped',
-    detail: 'ERP/FSM work orders, sites, materials, and review state',
+    detail: 'ERP/FSM installs, survey packs, kit, and MCS review state',
   },
   {
     value: 'openproject',
     label: 'OpenProject-shaped',
-    detail: 'Programme work packages, blockers, and milestones',
+    detail: 'DNO applications, scaffold dates, blockers, and handover milestones',
   },
 ]
 
@@ -125,8 +125,8 @@ export function fieldJobToDispatch(job: FieldJob, queue: QueueEntry[]): Dispatch
       conflictCount > 0
         ? `${conflictCount} conflict needs review`
         : pendingCount > 0
-          ? `${pendingCount} local changes pending`
-          : 'Synced locally',
+          ? `${pendingCount} local install changes pending`
+          : 'Install record synced',
     material: job.materialUsed,
     source: job.source,
   }
