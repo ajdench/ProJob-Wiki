@@ -1,5 +1,6 @@
 import {
   AlertTriangle,
+  Blocks,
   BriefcaseBusiness,
   CalendarDays,
   Camera,
@@ -10,6 +11,7 @@ import {
   FileSignature,
   GitBranch,
   HardHat,
+  Layers3,
   ListChecks,
   PackageCheck,
   Power,
@@ -394,8 +396,8 @@ function DemoSourcePanel({
           <StatusChip tone="neutral">GH Pages ready</StatusChip>
         </CardAction>
       </CardHeader>
-      <CardContent className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(280px,0.7fr)]">
-        <div className="grid gap-2 sm:grid-cols-3">
+      <CardContent className="grid gap-3 xl:grid-cols-[minmax(0,1fr)_minmax(280px,0.7fr)]">
+        <div className="grid gap-2 sm:grid-cols-[repeat(auto-fit,minmax(11rem,1fr))]">
           {sourceOptions.map((option) => (
             <button
               className={cn(
@@ -406,11 +408,9 @@ function DemoSourcePanel({
               onClick={() => onChangeSourceMode(option.value)}
               type="button"
             >
-              {option.value === 'openproject' ? (
-                <GitBranch aria-hidden="true" className="row-span-2 mt-0.5 justify-self-center" />
-              ) : (
-                <Database aria-hidden="true" className="row-span-2 mt-0.5 justify-self-center" />
-              )}
+              {option.value === 'combined' && <Layers3 aria-hidden="true" className="row-span-2 mt-0.5 justify-self-center" />}
+              {option.value === 'odoo' && <Blocks aria-hidden="true" className="row-span-2 mt-0.5 justify-self-center" />}
+              {option.value === 'openproject' && <GitBranch aria-hidden="true" className="row-span-2 mt-0.5 justify-self-center" />}
               <span className="block text-xs font-bold leading-tight text-muted-foreground">{option.label}</span>
               <span className="block text-sm font-bold leading-snug break-words">{option.detail}</span>
             </button>

@@ -74,12 +74,12 @@ export const sourceOptions: Array<{ value: DemoSourceMode; label: string; detail
   },
   {
     value: 'odoo',
-    label: 'Odoo-shaped',
+    label: 'Odoo',
     detail: 'ERP/FSM installs, survey packs, kit, and MCS review state',
   },
   {
     value: 'openproject',
-    label: 'OpenProject-shaped',
+    label: 'OpenProject',
     detail: 'DNO applications, scaffold dates, blockers, and handover milestones',
   },
 ]
