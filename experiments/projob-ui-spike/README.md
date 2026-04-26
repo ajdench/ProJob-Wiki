@@ -34,6 +34,13 @@ This is still a mocked prototype. It proves UI behaviour and state language befo
 
 The app is built into the published wiki artifact under `/demo/projob-ui/`.
 
+## Adapter Files
+
+- `src/adapters/projob.ts`: canonical ProJob types and mapping helpers.
+- `src/adapters/odoo-fixture.ts`: Odoo-shaped static fixture data.
+- `src/adapters/openproject-fixture.ts`: OpenProject-shaped static fixture data.
+- `src/adapters/odoo-live.ts`: local live Odoo adapter stub for future API testing.
+
 ## Commands
 
 From this folder:

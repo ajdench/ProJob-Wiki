@@ -51,7 +51,7 @@ https://ajdench.github.io/ProJob-Wiki/demo/projob-ui/
 
 ## Demo Data Strategy
 
-The public demo should use source-shaped fixtures:
+The public demo uses source-shaped fixtures through the [Adapter Contract](adapter-contract.md):
 
 | Source-shaped fixture | Represents | ProJob adapter output |
 | --- | --- | --- |
@@ -112,6 +112,8 @@ It now includes:
 - Odoo-shaped fixture mode.
 - OpenProject-shaped fixture mode.
 - Combined fixture mode.
+- ProJob adapter modules for canonical records and source selection.
+- Local live Odoo adapter stub for future API testing.
 - Static browser persistence through `localStorage`.
 - Offline/sync/review state simulation.
 - GitHub Pages publishing under `/demo/projob-ui/`.

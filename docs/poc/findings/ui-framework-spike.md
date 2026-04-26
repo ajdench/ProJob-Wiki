@@ -27,6 +27,7 @@ The first spike now includes:
 - Sync queue sheet.
 - Supervisor review and approval after queued field work is synced.
 - Static Odoo-shaped, OpenProject-shaped, and combined source modes.
+- Adapter modules for canonical ProJob records, Odoo fixtures, OpenProject fixtures, and a local live Odoo stub.
 - Desktop/tablet office workspace with dispatch, review, table, and route/dependency tabs.
 - ProJob semantic status chips mapped to design-token colours.
 
@@ -39,6 +40,7 @@ The first spike now includes:
 | Offline/sync UX | Sync queue, pending/synced/failed/conflict states, local persistence, and field completion progress can be made first-class UI components |
 | Vertical slice fit | The mocked flow can move a job from assigned, to completed offline, to ready for review, to approved without changing component families |
 | Backend composition | Odoo-shaped work orders and OpenProject-shaped dependencies can be shown in one ProJob UI when normalised through fixture adapters |
+| Adapter boundary | Moving fixture records out of `App.tsx` makes the live Odoo/OpenProject path clearer without changing the UI |
 | Desktop density | Cards, tabs, tables, and queues are adequate for a first scheduling/review surface; TanStack Table should be tested once real data density increases |
 | Implementation risk | Tailwind/shadcn setup needs repo checks so generated component and token drift is caught early |
 
@@ -84,6 +86,7 @@ This validates:
 
 - Add TanStack Table once schedule/resource rows become materially denser.
 - Add live local Odoo/OpenProject adapter tests after the static fixture demo is published.
+- Connect the local `odoo-live.ts` stub to the Odoo/OCA compose stack and document which Odoo objects map cleanly.
 - Compare Quasar or Ionic only if the React spike shows mobile ergonomics or packaging weaknesses.
 - Replace mocked `localStorage` persistence with a candidate local database: Dexie, RxDB, PouchDB/CouchDB, or PowerSync.
 - Split the large spike component into app shell, field job, sync queue, supervisor review, and office workspace modules if the prototype continues growing.

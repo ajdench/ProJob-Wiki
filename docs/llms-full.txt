@@ -36,6 +36,7 @@ The wiki now includes a gap register and explicit stack architecture:
 - Suite Composition and Design: defines how upstream components should be synthesised into one ProJob application suite with shared navigation, terminology, styling, roles, and workflow surfaces.
 - Application Suite Blueprint: maps ProJob workspaces, workflows, data objects, component patterns, and the first vertical slice into a buildable app-suite plan.
 - Demo Architecture: records the static GitHub Pages demo boundary, Odoo/OpenProject fixture-adapter strategy, and JS tool bundling guidance.
+- Adapter Contract: records the code-level ProJob adapter contract, canonical records, Odoo/OpenProject fixture modules, and local live Odoo stub.
 - UI Framework Options: compares open-source UI framework and component-library families for aligned mobile, tablet, and desktop ProJob screens. Current first research direction is React + TypeScript + Tailwind + shadcn/ui/Radix + TanStack tools, with Quasar, Ionic, MUI, Mantine, Chakra, PrimeReact, Skeleton, and Shoelace/Web Components as comparisons.
 - DESIGN.md Standard: explains how the root design contract is validated, used by prototypes, and kept aligned with wiki architecture.
 - UI Framework Spike Findings: records the first React/Vite/Tailwind/shadcn implementation spike, including component ownership, responsive fit, offline/sync UI behavior, and browser verification notes.
@@ -80,7 +81,7 @@ The suite should be organised as role-aware workspaces in one shared shell:
 - Portal workspace for scoped client/subcontractor status, approvals, documents, evidence, and comments.
 - Admin workspace for templates, roles, permissions, integrations, mappings, and audit exports.
 
-The first vertical slice should prove: office assigns a job with checklist/materials; field user opens it online, works offline, records checklist answers, notes, material usage, time, photo, and signature; sync queue applies mutations when the network returns; supervisor reviews completion and raises a variation or approves invoice-ready completion. The UI spike now includes a mocked version of this loop with `localStorage`, offline mode, mutation queue states, sync, supervisor review, approval, and static Odoo/OpenProject-shaped source modes.
+The first vertical slice should prove: office assigns a job with checklist/materials; field user opens it online, works offline, records checklist answers, notes, material usage, time, photo, and signature; sync queue applies mutations when the network returns; supervisor reviews completion and raises a variation or approves invoice-ready completion. The UI spike now includes a mocked version of this loop with `localStorage`, offline mode, mutation queue states, sync, supervisor review, approval, static Odoo/OpenProject-shaped source modes, adapter modules, and a local live Odoo stub.
 
 The shadcn MCP confirms the repo is configured for the `@shadcn` registry and exposes table/data-table and form/RHF examples that match ProJob's office and checklist surfaces. shadcn remains a primitive source; ProJob should own app shell, job cards, checklist rows, evidence panels, sync queue, review queues, scheduler views, and dependency views.
 
@@ -154,4 +155,5 @@ KoboToolbox / ODK: strong offline forms/checklist/data-collection tools; useful 
 - Application Suite Blueprint: https://ajdench.github.io/ProJob-Wiki/architecture/application-suite-blueprint/
 - UI Framework Options: https://ajdench.github.io/ProJob-Wiki/architecture/ui-framework-options/
 - Demo Architecture: https://ajdench.github.io/ProJob-Wiki/architecture/demo-architecture/
+- Adapter Contract: https://ajdench.github.io/ProJob-Wiki/architecture/adapter-contract/
 - Integration Contracts: https://ajdench.github.io/ProJob-Wiki/architecture/integration-contracts/

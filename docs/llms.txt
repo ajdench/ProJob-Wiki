@@ -24,6 +24,7 @@ Repository: https://github.com/ajdench/ProJob-Wiki
 - [Suite Composition and Design](https://ajdench.github.io/ProJob-Wiki/architecture/suite-composition-and-design/): how components should be synthesised into one ProJob application suite with common visuals and styling.
 - [Application Suite Blueprint](https://ajdench.github.io/ProJob-Wiki/architecture/application-suite-blueprint/): workspace, workflow, data object, component pattern, and first vertical-slice blueprint for the ProJob app.
 - [Demo Architecture](https://ajdench.github.io/ProJob-Wiki/architecture/demo-architecture/): static GitHub Pages demo boundary, fixture/adapters strategy, and JS tool bundling notes.
+- [Adapter Contract](https://ajdench.github.io/ProJob-Wiki/architecture/adapter-contract/): code-level ProJob adapter contract for Odoo/OpenProject fixture and live-adapter paths.
 - [UI Framework Options](https://ajdench.github.io/ProJob-Wiki/architecture/ui-framework-options/): open-source UI framework and component-library options for aligned mobile, tablet, and desktop ProJob screens.
 - [Component Map](https://ajdench.github.io/ProJob-Wiki/architecture/component-map/): ownership map for capabilities across ERP, PWA, Sync API, files, and planning.
 - [Integration Contracts](https://ajdench.github.io/ProJob-Wiki/architecture/integration-contracts/): canonical entities, field APIs, mutation envelope, attachment flow, and ERP adapter boundary.

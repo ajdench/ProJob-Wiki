@@ -49,186 +49,27 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import {
+  countQueueStates,
+  createInitialState,
+  fieldJobToDispatch,
+  jobTone,
+  makeQueueEntry,
+  queueTone,
+  sourceDispatchJobs,
+  sourceOptions,
+  storageKey,
+} from '@/adapters/projob'
+import type {
+  DemoSourceMode,
+  DispatchJob,
+  FieldJob,
+  PersistedState,
+  QueueEntry,
+  QueueState,
+  StatusTone,
+} from '@/adapters/projob'
 import { cn } from '@/lib/utils'
-
-type StatusTone = 'success' | 'warning' | 'danger' | 'info' | 'sync' | 'neutral'
-type QueueState = 'pending' | 'synced' | 'failed' | 'conflict'
-type JobStatus = 'Assigned' | 'In progress' | 'Completed offline' | 'Ready for review' | 'Approved'
-type DemoSourceMode = 'combined' | 'odoo' | 'openproject'
-
-type ChecklistRow = {
-  id: string
-  label: string
-  required: boolean
-  checked: boolean
-}
-
-type FieldJob = {
-  id: string
-  title: string
-  site: string
-  window: string
-  owner: string
-  status: JobStatus
-  nextAction: string
-  checklist: ChecklistRow[]
-  evidence: string[]
-  note: string
-  timeHours: number
-  materialUsed: string
-  materialException: boolean
-  signatureCaptured: boolean
-  source: string
-  approvedAt?: string
-}
-
-type DispatchJob = {
-  id: string
-  title: string
-  site: string
-  window: string
-  owner: string
-  status: string
-  tone: StatusTone
-  nextAction: string
-  checklistDone: number
-  checklistTotal: number
-  evidence: string[]
-  syncState: string
-  material: string
-  source: string
-}
-
-type QueueEntry = {
-  id: string
-  label: string
-  detail: string
-  state: QueueState
-  createdAt: string
-}
-
-type PersistedState = {
-  fieldJob: FieldJob
-  queue: QueueEntry[]
-  offlineMode: boolean
-  sourceMode: DemoSourceMode
-}
-
-const storageKey = 'projob-ui-spike.vertical-slice.v2'
-
-const initialFieldJob: FieldJob = {
-  id: 'PJ-1048',
-  title: 'Replace extractor fan',
-  site: 'Flat 12, Brixton Hill',
-  window: '10:30-12:00',
-  owner: 'A. Patel + J. Lee',
-  status: 'Assigned',
-  nextAction: 'Complete risk checklist and capture client sign-off',
-  checklist: [
-    { id: 'risk', label: 'Risk assessment completed', required: true, checked: false },
-    { id: 'isolation', label: 'Electrical isolation confirmed', required: true, checked: false },
-    { id: 'photos', label: 'Before and after photos attached', required: true, checked: false },
-    { id: 'materials', label: 'Material use recorded', required: true, checked: false },
-    { id: 'signature', label: 'Client signature captured', required: true, checked: false },
-  ],
-  evidence: ['Site document cached'],
-  note: '',
-  timeHours: 1.5,
-  materialUsed: 'Extractor fan x1, isolator x1',
-  materialException: false,
-  signatureCaptured: false,
-  source: 'Odoo work order fixture',
-}
-
-const odooDispatchJobs: DispatchJob[] = [
-  {
-    id: 'PJ-1051',
-    title: 'Electrical condition photo set',
-    site: 'Unit B, Clapham Works',
-    window: '13:00-14:00',
-    owner: 'D. Morgan',
-    status: 'Cached',
-    tone: 'sync',
-    nextAction: 'Capture board and route photos',
-    checklistDone: 2,
-    checklistTotal: 6,
-    evidence: ['Site document cached'],
-    syncState: 'Available offline',
-    material: 'No planned materials',
-    source: 'Odoo field service fixture',
-  },
-  {
-    id: 'PJ-1055',
-    title: 'Boiler panel access repair',
-    site: 'Peckham Rye Estate',
-    window: '15:30-17:00',
-    owner: 'M. Singh',
-    status: 'Ready',
-    tone: 'success',
-    nextAction: 'Start pre-work checklist',
-    checklistDone: 0,
-    checklistTotal: 5,
-    evidence: ['Method statement cached'],
-    syncState: 'Synced 09:42',
-    material: 'Panel clips, sealant',
-    source: 'Odoo maintenance fixture',
-  },
-]
-
-const openProjectFieldJob: FieldJob = {
-  ...initialFieldJob,
-  id: 'OP-2187',
-  title: 'Fire stopping dependency inspection',
-  site: 'Block C riser, Brixton Hill',
-  owner: 'Southline Fire + A. Patel',
-  status: 'Assigned',
-  nextAction: 'Confirm blocker is cleared before handoff',
-  checklist: [
-    { id: 'access', label: 'Access route confirmed', required: true, checked: false },
-    { id: 'blocker', label: 'Dependency blocker reviewed', required: true, checked: false },
-    { id: 'photos', label: 'Riser photos attached', required: true, checked: false },
-    { id: 'materials', label: 'Sealant/fire collar requirement recorded', required: true, checked: false },
-    { id: 'signature', label: 'Subcontractor handoff signed', required: true, checked: false },
-  ],
-  evidence: ['OpenProject work package cached'],
-  materialUsed: 'Fire collar check, sealant allowance',
-  source: 'OpenProject work package fixture',
-}
-
-const openProjectDispatchJobs: DispatchJob[] = [
-  {
-    id: 'OP-2189',
-    title: 'Cable route predecessor check',
-    site: 'Block C riser, Brixton Hill',
-    window: 'Today',
-    owner: 'Subcontractor: Southline Fire',
-    status: 'Blocked',
-    tone: 'warning',
-    nextAction: 'Waiting on containment completion from electrical crew',
-    checklistDone: 1,
-    checklistTotal: 4,
-    evidence: ['Dependency note', 'Programme snapshot'],
-    syncState: 'Planning event imported',
-    material: 'Dependency: electrical containment',
-    source: 'OpenProject dependency fixture',
-  },
-  {
-    id: 'OP-2194',
-    title: 'Client handover milestone',
-    site: 'Brixton Hill programme',
-    window: 'Fri 01 May',
-    owner: 'Project manager',
-    status: 'At risk',
-    tone: 'danger',
-    nextAction: 'Riser inspection drives handover date',
-    checklistDone: 0,
-    checklistTotal: 3,
-    evidence: ['Milestone baseline'],
-    syncState: 'Planning milestone imported',
-    material: 'No field materials',
-    source: 'OpenProject milestone fixture',
-  },
-]
 
 const navigation = [
   { label: 'Jobs', icon: BriefcaseBusiness },
@@ -260,18 +101,9 @@ function loadPersistedState(): PersistedState {
   }
 }
 
-function createInitialState(sourceMode: DemoSourceMode): PersistedState {
-  return {
-    fieldJob: sourceMode === 'openproject' ? openProjectFieldJob : initialFieldJob,
-    queue: [],
-    offlineMode: false,
-    sourceMode,
-  }
-}
-
 function App() {
   const [persisted, setPersisted] = useState<PersistedState>(() => loadPersistedState())
-  const [selectedJobId, setSelectedJobId] = useState(initialFieldJob.id)
+  const [selectedJobId, setSelectedJobId] = useState(() => loadPersistedState().fieldJob.id)
 
   const { fieldJob, offlineMode, queue, sourceMode } = persisted
   const dispatchJobs = useMemo(
@@ -546,24 +378,6 @@ function DemoSourcePanel({
   onChangeSourceMode: (sourceMode: DemoSourceMode) => void
   sourceMode: DemoSourceMode
 }) {
-  const sourceOptions: Array<{ value: DemoSourceMode; label: string; detail: string }> = [
-    {
-      value: 'combined',
-      label: 'Combined',
-      detail: 'Odoo work order plus OpenProject dependencies',
-    },
-    {
-      value: 'odoo',
-      label: 'Odoo-shaped',
-      detail: 'ERP/FSM work orders, sites, materials, and review state',
-    },
-    {
-      value: 'openproject',
-      label: 'OpenProject-shaped',
-      detail: 'Programme work packages, blockers, and milestones',
-    },
-  ]
-
   return (
     <Card className="mb-5">
       <CardHeader>
@@ -1166,93 +980,6 @@ function StatusChip({ children, tone }: { children: ReactNode; tone: StatusTone 
       {children}
     </Badge>
   )
-}
-
-function makeQueueEntry(label: string, detail: string, state: QueueState): QueueEntry {
-  return {
-    id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
-    label,
-    detail,
-    state,
-    createdAt: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-  }
-}
-
-function countQueueStates(queue: QueueEntry[]) {
-  return queue.reduce<Record<QueueState, number>>(
-    (counts, entry) => {
-      counts[entry.state] += 1
-      return counts
-    },
-    { pending: 0, synced: 0, failed: 0, conflict: 0 },
-  )
-}
-
-function sourceDispatchJobs(sourceMode: DemoSourceMode) {
-  switch (sourceMode) {
-    case 'odoo':
-      return odooDispatchJobs
-    case 'openproject':
-      return openProjectDispatchJobs
-    case 'combined':
-      return [...openProjectDispatchJobs, ...odooDispatchJobs]
-  }
-}
-
-function fieldJobToDispatch(job: FieldJob, queue: QueueEntry[]): DispatchJob {
-  const checklistDone = job.checklist.filter((row) => row.checked).length
-  const pendingCount = queue.filter((entry) => entry.state === 'pending').length
-  const conflictCount = queue.filter((entry) => entry.state === 'conflict').length
-
-  return {
-    id: job.id,
-    title: job.title,
-    site: job.site,
-    window: job.window,
-    owner: job.owner,
-    status: job.status,
-    tone: jobTone(job.status),
-    nextAction: job.nextAction,
-    checklistDone,
-    checklistTotal: job.checklist.length,
-    evidence: job.evidence,
-    syncState:
-      conflictCount > 0
-        ? `${conflictCount} conflict needs review`
-        : pendingCount > 0
-          ? `${pendingCount} local changes pending`
-          : 'Synced locally',
-    material: job.materialUsed,
-    source: job.source,
-  }
-}
-
-function jobTone(status: JobStatus): StatusTone {
-  switch (status) {
-    case 'Approved':
-      return 'success'
-    case 'Ready for review':
-      return 'info'
-    case 'Completed offline':
-      return 'warning'
-    case 'In progress':
-      return 'sync'
-    case 'Assigned':
-      return 'neutral'
-  }
-}
-
-function queueTone(state: QueueState): StatusTone {
-  switch (state) {
-    case 'synced':
-      return 'success'
-    case 'pending':
-      return 'warning'
-    case 'failed':
-      return 'danger'
-    case 'conflict':
-      return 'info'
-  }
 }
 
 function statusBadgeClass(tone: StatusTone) {

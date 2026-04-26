@@ -61,6 +61,7 @@ nav:
       - Suite Composition and Design: architecture/suite-composition-and-design.md
       - Application Suite Blueprint: architecture/application-suite-blueprint.md
       - Demo Architecture: architecture/demo-architecture.md
+      - Adapter Contract: architecture/adapter-contract.md
       - DESIGN.md Standard: architecture/design-md-standard.md
       - UI Framework Options: architecture/ui-framework-options.md
       - Component Map: architecture/component-map.md
