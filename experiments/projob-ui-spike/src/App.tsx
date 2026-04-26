@@ -2,6 +2,7 @@ import {
   AlertTriangle,
   Blocks,
   BriefcaseBusiness,
+  Building2,
   CalendarDays,
   Camera,
   CheckCircle2,
@@ -11,6 +12,7 @@ import {
   FileSignature,
   GitBranch,
   HardHat,
+  Home,
   Layers3,
   ListChecks,
   PackageCheck,
@@ -649,6 +651,7 @@ function QuoteWorkflow({
   quote: QuoteRecord
 }) {
   const converted = quote.status === 'Converted'
+  const PropertyIcon = quote.property.toLowerCase().includes('domestic') ? Home : Building2
 
   return (
     <Card className="mb-5" id="quotes">
@@ -683,7 +686,7 @@ function QuoteWorkflow({
 
           <div className="grid gap-2 md:grid-cols-2">
             <InfoRow icon={Route} label="Site" value={quote.site} />
-            <InfoRow icon={HardHat} label="Property" value={quote.property} />
+            <InfoRow icon={PropertyIcon} label="Property" value={quote.property} />
             <InfoRow icon={PackageCheck} label="System" value={`${quote.system}, ${quote.storage}`} />
             <InfoRow icon={AlertTriangle} label="DNO" value={quote.dno} />
           </div>
@@ -704,7 +707,7 @@ function QuoteWorkflow({
           />
           <WorkflowStep
             detail={`${fieldJob.id}; ${fieldJob.owner}; ${fieldJob.site}`}
-            icon={BriefcaseBusiness}
+            icon={HardHat}
             label="Install"
             title={converted ? 'Install job created' : 'Field job and kit pack'}
             tone={converted ? 'sync' : 'neutral'}
